@@ -1,7 +1,13 @@
 package de.dhbw.wwi11sca.skdns.shared;
 
-public class Simulationsversion {
+import java.io.Serializable;
 
+public class Simulationsversion implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int personal;
 	private int maschineWert;
 	private int maschineKapazitaet;
@@ -17,6 +23,9 @@ public class Simulationsversion {
 	private double nachfrageTendenz;
 	
 	// Konstruktor
+	public Simulationsversion(){
+		
+	}
 	public Simulationsversion(int simulationsjahr, int version){
 		this.setSimulationsJahr(simulationsjahr);
 		this.setVersion(version);

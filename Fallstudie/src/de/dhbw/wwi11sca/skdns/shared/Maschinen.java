@@ -1,7 +1,13 @@
 package de.dhbw.wwi11sca.skdns.shared;
 
-public class Maschinen {
+import java.io.Serializable;
+
+public class Maschinen implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int kapazitaet;
 	private int nutzungsDauer;
 	private int noetigeMitarbeiter;

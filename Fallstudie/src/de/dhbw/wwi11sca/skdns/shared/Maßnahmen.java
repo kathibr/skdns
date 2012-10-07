@@ -1,7 +1,13 @@
 package de.dhbw.wwi11sca.skdns.shared;
 
-public class Maﬂnahmen {
+import java.io.Serializable;
+
+public class Maﬂnahmen implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int werbemaﬂnahmen;
 	
 	// Getter-Setter-Methoden

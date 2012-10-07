@@ -1,7 +1,13 @@
 package de.dhbw.wwi11sca.skdns.shared;
 
-public class Unternehmen {
+import java.io.Serializable;
+
+public class Unternehmen implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int umsatz;
 	private int gewinn;
 	private double marktAnteil;

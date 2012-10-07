@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dhbw.wwi11sca.skdns.client.home.HomeService;
+import de.dhbw.wwi11sca.skdns.shared.Produkt;
 import de.dhbw.wwi11sca.skdns.shared.Unternehmen;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -22,7 +23,9 @@ public class HomeServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public List<Unternehmen> getUnternehmen() {
-		// TODO Auto-generated method stub
+		// TODO Daten aus der DB holen und an die GUI übergeben
+		// Daten: 4 Unternehmen, Felder: umsatz; gewinn; marktAnteil; nachfrageTendenz; produkt;
+		
 		return null;
 	}
 
