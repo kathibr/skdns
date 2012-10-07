@@ -13,6 +13,7 @@ public class EigenesUnternehmen extends Unternehmen implements Serializable{
 	private Maschinen maschinen;
 	private int mitarbeiterGehalt;	
 	private int mitarbeiterAnzahl;
+	private String firma;
 	
 	// Getter-Setter-Methoden
 	public double getFixkosten() {
@@ -38,6 +39,12 @@ public class EigenesUnternehmen extends Unternehmen implements Serializable{
 	}
 	public void setMitarbeiterAnzahl(int mitarbeiterAnzahl) {
 		this.mitarbeiterAnzahl = mitarbeiterAnzahl;
+	}
+	public String getFirma() {
+		return firma;
+	}
+	public void setFirma(String firma) {
+		this.firma = firma;
 	}
 	
 
