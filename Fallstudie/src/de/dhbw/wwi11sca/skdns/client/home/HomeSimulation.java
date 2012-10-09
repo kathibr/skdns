@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import de.dhbw.wwi11sca.skdns.client.simulation.*;
 import de.dhbw.wwi11sca.skdns.client.unternehmen.*;
+import com.google.gwt.user.client.ui.HTML;
 
 
 public class HomeSimulation implements EntryPoint {
@@ -60,9 +61,10 @@ public class HomeSimulation implements EntryPoint {
 		rootPanel.setSize("1024", "768");
 		rootPanel.add(absolutePanelHome, 0, 0);
 		absolutePanelHome.setSize("1024px", "768px");
+		labelHome.setStyleName("gwt-Home-Label");
 
 		// Label, das anzeigt, wo der User sich befindet
-		absolutePanelHome.add(labelHome, 43, 43);
+		absolutePanelHome.add(labelHome, 10, 10);
 
 		AsyncCallback<List<Unternehmen>> callback = new AsyncCallback<List<Unternehmen>>() {
 
@@ -128,7 +130,7 @@ public class HomeSimulation implements EntryPoint {
 		});
 
 		// Button zum ausloggen
-		absolutePanelHome.add(buttonLogout, 914, 10);
+		absolutePanelHome.add(buttonLogout, 797, 10);
 		buttonLogout.setSize("100px", "35px");
 		buttonLogout.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {

@@ -1,12 +1,14 @@
 package de.dhbw.wwi11sca.skdns.client.login;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -14,99 +16,170 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.Image;
 import de.dhbw.wwi11sca.skdns.shared.*;
 import de.dhbw.wwi11sca.skdns.client.home.HomeSimulation;
+import com.google.gwt.user.client.ui.TabLayoutPanel;
+import com.google.gwt.dom.client.Style.Unit;
 
 public class LoginSimulation  implements EntryPoint{
 		
-	AbsolutePanel absolutePanelLogin = new AbsolutePanel();
-	TextBox textBoxUsername = new TextBox();
-	PasswordTextBox textBoxKennwort = new PasswordTextBox();
-	Button ButtonLogin = new Button("Login");
-	Label LabelAnmeldeFehlschlag = new Label("");
-	Label labelSimulationsVersion = new Label("");
-	Image imageLoginLogo = new Image();
-	HomeSimulation home = new HomeSimulation();
-	public static User user1;
-	String version = new String ("0.00.1");
-	boolean AnmeldeBestaetigung;
+//	AbsolutePanel absolutePanelLogin = new AbsolutePanel();
+//	TextBox textBoxUsername = new TextBox();
+//	PasswordTextBox textBoxKennwort = new PasswordTextBox();
+//	Button ButtonLogin = new Button("Login");
+//	Label LabelAnmeldeFehlschlag = new Label("");
+//	Label labelSimulationsVersion = new Label("");
+//	Image imageLoginLogo = new Image();
+//	HomeSimulation home = new HomeSimulation();
+//	public static User user1;
+//	String version = new String ("0.00.1");
+//	boolean AnmeldeBestaetigung;
 	private final LoginServiceAsync LoginService = GWT.create(LoginService.class);
-
-
+	//Panel
+	private AbsolutePanel panelLogin;
+	private TabLayoutPanel tabLayoutPanel;
+	private VerticalPanel loginPanel;
+	private VerticalPanel forgotPwdPanel;
+	
+	private TextBox textBoxUsername;
+	private PasswordTextBox textBoxKennwort;
+	private Button btLogin;
+	private TextBox tBUser;
+	private TextBox tBEmail;
+	private Button btSend;
+	
+	public static User userOnline;
+	private Label lbLoginFail;
+	private String version;
+	
+	
 	public void onModuleLoad() {
-			// allgemeine Panels
-			RootPanel rootPanel = RootPanel.get();
-			rootPanel.setSize("1024", "768");
-			rootPanel.add(absolutePanelLogin, 182, 169);
-			absolutePanelLogin.setSize("655px", "395px");
 			
+		panelLogin = new AbsolutePanel();
+		panelLogin.setSize("624px", "382px");
+			
+		tabLayoutPanel = new TabLayoutPanel(1.5, Unit.EM);
+		tabLayoutPanel.setSize("360px", "216px");
+		
+		loginPanel = new VerticalPanel();
+		loginPanel.setSize("350px", "182px");		
+		
+		forgotPwdPanel = new VerticalPanel();
+		forgotPwdPanel.setSize("350px", "182px");	
+			
+		tabLayoutPanel.add(loginPanel, "Login", false);
+		tabLayoutPanel.add(forgotPwdPanel, "Passwort vergessen", false);
+		
+		panelLogin.add(tabLayoutPanel,0,110);
+		RootPanel.get().add(panelLogin, 0, 0);	
+			
+		Image image = new Image("fallstudie/gwt/clean/images/logo.png");
+		panelLogin.add(image, 0, 0);
+		image.setSize("624px", "110px");
+		
+		//Login Panel	
+		
 			// TextBox für den Usernamen
+			textBoxUsername = new TextBox();
+			loginPanel.add(textBoxUsername);
+			textBoxUsername.setSize("300px", "30px");
 			textBoxUsername.setText("Username");
-			absolutePanelLogin.add(textBoxUsername, 187, 188);
-			textBoxUsername.setSize("257px", "18px");
-			// ClickHandler löscht den Inhalt der Textbox, damit der User seine Daten eingeben kann 
-			textBoxUsername.addClickHandler(new ClickHandler() 
+			
+			// TextBox für das Kennwort		
+			textBoxKennwort = new PasswordTextBox();
+			loginPanel.add(textBoxKennwort);
+			textBoxKennwort.setText("Kennwort");
+			textBoxKennwort.setSize("300px", "30px");
+			
+			//Login Fail
+//			lbLoginFail.setStyleName("gwt-PasswortUnbekannt");
+			lbLoginFail = new Label();
+			loginPanel.add(lbLoginFail);
+			lbLoginFail.setSize("300px", "12px");
+			
+			//Button Bestätigung
+			btLogin = new Button("Login");
+			loginPanel.add(btLogin);
+			btLogin.setSize("100px", "30px");
+			
+			
+			btLogin.addClickHandler(new ClickHandler() 
+			{
+				public void onClick(ClickEvent event) {
+					userOnline = new User();
+					userOnline.setKennwort(textBoxKennwort.getText());
+					userOnline.setUsername(textBoxUsername.getText());
+					LoginService.checkLogin(userOnline, new CheckLoginCallback());	
+				}
+			});
+			textBoxKennwort.addClickHandler(new ClickHandler() //löscht den Inhalt der Textbox, damit der User seine Daten eingeben kann 
+			{
+				public void onClick(ClickEvent event) {
+					textBoxKennwort.setText("");
+				}
+			});
+			textBoxUsername.addClickHandler(new ClickHandler() //löscht den Inhalt der Textbox, damit der User seine Daten eingeben kann 
 			{
 				public void onClick(ClickEvent event) {
 					textBoxUsername.setText("");
 				}
 			});
 			
-			// TextBox für das Kennwort			
-			textBoxKennwort.setText("Kennwort");
-			absolutePanelLogin.add(textBoxKennwort, 187, 224);
-			textBoxKennwort.setSize("257px", "18px");
-				// ClickHandler löscht den Inhalt der Textbox, damit der User seine Daten eingeben kann 
-			textBoxKennwort.addClickHandler(new ClickHandler() 
+			
+		//ForgotPwd Panel	
+			
+			tBUser = new TextBox();
+			forgotPwdPanel.add(tBUser);
+			tBUser.setSize("300px", "30px");
+			tBUser.setText("Username");
+			
+			tBEmail = new TextBox();
+			forgotPwdPanel.add(tBEmail);
+			tBEmail.setSize("300px", "30px");
+			tBEmail.setText("E-Mail");
+			
+			btSend = new Button("Senden");
+			forgotPwdPanel.add(btSend);
+			btSend.setSize("100px", "30px");
+								
+			btSend.addClickHandler(new ClickHandler() 
 			{
 				public void onClick(ClickEvent event) {
-					textBoxKennwort.setText("");
+					//ToDo
 				}
 			});
-			
-			// Button für die Bestätigung der Daten
-			ButtonLogin.addClickHandler(new ClickHandler() 
+			tBUser.addClickHandler(new ClickHandler() //löscht den Inhalt der Textbox, damit der User seine Daten eingeben kann 
 			{
 				public void onClick(ClickEvent event) {
-					user1 = new User();
-					user1.setKennwort(textBoxKennwort.getText());
-					user1.setUsername(textBoxUsername.getText());
-					
-					LoginService.checkLogin(user1, new CheckLoginCallback());	
+					tBUser.setText("");
 				}
 			});
-			
-			absolutePanelLogin.add(ButtonLogin, 354, 260);
-			ButtonLogin.setSize("100px", "35px");
-			
-			// Label, dass dem User meldet, dass seine Daten nicht vorhanden sind.
-			LabelAnmeldeFehlschlag.setStyleName("gwt-PasswortUnbekannt");
-			absolutePanelLogin.add(LabelAnmeldeFehlschlag, 222, 159);
-			LabelAnmeldeFehlschlag.setSize("219px", "18px");
+			tBEmail.addClickHandler(new ClickHandler() //löscht den Inhalt der Textbox, damit der User seine Daten eingeben kann 
+			{
+				public void onClick(ClickEvent event) {
+					tBEmail.setText("");
+				}
+			});
+
 		
+	}	
+			
+
 			// Label, dass dem User Informationen über die Version gibt
-			labelSimulationsVersion.setStyleName("gwt-Informationslabel");
-			absolutePanelLogin.add(labelSimulationsVersion, 10, 373);
-			labelSimulationsVersion.setText("Version " + version);
-			imageLoginLogo.setUrl("fallstudie/gwt/clean/images/Logo.JPG");
-			
-			absolutePanelLogin.add(imageLoginLogo, 175, 46);
-			imageLoginLogo.setSize("292px", "89px");
-			
-			Button btnNeuerBenutzer = new Button("Passwort vergessen");
-			absolutePanelLogin.add(btnNeuerBenutzer, 520, 355);
-			btnNeuerBenutzer.setSize("125px", "30px");
-			
-		}
+//			labelSimulationsVersion.setStyleName("gwt-Informationslabel");
+//			absolutePanelLogin.add(labelSimulationsVersion, 10, 373);
+//			labelSimulationsVersion.setText("Version " + version);
+//			imageLoginLogo.setUrl("fallstudie/gwt/clean/images/Logo.JPG");
+
 	    public class CheckLoginCallback implements AsyncCallback<java.lang.Void> {
 
 	        @Override
 	        public void onFailure(Throwable caught) {
-	        	LabelAnmeldeFehlschlag.setText("Username oder Passwort falsch/ unbekannt.");
+	        	lbLoginFail.setText("Username oder Passwort falsch/ unbekannt.");
 	        	
 	        }
 
 	        @Override
 	        public void onSuccess(Void result) {
-	        	LabelAnmeldeFehlschlag.setText("Daten korrekt.");
+	        	
 				RootPanel.get().clear();
 				HomeSimulation home = new HomeSimulation();
 				home.onModuleLoad();
