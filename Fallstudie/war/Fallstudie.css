@@ -45,6 +45,6 @@ h1 {
 	font-weight: bold;
 }
 .gwt-Home-Label {
-	color: blue;
-	text-decoration: underline;
+	font-size: 18px;
+	text-decoration: none;
 }

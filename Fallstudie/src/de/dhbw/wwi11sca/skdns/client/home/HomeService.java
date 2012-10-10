@@ -12,5 +12,5 @@ public interface HomeService extends RemoteService {
 	
 	String loginServer(String name) throws IllegalArgumentException;
 	public List<Unternehmen> getUnternehmen();
-		
+	public List<EigenesUnternehmen> getEigenesUnternehmen();	
 }
