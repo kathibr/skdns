@@ -1,5 +1,7 @@
 package de.dhbw.wwi11sca.skdns.shared;
 
+
+
 import java.io.Serializable;
 
 public class EigenesUnternehmen extends Unternehmen implements Serializable{
@@ -11,7 +13,7 @@ public class EigenesUnternehmen extends Unternehmen implements Serializable{
 	private int mitarbeiterAnzahl;
 	private String firma;
 	
-	// Getter-Setter-Methoden
+	public EigenesUnternehmen(){}
 	public double getFixkosten() {
 		return fixkosten;
 	}

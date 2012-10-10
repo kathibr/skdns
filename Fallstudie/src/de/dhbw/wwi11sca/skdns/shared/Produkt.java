@@ -1,18 +1,19 @@
 package de.dhbw.wwi11sca.skdns.shared;
 
+
 import java.io.Serializable;
 
 public class Produkt implements Serializable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private int menge;
 	private double preis;
 
-
-	// Getter-Setter-Methode
+	public Produkt(){}
+	public Produkt(int menge, double preis){
+		this.menge = menge;
+		this.preis = preis;		
+	}
 	public int getMenge() {
 		return menge;
 	}

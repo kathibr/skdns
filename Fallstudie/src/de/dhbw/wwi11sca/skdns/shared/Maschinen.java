@@ -14,7 +14,13 @@ public class Maschinen implements Serializable{
 	private double buchwert;
 
 	
-	// Getter-Setter-Methoden
+	public Maschinen(){}
+	public Maschinen(int kapazitaet, int nutzungsDauer, int noetigeMitarbeiter, double buchwert){
+		this.kapazitaet = kapazitaet;
+		this.nutzungsDauer = nutzungsDauer;
+		this.noetigeMitarbeiter = noetigeMitarbeiter;
+		this.buchwert = buchwert;
+	}
 	public int getKapazitaet() {
 		return kapazitaet;
 	}
