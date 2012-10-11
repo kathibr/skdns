@@ -6,6 +6,8 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
@@ -15,7 +17,10 @@ import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabPanel;
+import com.google.gwt.view.client.ListDataProvider;
+
 import de.dhbw.wwi11sca.skdns.client.home.*;
+import de.dhbw.wwi11sca.skdns.client.home.HomeSimulation.GetEigenesUnternehmenCallback;
 import de.dhbw.wwi11sca.skdns.shared.*;
 
 public class Simulation implements EntryPoint {
@@ -74,9 +79,10 @@ public class Simulation implements EntryPoint {
 	Label labelMaschinenKapazitaet = new Label("Kapazität:");
 	Label lblNtigeMitarbeiter = new Label("nötige Mitarbeiter:");
 	IntegerBox integerBoxMaschinenMitarbeiter = new IntegerBox();
-
-	private SimulationServiceAsync service = GWT
-			.create(SimulationService.class);
+	
+	CellTable<EigenesUnternehmen> tableEigenesUnternehmen;
+	List<EigenesUnternehmen> unEList;
+	private SimulationServiceAsync service = GWT.create(SimulationService.class);
 
 	@Override
 	public void onModuleLoad() {
@@ -96,6 +102,8 @@ public class Simulation implements EntryPoint {
 		absolutePanelInvestitionen.add(labelInvestitionen, 10, 10);
 		labelInvestitionen.setSize("282px", "18px");
 
+		uebersicht();
+		
 		// Marketing Investitionen
 		absolutePanelInvestitionen.add(labelMarketing, 20, 45);
 		absolutePanelInvestitionen.add(integerBoxMarketing, 86, 34);
@@ -226,6 +234,83 @@ public class Simulation implements EntryPoint {
 
 	}
 
+	
+	public class GetEigenesUnternehmenCallback implements AsyncCallback<EigenesUnternehmen> {
+		
+        @Override
+        public void onFailure(Throwable caught) { }
+
+        @Override
+        public void onSuccess(EigenesUnternehmen result) {
+        	
+    		ListDataProvider<EigenesUnternehmen> dataEProvider = new ListDataProvider<EigenesUnternehmen>();
+    	    // Connect the table to the data provider.
+    	    dataEProvider.addDataDisplay(tableEigenesUnternehmen);
+    			
+    	   // Add the data to the data provider, which automatically pushes it to the widget.
+    	    unEList = dataEProvider.getList();
+        	unEList.add(result);
+        	
+     
+        }
+    }
+	
+	
+	
+	public void uebersicht(){
+		tableEigenesUnternehmen = new CellTable<EigenesUnternehmen>();
+		absolutePanelSimulation.add(tableEigenesUnternehmen, 0, 144);
+		tableEigenesUnternehmen.setSize("500px", "100px");
+		
+		TextColumn<EigenesUnternehmen> firmaEColumn = new TextColumn<EigenesUnternehmen>(){
+			@Override
+			public String getValue(EigenesUnternehmen unternehmen) {
+				return unternehmen.getFirma();
+			}			
+		};
+		TextColumn<EigenesUnternehmen> umsatzEColumn = new TextColumn<EigenesUnternehmen>(){
+			@Override
+			public String getValue(EigenesUnternehmen unternehmen) {
+				return new Integer(unternehmen.getUmsatz()).toString();
+			}			
+		};
+		TextColumn<EigenesUnternehmen> gewinnEColumn = new TextColumn<EigenesUnternehmen>(){
+			@Override
+			public String getValue(EigenesUnternehmen unternehmen) {
+				return new Integer(unternehmen.getGewinn()).toString();
+			}			
+		};
+		TextColumn<EigenesUnternehmen> marktAnteilEColumn = new TextColumn<EigenesUnternehmen>(){
+			@Override
+			public String getValue(EigenesUnternehmen unternehmen) {
+				return new Double(unternehmen.getMarktAnteil()).toString();
+			}			
+		};
+		TextColumn<EigenesUnternehmen> produktMengeEColumn = new TextColumn<EigenesUnternehmen>(){
+			@Override
+			public String getValue(EigenesUnternehmen unternehmen) {
+				return new Integer(unternehmen.getProdukt().getMenge()).toString();
+			}			
+		};
+		TextColumn<EigenesUnternehmen> produktPreisEColumn = new TextColumn<EigenesUnternehmen>(){
+			@Override
+			public String getValue(EigenesUnternehmen unternehmen) {
+				return new Double(unternehmen.getProdukt().getPreis()).toString();
+			}			
+		};
+
+		tableEigenesUnternehmen.addColumn(firmaEColumn, "Firma");
+		tableEigenesUnternehmen.addColumn(umsatzEColumn, "Umsatz");
+		tableEigenesUnternehmen.addColumn(gewinnEColumn, "Gewinn");
+		tableEigenesUnternehmen.addColumn(marktAnteilEColumn, "Marktanteil");
+		tableEigenesUnternehmen.addColumn(produktPreisEColumn, "Produktpreis");
+		tableEigenesUnternehmen.addColumn(produktMengeEColumn, "Absatzmenge");
+		
+		service.getEigenesUnternehmen(new GetEigenesUnternehmenCallback());
+		
+		
+		
+	}
 	public void unternehmenAktualisieren() {
 		// Asynchroner Service, der die Daten des eigenen Unternehmens aus der
 		// Datenbank holt

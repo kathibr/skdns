@@ -12,5 +12,5 @@ public interface UnternehmenService extends RemoteService  {
 
 	public List<Unternehmen> getUnternehmen();
 	public EigenesUnternehmen getEigenesUnternehmen();	
-
+	void addEigenesUN(EigenesUnternehmen eigenesUN);
 }

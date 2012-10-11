@@ -107,7 +107,7 @@ public class HomeSimulation implements EntryPoint {
 				
 		labelAndereUN = new Label("Andere Unternehmen");
 		labelAndereUN.setStyleName("gwt-Home-Label");
-		absolutePanelHome.add(labelAndereUN, 530, 115);
+		absolutePanelHome.add(labelAndereUN, 565, 115);
 		
 		// Buttons
 	
@@ -120,7 +120,7 @@ public class HomeSimulation implements EntryPoint {
 		btSimulation.setSize("200px", "35px");
 		
 		btLogout = new Button("Logout");
-		absolutePanelHome.add(btLogout, 633, 0);
+		absolutePanelHome.add(btLogout, 700, 0);
 		btLogout.setSize("100px", "35px");
 				
 		btUNBearbeiten.addClickHandler(new ClickHandler() {
@@ -203,7 +203,7 @@ public class HomeSimulation implements EntryPoint {
 		// CellTable für andere Unternehmen
 		
 		tableUnternehmen = new CellTable<Unternehmen>();
-		absolutePanelHome.add(tableUnternehmen, 530, 144);
+		absolutePanelHome.add(tableUnternehmen, 560, 144);
 		tableUnternehmen.setSize("500px", "200px");
 				
 		TextColumn<Unternehmen> umsatzColumn = new TextColumn<Unternehmen>(){

@@ -36,6 +36,16 @@
     <servlet-name>unternehmen</servlet-name>
     <url-pattern>/fallstudie/unternehmen</url-pattern>
   </servlet-mapping>
+  
+      <servlet>
+    <servlet-name>simulation</servlet-name>
+    <servlet-class>de.dhbw.wwi11sca.skdns.server.SimulationServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>simulation</servlet-name>
+    <url-pattern>/fallstudie/simulation</url-pattern>
+  </servlet-mapping>
       
   <!-- Default page to serve -->
   <welcome-file-list>

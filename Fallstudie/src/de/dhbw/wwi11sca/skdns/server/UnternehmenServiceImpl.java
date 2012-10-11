@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
+import com.google.code.morphia.query.Query;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
@@ -12,7 +13,7 @@ import com.mongodb.MongoException;
 import de.dhbw.wwi11sca.skdns.client.unternehmen.UnternehmenService;
 import de.dhbw.wwi11sca.skdns.shared.EigenesUnternehmen;
 import de.dhbw.wwi11sca.skdns.shared.Unternehmen;
-import de.dhbw.wwi11sca.skdns.shared.User;
+
 
 @SuppressWarnings("serial")
 public class UnternehmenServiceImpl extends RemoteServiceServlet implements
@@ -43,5 +44,16 @@ public class UnternehmenServiceImpl extends RemoteServiceServlet implements
             e.printStackTrace();
         }
         return m;
+	}
+	
+	@Override
+	public void addEigenesUN(EigenesUnternehmen eigenesUN) {
+		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
+	//	ds.createQuery(EigenesUnternehmen.class);
+		Query<EigenesUnternehmen> q = ds.createQuery(EigenesUnternehmen.class);
+		ds.delete(q);
+		ds.save(eigenesUN);
+		 //PersistenceManager.getDatastore().save(student);
+		
 	}
 }

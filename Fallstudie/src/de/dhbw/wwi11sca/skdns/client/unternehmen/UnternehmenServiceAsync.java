@@ -9,5 +9,5 @@ public interface UnternehmenServiceAsync {
 	
 	void getUnternehmen(AsyncCallback<List<Unternehmen>> callback);
 	void getEigenesUnternehmen(AsyncCallback<EigenesUnternehmen> callback);
-
+	void addEigenesUN(EigenesUnternehmen eigenesUN, AsyncCallback<Void> callback);
 }

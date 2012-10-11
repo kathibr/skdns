@@ -11,9 +11,9 @@ public interface SimulationService extends RemoteService{
 
 	List<Unternehmen> getUnternehmen();
 	
-	EigenesUnternehmen getEigenesUnternehmen();
+	public EigenesUnternehmen getEigenesUnternehmen();
 
-	Simulationsversion getVersion();
+	public Simulationsversion getVersion();
 
 	
 }

@@ -1,9 +1,12 @@
 package de.dhbw.wwi11sca.skdns.client.unternehmen;
 
 import java.util.List;
+import java.util.regex.Pattern;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Button;
@@ -23,6 +26,7 @@ import com.google.gwt.view.client.ListDataProvider;
 
 public class UnternehmenSimulation implements EntryPoint {
 		
+	EigenesUnternehmen eigenesUN;
 	Unternehmen[] unternehmen = new Unternehmen[3];
 	EigenesUnternehmen eigenesUnternehmen = new EigenesUnternehmen();
 		
@@ -178,12 +182,23 @@ public class UnternehmenSimulation implements EntryPoint {
 		});
 								
 		// Unternehmensdaten des eigenen Unternehmen in der Datenbank speichern
-		absolutePanelEigenesUnternehmen.add(
-		buttonUebernehmenEigenesUnternehmen, 614, 551);
+		absolutePanelEigenesUnternehmen.add(buttonUebernehmenEigenesUnternehmen, 614, 551);
 		buttonUebernehmenEigenesUnternehmen.setSize("100px", "35px");
 		buttonUebernehmenEigenesUnternehmen.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				// TODO: Daten Eigenes Unternehmen in DB speichern
+									
+				if(Pattern.matches("[\u00C4\u00DC\u00D6A-Z][a-z\u00E4\u00FC\u00F6\u00C4\u00DC\u00DF\u00D6A-Z\\s]*", textBoxFirma.getText())){
+					
+					eigenesUN.setFirma(textBoxFirma.getText());
+					
+					service.addEigenesUN(eigenesUN, new AddEigenesUNCallback());
+					
+					
+				} else {
+					Window.alert("Bitte Eingabe \u00FCberpr\u00FCfen");
+				}
+				
+				
 			}
 		});
 										
@@ -332,7 +347,7 @@ public class UnternehmenSimulation implements EntryPoint {
 		// Maschinen
 		cellTableMaschinen = new CellTable<Maschinen>();
 		absolutePanelEigenesUnternehmen.add(cellTableMaschinen, 88, 277);
-		cellTableMaschinen.setSize("656px", "194px");
+		cellTableMaschinen.setSize("656px", "100px");
 		
 		TextColumn<Maschinen> nutzungsdauerColumn = new TextColumn<Maschinen>() {
 			@Override
@@ -419,6 +434,29 @@ public class UnternehmenSimulation implements EntryPoint {
 		absolutePanelUnternehmenDrei.add(integerBoxAbsatzUNDrei, 577, 92);
 		integerBoxAbsatzUNDrei.setSize("161px", "24px");
 	}
+	
+	
+    public class AddEigenesUNCallback implements AsyncCallback<java.lang.Void> {
+
+        @Override
+        public void onFailure(Throwable caught) {
+        }
+
+        @Override
+        public void onSuccess(Void result) {
+            // jetzt wissen wir, das alles geklappt hat, auf dem Server.
+            // Wir fügen den neuen Wert der Liste hinzu
+//            students.addItem(newName.getText());
+//            
+//            // und leeren das Eingabefeld.
+//            newName.setText("");
+        	
+        	Window.alert("Das eigene Unternehmen wurde aktualisiert");
+        }
+    }
+	
+	
+	
 	public class GetEigenesUnternehmenCallback implements AsyncCallback<EigenesUnternehmen> {
 		
         @Override
@@ -427,6 +465,8 @@ public class UnternehmenSimulation implements EntryPoint {
         @Override
         public void onSuccess(EigenesUnternehmen result) {
          	    	
+        	eigenesUN = new EigenesUnternehmen();
+        	eigenesUN =	result;
         	
         	ListDataProvider<Maschinen> dataEProvider = new ListDataProvider<Maschinen>();
     	    // Connect the table to the data provider.
