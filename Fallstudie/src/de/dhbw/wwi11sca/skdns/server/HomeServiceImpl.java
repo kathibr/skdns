@@ -29,10 +29,11 @@ public class HomeServiceImpl extends RemoteServiceServlet implements
 		return dbUN;
 	}
 	@Override
-	public List<EigenesUnternehmen> getEigenesUnternehmen() {
+	public EigenesUnternehmen getEigenesUnternehmen() {
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
 		List<EigenesUnternehmen> dbEUN =  ds.createQuery(EigenesUnternehmen.class).asList();
-		return dbEUN;
+		EigenesUnternehmen single = dbEUN.get(0);
+		return single;
 	}
 	
 	

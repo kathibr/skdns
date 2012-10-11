@@ -38,18 +38,24 @@ public class LoginSimulation  implements EntryPoint{
 	private TabLayoutPanel tabLayoutPanel;
 	private VerticalPanel loginPanel;
 	private VerticalPanel forgotPwdPanel;
+	private VerticalPanel adminPanel;
 	
 	private TextBox textBoxUsername;
 	private PasswordTextBox textBoxKennwort;
 	private Button btLogin;
+	
 	private TextBox tBUser;
 	private TextBox tBEmail;
 	private Button btSend;
 	
+	private TextBox tBAdmin;
+	private TextBox tbpwd;
+	private Button btAdminLogin;
+	
 	public static User userOnline;
 	private Label lbLoginFail;
+	private Label adminLoginFail;
 	private String version;
-	
 	
 	public void onModuleLoad() {
 			
@@ -64,9 +70,13 @@ public class LoginSimulation  implements EntryPoint{
 		
 		forgotPwdPanel = new VerticalPanel();
 		forgotPwdPanel.setSize("350px", "182px");	
+		
+		adminPanel = new VerticalPanel();
+		adminPanel.setSize("350px", "182px");	
 			
-		tabLayoutPanel.add(loginPanel, "Login", false);
+		tabLayoutPanel.add(loginPanel, "Login", true);
 		tabLayoutPanel.add(forgotPwdPanel, "Passwort vergessen", false);
+		tabLayoutPanel.add(adminPanel, "Admin", false);
 		
 		panelLogin.add(tabLayoutPanel,0,110);
 		RootPanel.get().add(panelLogin, 0, 0);	
@@ -156,6 +166,51 @@ public class LoginSimulation  implements EntryPoint{
 			{
 				public void onClick(ClickEvent event) {
 					tBEmail.setText("");
+				}
+			});
+			
+		//Admin Panel	
+			
+		// TextBox für den Usernamen
+		tBAdmin = new TextBox();
+		adminPanel.add(tBAdmin);
+		tBAdmin.setSize("300px", "30px");
+		tBAdmin.setText("Admin Name");
+		
+		// TextBox für das Kennwort		
+		tbpwd = new PasswordTextBox();
+		adminPanel.add(tbpwd);
+		tbpwd.setText("Kennwort");
+		tbpwd.setSize("300px", "30px");
+			
+		//Login Fail
+//			lbLoginFail.setStyleName("gwt-PasswortUnbekannt");
+		adminLoginFail = new Label();
+		adminPanel.add(adminLoginFail);
+		adminLoginFail.setSize("300px", "12px");
+			
+			//Button Bestätigung
+		btAdminLogin = new Button("Login");
+		adminPanel.add(btAdminLogin);
+		btAdminLogin.setSize("100px", "30px");
+		
+			
+		btLogin.addClickHandler(new ClickHandler() 
+		{
+			public void onClick(ClickEvent event) {
+				//TODO
+			}
+		});
+			textBoxKennwort.addClickHandler(new ClickHandler() //löscht den Inhalt der Textbox, damit der User seine Daten eingeben kann 
+			{
+				public void onClick(ClickEvent event) {
+					tbpwd.setText("");
+				}
+			});
+			textBoxUsername.addClickHandler(new ClickHandler() //löscht den Inhalt der Textbox, damit der User seine Daten eingeben kann 
+			{
+				public void onClick(ClickEvent event) {
+					tBAdmin.setText("");
 				}
 			});
 

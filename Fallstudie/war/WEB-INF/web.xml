@@ -16,17 +16,27 @@
     <servlet-name>login</servlet-name>
     <url-pattern>/fallstudie/login</url-pattern>
   </servlet-mapping>
-    
-  <servlet>
-    <servlet-name>homeServlet</servlet-name>
+  
+    <servlet>
+    <servlet-name>home</servlet-name>
     <servlet-class>de.dhbw.wwi11sca.skdns.server.HomeServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
-    <servlet-name>homeServlet</servlet-name>
+    <servlet-name>home</servlet-name>
     <url-pattern>/fallstudie/home</url-pattern>
   </servlet-mapping>
   
+    <servlet>
+    <servlet-name>unternehmen</servlet-name>
+    <servlet-class>de.dhbw.wwi11sca.skdns.server.UnternehmenServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>unternehmen</servlet-name>
+    <url-pattern>/fallstudie/unternehmen</url-pattern>
+  </servlet-mapping>
+      
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>Fallstudie.html</welcome-file>

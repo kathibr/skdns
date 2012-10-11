@@ -5,7 +5,6 @@ import java.io.Serializable;
 public class Unternehmen implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
-	private String name;
 	private int umsatz;
 	private int gewinn;
 	private double marktAnteil;
@@ -13,29 +12,22 @@ public class Unternehmen implements Serializable{
 	private Produkt produkt;
 	 
 	public Unternehmen(){}
-	public Unternehmen(String name,int umsatz, int gewinn, double marktAnteil, String nachfrageTendenz, Produkt produkt){
-		this.name=name;
+	
+	public Unternehmen(int umsatz, int gewinn, double marktAnteil, String nachfrageTendenz, Produkt produkt){
 		this.umsatz=umsatz;
 		this.gewinn=gewinn;
 		this.marktAnteil=marktAnteil;
 		this.nachfrageTendenz=nachfrageTendenz;
 		this.produkt=produkt;
 	}
-	public Unternehmen(String name,int umsatz, int gewinn, double marktAnteil, String nachfrageTendenz){
-		this.name=name;
+	public Unternehmen(int umsatz, int gewinn, double marktAnteil, String nachfrageTendenz){
 		this.umsatz=umsatz;
 		this.gewinn=gewinn;
 		this.marktAnteil=marktAnteil;
 		this.nachfrageTendenz=nachfrageTendenz;
 		
 	}
-	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
+
 	public int getUmsatz() {
 		return umsatz;
 	}

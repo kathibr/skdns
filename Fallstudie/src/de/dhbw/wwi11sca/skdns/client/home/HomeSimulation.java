@@ -92,12 +92,10 @@ public class HomeSimulation implements EntryPoint {
 	@Override
 	public void onModuleLoad() {
 	
-
 		// allgemeine Panels
 		absolutePanelHome = new AbsolutePanel();
 		RootPanel.get().add(absolutePanelHome,0,0);
 		absolutePanelHome.setSize("1024px", "768px");
-		
 		
 		Image image = new Image("fallstudie/gwt/clean/images/logo.png");
 		absolutePanelHome.add(image, 0, 0);
@@ -106,11 +104,10 @@ public class HomeSimulation implements EntryPoint {
 		labelEigenesUN = new Label("Eigenes Unternehmen");
 		labelEigenesUN.setStyleName("gwt-Home-Label");
 		absolutePanelHome.add(labelEigenesUN, 10, 115);
-		
-		
+				
 		labelAndereUN = new Label("Andere Unternehmen");
 		labelAndereUN.setStyleName("gwt-Home-Label");
-		absolutePanelHome.add(labelAndereUN, 10, 255);
+		absolutePanelHome.add(labelAndereUN, 530, 115);
 		
 		// Buttons
 	
@@ -154,12 +151,12 @@ public class HomeSimulation implements EntryPoint {
 		
 		tableEigenesUnternehmen = new CellTable<EigenesUnternehmen>();
 		absolutePanelHome.add(tableEigenesUnternehmen, 0, 144);
-		tableEigenesUnternehmen.setSize("622px", "100px");
+		tableEigenesUnternehmen.setSize("500px", "100px");
 		
-		TextColumn<EigenesUnternehmen> nameEColumn = new TextColumn<EigenesUnternehmen>(){
+		TextColumn<EigenesUnternehmen> firmaEColumn = new TextColumn<EigenesUnternehmen>(){
 			@Override
 			public String getValue(EigenesUnternehmen unternehmen) {
-				return unternehmen.getName();
+				return unternehmen.getFirma();
 			}			
 		};
 		TextColumn<EigenesUnternehmen> umsatzEColumn = new TextColumn<EigenesUnternehmen>(){
@@ -192,35 +189,23 @@ public class HomeSimulation implements EntryPoint {
 				return new Double(unternehmen.getProdukt().getPreis()).toString();
 			}			
 		};
-		TextColumn<EigenesUnternehmen> FixkostenEColumn = new TextColumn<EigenesUnternehmen>(){
-			@Override
-			public String getValue(EigenesUnternehmen unternehmen) {
-				return new Double(unternehmen.getFixkosten()).toString();
-			}			
-		};
-		tableEigenesUnternehmen.addColumn(nameEColumn, "Name");
+
+		tableEigenesUnternehmen.addColumn(firmaEColumn, "Firma");
 		tableEigenesUnternehmen.addColumn(umsatzEColumn, "Umsatz");
 		tableEigenesUnternehmen.addColumn(gewinnEColumn, "Gewinn");
 		tableEigenesUnternehmen.addColumn(marktAnteilEColumn, "Marktanteil");
-		tableEigenesUnternehmen.addColumn(produktMengeEColumn, "Produkt: Menge");
-		tableEigenesUnternehmen.addColumn(produktPreisEColumn, "Produkt: Preis");
-		tableEigenesUnternehmen.addColumn(FixkostenEColumn, "Fixkosten");
+		tableEigenesUnternehmen.addColumn(produktPreisEColumn, "Produktpreis");
+		tableEigenesUnternehmen.addColumn(produktMengeEColumn, "Absatzmenge");
 		
 
-			
+		
 		
 		// CellTable für andere Unternehmen
 		
 		tableUnternehmen = new CellTable<Unternehmen>();
-		absolutePanelHome.add(tableUnternehmen, 0, 270);
-		tableUnternehmen.setSize("622px", "200px");
+		absolutePanelHome.add(tableUnternehmen, 530, 144);
+		tableUnternehmen.setSize("500px", "200px");
 				
-		TextColumn<Unternehmen> nameColumn = new TextColumn<Unternehmen>(){
-			@Override
-			public String getValue(Unternehmen unternehmen) {
-				return unternehmen.getName();
-			}			
-		};
 		TextColumn<Unternehmen> umsatzColumn = new TextColumn<Unternehmen>(){
 			@Override
 			public String getValue(Unternehmen unternehmen) {
@@ -251,12 +236,15 @@ public class HomeSimulation implements EntryPoint {
 				return new Double(unternehmen.getProdukt().getPreis()).toString();
 			}			
 		};
-		tableUnternehmen.addColumn(nameColumn, "Name");
+		
 		tableUnternehmen.addColumn(umsatzColumn, "Umsatz");
 		tableUnternehmen.addColumn(gewinnColumn, "Gewinn");
 		tableUnternehmen.addColumn(marktAnteilColumn, "Marktanteil");
-		tableUnternehmen.addColumn(produktMengeColumn, "Produkt: Menge");
-		tableUnternehmen.addColumn(produktPreisColumn, "Produkt: Preis");
+		tableUnternehmen.addColumn(produktPreisColumn, "Produktpreis");
+		tableUnternehmen.addColumn(produktMengeColumn, "Absatzmenge");
+		
+		
+		
 
 		//Call
 		
@@ -288,13 +276,13 @@ public class HomeSimulation implements EntryPoint {
 	     
 	        }
 	    }
-		public class GetEigenesUnternehmenCallback implements AsyncCallback<List<EigenesUnternehmen>> {
+		public class GetEigenesUnternehmenCallback implements AsyncCallback<EigenesUnternehmen> {
 			
 	        @Override
 	        public void onFailure(Throwable caught) { }
 	
 	        @Override
-	        public void onSuccess(List<EigenesUnternehmen> result) {
+	        public void onSuccess(EigenesUnternehmen result) {
 	        	
 	    		ListDataProvider<EigenesUnternehmen> dataEProvider = new ListDataProvider<EigenesUnternehmen>();
 	    	    // Connect the table to the data provider.
@@ -302,10 +290,8 @@ public class HomeSimulation implements EntryPoint {
 	    			
 	    	   // Add the data to the data provider, which automatically pushes it to the widget.
 	    	    unEList = dataEProvider.getList();
+	        	unEList.add(result);
 	        	
-	        	for (EigenesUnternehmen unternehmen : result) {
-	                unEList.add(unternehmen);
-	        	}
 	     
 	        }
 	    }

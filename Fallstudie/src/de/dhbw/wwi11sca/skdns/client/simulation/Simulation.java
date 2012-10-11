@@ -84,7 +84,7 @@ public class Simulation implements EntryPoint {
 		RootPanel rootPanel = RootPanel.get();
 		rootPanel.setSize("1024", "768");
 		rootPanel.add(absolutePanelSimulation, 0, 0);
-		absolutePanelSimulation.setSize("1024", "768px");
+		absolutePanelSimulation.setSize("844px", "768px");
 
 		unternehmenAktualisieren();
 

@@ -9,7 +9,7 @@ import de.dhbw.wwi11sca.skdns.shared.Unternehmen;
 public interface HomeServiceAsync {
 
 	void getUnternehmen(AsyncCallback<List<Unternehmen>> callback);
-	void getEigenesUnternehmen(AsyncCallback<List<EigenesUnternehmen>> callback);
+	void getEigenesUnternehmen(AsyncCallback<EigenesUnternehmen> callback);
 	void loginServer(String name, AsyncCallback<String> callback);
 
 }

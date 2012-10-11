@@ -1,12 +1,18 @@
 package de.dhbw.wwi11sca.skdns.server;
 
+import java.net.UnknownHostException;
 import java.util.List;
 
+import com.google.code.morphia.Datastore;
+import com.google.code.morphia.Morphia;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.mongodb.Mongo;
+import com.mongodb.MongoException;
 
 import de.dhbw.wwi11sca.skdns.client.unternehmen.UnternehmenService;
 import de.dhbw.wwi11sca.skdns.shared.EigenesUnternehmen;
 import de.dhbw.wwi11sca.skdns.shared.Unternehmen;
+import de.dhbw.wwi11sca.skdns.shared.User;
 
 @SuppressWarnings("serial")
 public class UnternehmenServiceImpl extends RemoteServiceServlet implements
@@ -14,14 +20,28 @@ public class UnternehmenServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public List<Unternehmen> getUnternehmen() {
-		// TODO Unternehmen aus der Datenbank holen
-		return null;
+		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
+		List<Unternehmen> dbUN =  ds.createQuery(Unternehmen.class).asList();
+		return dbUN;
 	}
-
 	@Override
 	public EigenesUnternehmen getEigenesUnternehmen() {
-		// TODO Eigenes Unternehmen aus der Datenbank holen
-		return null;
+		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
+		List<EigenesUnternehmen> dbEUN =  ds.createQuery(EigenesUnternehmen.class).asList();
+		EigenesUnternehmen singleUN = dbEUN.get(0);
+		
+		return singleUN;
 	}
 
+	private static Mongo getMongo() {
+        Mongo m = null;
+	    try {
+            m = new Mongo("localhost", 27017);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (MongoException e) {
+            e.printStackTrace();
+        }
+        return m;
+	}
 }
