@@ -1,5 +1,11 @@
 package de.dhbw.wwi11sca.skdns.client.login;
-
+/**
+ * 
+ * @author SKDNS Marktsimulationen
+ * 
+ *         Die LoginSimulation enthält das Frontend des Logins.
+ * 
+ */
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -8,239 +14,190 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.Image;
-import de.dhbw.wwi11sca.skdns.shared.*;
+import de.dhbw.wwi11sca.skdns.shared.User;
 import de.dhbw.wwi11sca.skdns.client.home.HomeSimulation;
-import com.google.gwt.user.client.ui.TabLayoutPanel;
-import com.google.gwt.dom.client.Style.Unit;
 
-public class LoginSimulation  implements EntryPoint{
-		
-//	AbsolutePanel absolutePanelLogin = new AbsolutePanel();
-//	TextBox textBoxUsername = new TextBox();
-//	PasswordTextBox textBoxKennwort = new PasswordTextBox();
-//	Button ButtonLogin = new Button("Login");
-//	Label LabelAnmeldeFehlschlag = new Label("");
-//	Label labelSimulationsVersion = new Label("");
-//	Image imageLoginLogo = new Image();
-//	HomeSimulation home = new HomeSimulation();
-//	public static User user1;
-//	String version = new String ("0.00.1");
-//	boolean AnmeldeBestaetigung;
-	private final LoginServiceAsync LoginService = GWT.create(LoginService.class);
-	//Panel
-	private AbsolutePanel panelLogin;
-	private TabLayoutPanel tabLayoutPanel;
-	private VerticalPanel loginPanel;
-	private VerticalPanel forgotPwdPanel;
-	private VerticalPanel adminPanel;
-	
-	private TextBox textBoxUsername;
-	private PasswordTextBox textBoxKennwort;
-	private Button btLogin;
-	
-	private TextBox tBUser;
-	private TextBox tBEmail;
-	private Button btSend;
-	
-	private TextBox tBAdmin;
-	private TextBox tbpwd;
-	private Button btAdminLogin;
-	
+
+
+public class LoginSimulation implements EntryPoint {
+
+	private final LoginServiceAsync LoginService = GWT
+			.create(LoginService.class);
+
+	// Panel
+	private AbsolutePanel panelLogin = new AbsolutePanel();
+
+	// Widgets
+	Image logo = new Image("fallstudie/gwt/clean/images/Logo.JPG");
+	private TextBox textBoxUsername = new TextBox();
+	private PasswordTextBox textBoxPassword = new PasswordTextBox();
+	private Button btLogin = new Button("Login");
+	private Button btForgotPassword = new Button("Passwort vergessen?");
+
 	public static User userOnline;
-	private Label lbLoginFail;
-	private Label adminLoginFail;
-	private String version;
-	
+	private Label lbInfo = new Label();
+	String admin = new String("admin");
+
 	public void onModuleLoad() {
-			
-		panelLogin = new AbsolutePanel();
-		panelLogin.setSize("624px", "382px");
-			
-		tabLayoutPanel = new TabLayoutPanel(1.5, Unit.EM);
-		tabLayoutPanel.setSize("360px", "216px");
-		
-		loginPanel = new VerticalPanel();
-		loginPanel.setSize("350px", "182px");		
-		
-		forgotPwdPanel = new VerticalPanel();
-		forgotPwdPanel.setSize("350px", "182px");	
-		
-		adminPanel = new VerticalPanel();
-		adminPanel.setSize("350px", "182px");	
-			
-		tabLayoutPanel.add(loginPanel, "Login", true);
-		tabLayoutPanel.add(forgotPwdPanel, "Passwort vergessen", false);
-		tabLayoutPanel.add(adminPanel, "Admin", false);
-		
-		panelLogin.add(tabLayoutPanel,0,110);
-		RootPanel.get().add(panelLogin, 0, 0);	
-			
-		Image image = new Image("fallstudie/gwt/clean/images/logo.png");
-		panelLogin.add(image, 0, 0);
-		image.setSize("624px", "110px");
-		
-		//Login Panel	
-		
-			// TextBox für den Usernamen
-			textBoxUsername = new TextBox();
-			loginPanel.add(textBoxUsername);
-			textBoxUsername.setSize("300px", "30px");
-			textBoxUsername.setText("Username");
-			
-			// TextBox für das Kennwort		
-			textBoxKennwort = new PasswordTextBox();
-			loginPanel.add(textBoxKennwort);
-			textBoxKennwort.setText("Kennwort");
-			textBoxKennwort.setSize("300px", "30px");
-			
-			//Login Fail
-//			lbLoginFail.setStyleName("gwt-PasswortUnbekannt");
-			lbLoginFail = new Label();
-			loginPanel.add(lbLoginFail);
-			lbLoginFail.setSize("300px", "12px");
-			
-			//Button Bestätigung
-			btLogin = new Button("Login");
-			loginPanel.add(btLogin);
-			btLogin.setSize("100px", "30px");
-			
-			
-			btLogin.addClickHandler(new ClickHandler() 
-			{
-				public void onClick(ClickEvent event) {
-					userOnline = new User();
-					userOnline.setKennwort(textBoxKennwort.getText());
-					userOnline.setUsername(textBoxUsername.getText());
-					LoginService.checkLogin(userOnline, new CheckLoginCallback());	
-				}
-			});
-			textBoxKennwort.addClickHandler(new ClickHandler() //löscht den Inhalt der Textbox, damit der User seine Daten eingeben kann 
-			{
-				public void onClick(ClickEvent event) {
-					textBoxKennwort.setText("");
-				}
-			});
-			textBoxUsername.addClickHandler(new ClickHandler() //löscht den Inhalt der Textbox, damit der User seine Daten eingeben kann 
-			{
-				public void onClick(ClickEvent event) {
-					textBoxUsername.setText("");
-				}
-			});
-			
-			
-		//ForgotPwd Panel	
-			
-			tBUser = new TextBox();
-			forgotPwdPanel.add(tBUser);
-			tBUser.setSize("300px", "30px");
-			tBUser.setText("Username");
-			
-			tBEmail = new TextBox();
-			forgotPwdPanel.add(tBEmail);
-			tBEmail.setSize("300px", "30px");
-			tBEmail.setText("E-Mail");
-			
-			btSend = new Button("Senden");
-			forgotPwdPanel.add(btSend);
-			btSend.setSize("100px", "30px");
-								
-			btSend.addClickHandler(new ClickHandler() 
-			{
-				public void onClick(ClickEvent event) {
-					//ToDo
-				}
-			});
-			tBUser.addClickHandler(new ClickHandler() //löscht den Inhalt der Textbox, damit der User seine Daten eingeben kann 
-			{
-				public void onClick(ClickEvent event) {
-					tBUser.setText("");
-				}
-			});
-			tBEmail.addClickHandler(new ClickHandler() //löscht den Inhalt der Textbox, damit der User seine Daten eingeben kann 
-			{
-				public void onClick(ClickEvent event) {
-					tBEmail.setText("");
-				}
-			});
-			
-		//Admin Panel	
-			
-		// TextBox für den Usernamen
-		tBAdmin = new TextBox();
-		adminPanel.add(tBAdmin);
-		tBAdmin.setSize("300px", "30px");
-		tBAdmin.setText("Admin Name");
-		
-		// TextBox für das Kennwort		
-		tbpwd = new PasswordTextBox();
-		adminPanel.add(tbpwd);
-		tbpwd.setText("Kennwort");
-		tbpwd.setSize("300px", "30px");
-			
-		//Login Fail
-//			lbLoginFail.setStyleName("gwt-PasswortUnbekannt");
-		adminLoginFail = new Label();
-		adminPanel.add(adminLoginFail);
-		adminLoginFail.setSize("300px", "12px");
-			
-			//Button Bestätigung
-		btAdminLogin = new Button("Login");
-		adminPanel.add(btAdminLogin);
-		btAdminLogin.setSize("100px", "30px");
-		
-			
-		btLogin.addClickHandler(new ClickHandler() 
-		{
+
+		// RootPanel: root
+		RootPanel root = RootPanel.get();
+		root.setSize("1024px", "768px");
+
+		// AbsolutePanel: panelLogin
+		root.get().add(panelLogin, 0, 0);
+		panelLogin.setSize("1024px", "768px");
+		lbInfo.setSize("310px", "12px");
+
+		// Firmenlogo: logo
+		panelLogin.add(logo, 205, 70);
+		logo.setSize("360px", "110px");
+
+		// TextBox für den Usernamen: textBoxUsername
+		panelLogin.add(textBoxUsername, 236, 228);
+		textBoxUsername.setSize("300px", "24px");
+		textBoxUsername.setText("Username");
+
+		// TextBox für das Kennwort: textBoxPassword
+		panelLogin.add(textBoxPassword, 236, 283);
+		textBoxPassword.setText("Kennwort");
+		textBoxPassword.setSize("300px", "24px");
+
+		// Informationsfeld: lfInfo
+		panelLogin.add(lbInfo, 236, 404);
+
+		// Buttons
+
+		// Button vergessenes Passwort: btForgotPassword
+		panelLogin.add(btForgotPassword, 397, 353);
+		btForgotPassword.setSize("149px", "30px");
+
+		// Button einloggen: btLogin
+		panelLogin.add(btLogin, 236, 353);
+		btLogin.setSize("100px", "30px");
+
+		// Eventhandler
+
+		// Eventhandler Login
+		btLogin.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				//TODO
+				userOnline = new User();
+				userOnline.setKennwort(textBoxPassword.getText());
+				userOnline.setUsername(textBoxUsername.getText());
+				// Überprüfen, ob es sich bei dem einloggenden User um den admin
+				// handelt
+				// TODO funktioniert noch nicht
+				if (userOnline.getUsername() == admin) {
+					LoginService.checkAdmin(userOnline,
+							new CheckAdminCallback());
+				} else {
+					LoginService.checkLogin(userOnline,
+							new CheckLoginCallback());
+				}
 			}
 		});
-			textBoxKennwort.addClickHandler(new ClickHandler() //löscht den Inhalt der Textbox, damit der User seine Daten eingeben kann 
-			{
-				public void onClick(ClickEvent event) {
-					tbpwd.setText("");
-				}
-			});
-			textBoxUsername.addClickHandler(new ClickHandler() //löscht den Inhalt der Textbox, damit der User seine Daten eingeben kann 
-			{
-				public void onClick(ClickEvent event) {
-					tBAdmin.setText("");
-				}
-			});
 
-		
-	}	
-			
+		// Eventhandler vergessenes Passwort
+		btForgotPassword.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				userOnline = new User();
+				userOnline.setUsername(textBoxUsername.getText());
+				LoginService.forgotPassword(userOnline,
+						new ForgotPasswordCallback());
+			}
+		});
 
-			// Label, dass dem User Informationen über die Version gibt
-//			labelSimulationsVersion.setStyleName("gwt-Informationslabel");
-//			absolutePanelLogin.add(labelSimulationsVersion, 10, 373);
-//			labelSimulationsVersion.setText("Version " + version);
-//			imageLoginLogo.setUrl("fallstudie/gwt/clean/images/Logo.JPG");
+		// Eventhandler Password TextBox: löscht den Textboxinhalt, damit der
+		// User Daten eingeben kann
+		textBoxPassword.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				textBoxPassword.setText("");
+			}
 
-	    public class CheckLoginCallback implements AsyncCallback<java.lang.Void> {
+		});
 
-	        @Override
-	        public void onFailure(Throwable caught) {
-	        	lbLoginFail.setText("Username oder Passwort falsch/ unbekannt.");
-	        	
-	        }
+		// Eventhandler Username TextBox: löscht den Textboxinhalt, damit der
+		// User Daten eingeben kann
+		textBoxUsername.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				textBoxUsername.setText("");
+			}
+		});
+	}
 
-	        @Override
-	        public void onSuccess(Void result) {
-	        	
-				RootPanel.get().clear();
-				HomeSimulation home = new HomeSimulation();
-				home.onModuleLoad();
-	      
-	        }
-	    }
+	/**
+	 * 
+	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher die
+	 * Logindaten mit den Daten der DB vergleicht.
+	 * 
+	 */
+	public class CheckLoginCallback implements AsyncCallback<java.lang.Void> {
+
+		@Override
+		public void onFailure(Throwable caught) {
+			lbInfo.setText("Username oder Passwort falsch/ unbekannt.");
+
+		}
+
+		@Override
+		public void onSuccess(Void result) {
+
+			RootPanel.get().clear();
+			HomeSimulation home = new HomeSimulation();
+			home.onModuleLoad();
+
+		}
+	}
+
+	/**
+	 * 
+	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher
+	 * speichert, dass der User sein Passwort vergessen hat
+	 * 
+	 */
+	public class ForgotPasswordCallback implements
+			AsyncCallback<java.lang.Void> {
+
+		@Override
+		public void onFailure(Throwable caught) {
+			lbInfo.setText("Derzeit liegt leider ein Systemfehler vor. Versuchen Sie es später erneut.");
+
+		}
+
+		@Override
+		public void onSuccess(Void result) {
+
+			lbInfo.setText("Der Admin wurde informiert.");
+
+		}
+	}
+
+	/**
+	 * 
+	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher das
+	 * Adminpasswort mit der DB vergleicht.
+	 * 
+	 */
+	public class CheckAdminCallback implements AsyncCallback<java.lang.Void> {
+
+		@Override
+		public void onFailure(Throwable caught) {
+			lbInfo.setText("Adminpasswort falsch.");
+
+		}
+
+		@Override
+		public void onSuccess(Void result) {
+
+			RootPanel.get().clear();
+			// TODO: AdminSimulation admin = new AdminSimulation();
+			// admin.onModuleLoad();
+
+		}
+	}
 }
-
-
