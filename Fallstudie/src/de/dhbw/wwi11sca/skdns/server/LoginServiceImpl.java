@@ -43,6 +43,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 		String dbKennwort = (String) first.getKennwort();
 
 		if ((username.equals(dbUsername)) && (kennwort.equals(dbKennwort))) {
+			AdminServiceImpl.getAdmin().setLoginCount(1);
 			// success
 		} else {
 			throw new DelistedException("ERR");

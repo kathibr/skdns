@@ -9,6 +9,8 @@ package de.dhbw.wwi11sca.skdns.shared;
  */
 import java.io.Serializable;
 
+import com.google.gwt.user.client.ui.SimpleCheckBox;
+
 public class User implements Serializable {
 
 	/**
@@ -19,7 +21,7 @@ public class User implements Serializable {
 	private String kennwort = new String();
 	private String mail = new String();
 	private boolean forgottenPasswort = false;
-
+	
 	public User() {
 	}
 
