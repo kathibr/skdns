@@ -20,7 +20,7 @@ public class User implements Serializable {
 	private String username = new String();
 	private String kennwort = new String();
 	private String mail = new String();
-	private boolean forgottenPasswort = false;
+	private boolean forgottenPassword = false;
 	
 	public User() {
 	}
@@ -29,6 +29,7 @@ public class User implements Serializable {
 		this.username = username;
 		this.kennwort = kennwort;
 		this.mail = mail;
+		this.forgottenPassword = false;
 	}
 
 	public String getUsername() {
@@ -55,12 +56,12 @@ public class User implements Serializable {
 		this.mail = mail;
 	}
 
-	public boolean isForgottenPasswort() {
-		return forgottenPasswort;
+	public boolean isForgottenPassword() {
+		return forgottenPassword;
 	}
 
-	public void setForgottenPasswort(boolean forgottenPasswort) {
-		this.forgottenPasswort = forgottenPasswort;
+	public void setForgottenPassword(boolean forgottenPassword) {
+		this.forgottenPassword = forgottenPassword;
 	}
 
 }

@@ -15,6 +15,8 @@ import de.dhbw.wwi11sca.skdns.client.login.LoginService;
 import de.dhbw.wwi11sca.skdns.shared.User;
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
+import com.google.code.morphia.query.Query;
+import com.google.code.morphia.query.UpdateOperations;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
@@ -69,21 +71,28 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public void forgotPassword(User user) throws DelistedException {
-		userForgottenPassword = new User();
-		userForgottenPassword.setUsername(user.getUsername().trim());
-		userForgottenPassword.setForgottenPasswort(true);
+//		userForgottenPassword = new User();
+//		userForgottenPassword.setUsername(user.getUsername().trim());
+//		userForgottenPassword.setForgottenPasswort(true);
 
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
 
-		List<User> dbUser = ds.createQuery(User.class)
-				.filter("username =", username).asList();
+//		List<User> dbUser = ds.createQuery(User.class)
+//				.filter("username =", username).asList();
 
-		User first = dbUser.get(0);
+//		User first = dbUser.get(0);
 
-		userForgottenPassword.setMail(first.getMail());
-		userForgottenPassword.setKennwort(first.getKennwort());
+//		userForgottenPassword.setMail(first.getMail());
+//		userForgottenPassword.setKennwort(first.getKennwort());
 
-		ds.save(userForgottenPassword);
+		//ds.save(userForgottenPassword);
+
+		Query<User> updateQuery = ds.createQuery(User.class).filter("username =", user.getUsername());
+			
+		UpdateOperations<User> ops;
+		ops = ds.createUpdateOperations(User.class).set("forgottenPassword", "true");
+		
+		ds.update(updateQuery, ops);
 		// TODO: Daten aus DB löschen
 		// ds.delete(dbUser.get(0));
 
