@@ -92,7 +92,7 @@ public class LoginSimulation implements EntryPoint {
 				// Überprüfen, ob es sich bei dem einloggenden User um den admin
 				// handelt
 				// TODO funktioniert noch nicht
-				if (userOnline.getUsername() == admin) {
+				if (userOnline.getUsername().equals(admin)) {
 					LoginService.checkAdmin(userOnline,
 							new CheckAdminCallback());
 				} else {
