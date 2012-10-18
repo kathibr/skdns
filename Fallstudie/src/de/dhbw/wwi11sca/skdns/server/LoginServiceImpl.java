@@ -71,21 +71,8 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public void forgotPassword(User user) throws DelistedException {
-//		userForgottenPassword = new User();
-//		userForgottenPassword.setUsername(user.getUsername().trim());
-//		userForgottenPassword.setForgottenPasswort(true);
 
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
-
-//		List<User> dbUser = ds.createQuery(User.class)
-//				.filter("username =", username).asList();
-
-//		User first = dbUser.get(0);
-
-//		userForgottenPassword.setMail(first.getMail());
-//		userForgottenPassword.setKennwort(first.getKennwort());
-
-		//ds.save(userForgottenPassword);
 
 		Query<User> updateQuery = ds.createQuery(User.class).filter("username =", user.getUsername());
 			
@@ -93,8 +80,6 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 		ops = ds.createUpdateOperations(User.class).set("forgottenPassword", "true");
 		
 		ds.update(updateQuery, ops);
-		// TODO: Daten aus DB löschen
-		// ds.delete(dbUser.get(0));
 
 		// success
 

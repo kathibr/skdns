@@ -11,201 +11,196 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.IntegerBox;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.view.client.ListDataProvider;
 
-import de.dhbw.wwi11sca.skdns.client.home.*;
-import de.dhbw.wwi11sca.skdns.client.home.HomeSimulation.GetEigenesUnternehmenCallback;
-import de.dhbw.wwi11sca.skdns.shared.*;
+import de.dhbw.wwi11sca.skdns.client.home.HomeSimulation;
+import de.dhbw.wwi11sca.skdns.shared.EigenesUnternehmen;
+import de.dhbw.wwi11sca.skdns.shared.SimulationVersion;
+
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.ScrollPanel;
 
 public class Simulation implements EntryPoint {
 
+	// Panels
 	AbsolutePanel absolutePanelSimulation = new AbsolutePanel();
-	Label labelAusgeloggt = new Label("Sie wurden erfolgreich ausgeloggt.");
-	Label labelHome = new Label("Home");
-	Label lblSimulation = new Label(">  Simulation");
-	Button btnLogout = new Button("Logout");
-	HorizontalPanel horizontalPanel = new HorizontalPanel();
-	AbsolutePanel absolutePanelEigenesUN = new AbsolutePanel();
-	AbsolutePanel[] absolutePanelUnternehmen = new AbsolutePanel[3];
-	AbsolutePanel[] absolutePanelJahre = new AbsolutePanel[100];
-	Label labelEigenesUnternehmen = new Label("Eigenes Unternehmen");
-	Label labelUmsatz = new Label("Umsatz:");
-	Label labelGewinn = new Label("Gewinn:");
-	Label labelMarktanteil = new Label("Marktanteil:");
-	Label labelNachfrageTendenz = new Label("Nachfragetendenz:");
-	Label labelUmsatzEUN = new Label("0.00\u20AC");
-	Label labelGewinnEUN = new Label("0.00\u20AC");
-	Label labelMarktanteilEUN = new Label("0%");
-	Label labelNachfrageEUN = new Label("steigend");
-	Label[] labelUnternehmen = new Label[3];
-	Label[] labelUmsatzUnternehmen = new Label[3];
-	Label[] labelUmsatzUnternehmenWert = new Label[3];
-	Label[] labelGewinnUnternehmen = new Label[3];
-	Label[] labelGewinnUnternehmenWert = new Label[3];
-	Label[] labelMarktanteilUnternehmen = new Label[3];
-	Label[] labelMarktanteilUnternehmenWert = new Label[3];
-	Label[] labelNachfrageTendenzUnternehmen = new Label[3];
-	Label[] labelNachfrageTendenzUnternehmenWert = new Label[3];
-	AbsolutePanel absolutePanelInvestitionen = new AbsolutePanel();
-	Label labelInvestitionen = new Label("Investitionen Eigenes Unternehmen");
+	AbsolutePanel absolutePanelInvest = new AbsolutePanel();
+
+	// Widgets
+	Label lbHome = new Label("Home");
+	Label lbSimulation = new Label(">  Simulation");
+	Label lbLogout = new Label("Sie wurden erfolgreich ausgeloggt.");
+
+	Button btSimulation = new Button("Simulation starten");
+	Button btNextYear = new Button("Folgejahr");
+	Button btLogout = new Button("Logout");
+
+	Label lbInvest = new Label("Investitionen:");
+	Label lbMarketing = new Label("Marketing:");
+	Label lbMachine = new Label("Maschinen:");
+	Label lbMachineValue = new Label("Wert:");
+	Label lbUsedPersonal = new Label("nötiges Personal:");
+	Label lbMachineCapacity = new Label("Kapazität:");
+	Label lbPersonal = new Label("Personal:");
+	Label lbPrice = new Label("Produktpreis:");
+
 	IntegerBox integerBoxMarketing = new IntegerBox();
-	IntegerBox integerBoxMaschinenWert = new IntegerBox();
+	IntegerBox integerBoxMachineValue = new IntegerBox();
+	IntegerBox integerBoxCapacity = new IntegerBox();
+	IntegerBox integerBoxMachineStaff = new IntegerBox();
 	IntegerBox integerBoxPersonal = new IntegerBox();
-	Label labelMarketing = new Label("Marketing:");
-	Label labelMaschinen = new Label("Maschinen:");
-	Label labelPersonal = new Label("Personal:");
-	Button buttonSimulation = new Button("Simulation starten");
-	Button buttonFolgejahr = new Button("Folgejahr");
-	AbsolutePanel absolutePanelJahrEins = new AbsolutePanel();
-	TabPanel tabPanelJahre = new TabPanel();
-	int jahr = 2;
-	int anzahlUnternehmen;
-	int version = 1;
-	int simulationsJahr = 2012;
-	EigenesUnternehmen eigenesUN = new EigenesUnternehmen();
-	Unternehmen[] unternehmen = new Unternehmen[3];
-	Label labelAnzahlMitarbeiter = new Label("Anzahl Mitarbeiter:");
-	Label labelKapazitaet = new Label("Maschinenkapazitaet:");
-	Label labelAnzahlMitarbeiterWert = new Label("0");
-	Label labelKapazitaetWert = new Label("0");
-	Label labelMaschinenWert = new Label("Wert:");
-	IntegerBox integerBoxKapazitaet = new IntegerBox();
-	Label labelMaschinenKapazitaet = new Label("Kapazität:");
-	Label lblNtigeMitarbeiter = new Label("nötige Mitarbeiter:");
-	IntegerBox integerBoxMaschinenMitarbeiter = new IntegerBox();
-	
-	CellTable<EigenesUnternehmen> tableEigenesUnternehmen;
-	List<EigenesUnternehmen> unEList;
-	private SimulationServiceAsync service = GWT.create(SimulationService.class);
+	IntegerBox integerBoxPrice = new IntegerBox();
 
-	@Override
+	ScrollPanel scrollPanelYears = new ScrollPanel();
+	TabPanel tabPanelYears = new TabPanel();
+	CellTable<EigenesUnternehmen> tableOwnCompany;
+	List<EigenesUnternehmen> companyList;
+	AbsolutePanel[] absolutePanelYear = new AbsolutePanel[1000];
+
+	int stackYear = 0;
+	int simulationYear = 1;
+	int simulationVersion = 1;
+	int deleteCounter = 0;
+
+	private SimulationServiceAsync service = GWT
+			.create(SimulationService.class);
+
 	public void onModuleLoad() {
-		// allgemeine Panels
-		RootPanel rootPanel = RootPanel.get();
-		rootPanel.setSize("1024", "768");
-		rootPanel.add(absolutePanelSimulation, 0, 0);
-		absolutePanelSimulation.setSize("844px", "768px");
+		// RootPanel : root
+		RootPanel root = RootPanel.get();
+		root.setSize("1024", "768");
 
-		unternehmenAktualisieren();
+		// Absolute Panel: absolutePanelSimulation
+		root.add(absolutePanelSimulation, 0, 0);
+		absolutePanelSimulation.setSize("1024px", "768px");
 
-		// Panel, um die Investitionen zu tätigen
-		absolutePanelSimulation.add(absolutePanelInvestitionen, 84, 276);
-		absolutePanelInvestitionen.setSize("700px", "151px");
+		// Informationsfelder
 
-		labelInvestitionen.setStyleName("gwt-UnternehmenLabel");
-		absolutePanelInvestitionen.add(labelInvestitionen, 10, 10);
-		labelInvestitionen.setSize("282px", "18px");
+		// Label zurück zur Home: lbHome
+		absolutePanelSimulation.add(lbHome, 30, 30);
+		lbHome.setStyleName("gwt-Home-Label");
+		// Label Simulation : lbSimulation
+		absolutePanelSimulation.add(lbSimulation, 84, 34);
 
+		// ScrollPanel, auf dem der TabPanel angebracht wird
+		absolutePanelSimulation.add(scrollPanelYears, 60, 401);
+		scrollPanelYears.setSize("894px", "300px");
+
+		// TabPanel, auf dem die Ergebnisse der Simulation angezeigt werden
+		scrollPanelYears.add(tabPanelYears);
+		tabPanelYears.setSize("100%", "100%");
+
+		// Darstellung der Unternehmen
 		uebersicht();
-		
-		// Marketing Investitionen
-		absolutePanelInvestitionen.add(labelMarketing, 20, 45);
-		absolutePanelInvestitionen.add(integerBoxMarketing, 86, 34);
-		integerBoxMarketing.setSize("94px", "25px");
 
-		// Maschinen Investitionen
-		absolutePanelInvestitionen.add(labelMaschinen, 14, 83);
-		absolutePanelInvestitionen.add(integerBoxMaschinenWert, 86, 110);
-		integerBoxMaschinenWert.setSize("94px", "25px");
-		absolutePanelInvestitionen.add(labelMaschinenWert, 37, 123);
-		labelMaschinenWert.setSize("60px", "18px");
-		absolutePanelInvestitionen.add(integerBoxKapazitaet, 300, 110);
-		integerBoxKapazitaet.setSize("94px", "25px");
-		absolutePanelInvestitionen.add(labelMaschinenKapazitaet, 236, 123);
-		absolutePanelInvestitionen
-				.add(integerBoxMaschinenMitarbeiter, 520, 110);
-		integerBoxMaschinenMitarbeiter.setSize("94px", "25px");
-		absolutePanelInvestitionen.add(lblNtigeMitarbeiter, 410, 123);
+		// Investitionen
+		investitionLaden();
 
-		// Personal Investitionen
-		absolutePanelInvestitionen.add(labelPersonal, 239, 45);
-		absolutePanelInvestitionen.add(integerBoxPersonal, 300, 34);
-		integerBoxPersonal.setSize("94px", "25px");
+		// Buttons
 
-		// Button, um die Simulation mit den getätigten Investitionen zu starten
-		absolutePanelSimulation.add(buttonSimulation, 844, 310);
-		buttonSimulation.setSize("127px", "35px");
-		buttonSimulation.addClickHandler(new ClickHandler() {
+		// Simulation starten : buttonSimulation
+		absolutePanelSimulation.add(btSimulation, 795, 274);
+		btSimulation.setSize("127px", "35px");
+
+		// Simulation für das Folgejahr starten : buttonFolgejahr
+		absolutePanelSimulation.add(btNextYear, 795, 334);
+		btNextYear.setSize("127px", "35px");
+
+		// Logout : btLogout
+		absolutePanelSimulation.add(btLogout, 914, 10);
+		btLogout.setSize("100px", "35px");
+
+		// Eventhandler
+
+		// Simulation starten
+		btSimulation.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				// Daten aus den IntegerBoxen ablegen
-				Simulationsversion simulation = new Simulationsversion(
-						simulationsJahr, version);
-				simulation.setMaschineKapazitaet(integerBoxKapazitaet
-						.getValue());
-				simulation
-						.setMaschineMitarbeiter(integerBoxMaschinenMitarbeiter
-								.getValue());
-				simulation.setPersonal(integerBoxMaschinenWert.getValue());
-				simulation.setPersonal(integerBoxPersonal.getValue());
-				simulation.setMarketing(integerBoxMarketing.getValue());
-				version++;
+				absolutePanelYear[stackYear] = new AbsolutePanel();
+				absolutePanelYear[stackYear].setSize("100%", "250px");
 
-				AsyncCallback<Simulationsversion> callback = new AsyncCallback<Simulationsversion>() {
+				SimulationVersion version = new SimulationVersion(
+						simulationYear, simulationVersion);
 
-					@Override
-					public void onFailure(Throwable caught) {
-						// TODO onFailure
+				if (integerBoxMarketing.getValue() != null)
+					version.setMarketing(integerBoxMarketing.getValue());
+				if (integerBoxMachineValue.getValue() != null)
+					version.setMachineValue(integerBoxMachineValue.getValue());
+				if (integerBoxCapacity.getValue() != null)
+					version.setMachineCapacity(integerBoxCapacity.getValue());
+				if (integerBoxMachineStaff.getValue() != null)
+					version.setMachineStaff(integerBoxMachineStaff.getValue());
+				if (integerBoxPersonal.getValue() != null)
+					version.setPersonal(integerBoxPersonal.getValue());
+				if (integerBoxPrice.getValue() != null)
+					version.setPrice(integerBoxPrice.getValue());
 
-					}
+				deleteValueInvest();
 
-					@Override
-					public void onSuccess(Simulationsversion result) {
-						Simulationsversion simulationsErgebnis = new Simulationsversion(
-								result.getSimulationsJahr(), result
-										.getVersion());
-						simulationsErgebnis.setGewinn(result.getGewinn());
-						simulationsErgebnis.setUmsatz(result.getUmsatz());
-						simulationsErgebnis.setMarktAnteil(result
-								.getMarktAnteil());
-						simulationsErgebnis.setNachfrageTendenz(result
-								.getNachfrageTendenz());
+				tabPanelYears
+						.add(absolutePanelYear[stackYear], "Jahr "
+								+ simulationYear + " (" + simulationVersion
+								+ ")", true);
 
-						// TODO: Simulationsergebnisse anzeigen
-					}
-
-				};
-
-				service.getVersion(callback);
-				// TODO Simulation starten
+				stackYear++;
+				simulationVersion++;
+				// service.createSimulationCallback(version,
+				// new CreateSimulationCallback());
 			}
 		});
 
-		// Button, um einen weiteren Tab für ein weiteres Jahr zu tätigen
-		absolutePanelSimulation.add(buttonFolgejahr, 844, 368);
-		buttonFolgejahr.setSize("127px", "35px");
-		buttonFolgejahr.addClickHandler(new ClickHandler() {
+		// Simulation Folgejahr starten
+		btNextYear.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				// Simulationsjahr erhöhen
-				simulationsJahr++;
-				// weiteren Tab hinzufügen
-				absolutePanelJahre[jahr - 2] = new AbsolutePanel();
-				tabPanelJahre.add(absolutePanelJahre[jahr - 2], "Jahr" + jahr,
-						false);
-				absolutePanelJahre[jahr - 2].setSize("100%", "238");
-				// IntegerBoxen leeren
-				integerBoxMarketing.setValue(null);
-				integerBoxMaschinenWert.setValue(null);
-				integerBoxPersonal.setValue(null);
-				integerBoxMaschinenMitarbeiter.setValue(null);
-				integerBoxKapazitaet.setValue(null);
-				jahr++;
+				// TODO: Kommentieren
+				for (int i = deleteCounter; i < stackYear - 1; i++) {
+					tabPanelYears.remove(absolutePanelYear[i]);
+				}
+
+				deleteCounter = stackYear;
+				// TODO Ende
+				simulationYear++;
+				simulationVersion = 1;
+
+				absolutePanelYear[stackYear] = new AbsolutePanel();
+				absolutePanelYear[stackYear].setSize("100%", "250px");
+
+				SimulationVersion version = new SimulationVersion(
+						simulationYear, simulationVersion);
+
+				if (integerBoxMarketing.getValue() != null)
+					version.setMarketing(integerBoxMarketing.getValue());
+				if (integerBoxMachineValue.getValue() != null)
+					version.setMachineValue(integerBoxMachineValue.getValue());
+				if (integerBoxCapacity.getValue() != null)
+					version.setMachineCapacity(integerBoxCapacity.getValue());
+				if (integerBoxMachineStaff.getValue() != null)
+					version.setMachineStaff(integerBoxMachineStaff.getValue());
+				if (integerBoxPersonal.getValue() != null)
+					version.setPersonal(integerBoxPersonal.getValue());
+				if (integerBoxPrice.getValue() != null)
+					version.setPrice(integerBoxPrice.getValue());
+
+				deleteValueInvest();
+
+				tabPanelYears
+						.add(absolutePanelYear[stackYear], "Jahr "
+								+ simulationYear + " (" + simulationVersion
+								+ ")", true);
+
+				stackYear++;
+				simulationVersion++;
+				// service.createSimulationCallback(version,
+				// new CreateSimulationCallback());
 
 			}
 		});
 
-		// Label, dass zeigt, in welcher Sicht der User sich befindet
-		absolutePanelSimulation.add(labelHome, 30, 30);
-		labelHome.setStyleName("gwt-Home-Label");
-		absolutePanelSimulation.add(lblSimulation, 70, 30);
-
-		// Button, um auf die Home-Seite zurückzukehren
-		labelHome.addClickHandler(new ClickHandler() {
+		// zur Home zurückkehren
+		lbHome.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get().clear();
 				HomeSimulation home = new HomeSimulation();
@@ -213,264 +208,166 @@ public class Simulation implements EntryPoint {
 			}
 		});
 
-		// Logout-Button
-		absolutePanelSimulation.add(btnLogout, 914, 10);
-		btnLogout.setSize("100px", "35px");
-		btnLogout.addClickHandler(new ClickHandler() {
+		// Logout
+		btLogout.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				// TODO: Daten an DB übergeben
-
 				RootPanel.get().clear();
-				RootPanel.get().add(labelAusgeloggt);
+				RootPanel.get().add(lbLogout);
 			}
 		});
 
-		// TabPanel, auf dem die Ergebnisse der Simulation angezeigt werden
-		absolutePanelSimulation.add(tabPanelJahre, 60, 458);
-		tabPanelJahre.setSize("894px", "268px");
-		// erstes Jahr
-		tabPanelJahre.add(absolutePanelJahrEins, "Jahr 1", false);
-		absolutePanelJahrEins.setSize("100%", "238");
+	}
+
+	private void deleteValueInvest() {
+		integerBoxMarketing.setValue(null);
+		integerBoxMachineValue.setValue(null);
+		integerBoxCapacity.setValue(null);
+		integerBoxMachineStaff.setValue(null);
+		integerBoxPersonal.setValue(null);
+		integerBoxPrice.setValue(null);
 
 	}
 
-	
-	public class GetEigenesUnternehmenCallback implements AsyncCallback<EigenesUnternehmen> {
-		
-        @Override
-        public void onFailure(Throwable caught) { }
+	public void uebersicht() {
+		tableOwnCompany = new CellTable<EigenesUnternehmen>();
+		absolutePanelSimulation.add(tableOwnCompany, 60, 79);
+		tableOwnCompany.setSize("894px", "135px");
 
-        @Override
-        public void onSuccess(EigenesUnternehmen result) {
-        	
-    		ListDataProvider<EigenesUnternehmen> dataEProvider = new ListDataProvider<EigenesUnternehmen>();
-    	    // Connect the table to the data provider.
-    	    dataEProvider.addDataDisplay(tableEigenesUnternehmen);
-    			
-    	   // Add the data to the data provider, which automatically pushes it to the widget.
-    	    unEList = dataEProvider.getList();
-        	unEList.add(result);
-        	
-     
-        }
-    }
-	
-	
-	
-	public void uebersicht(){
-		tableEigenesUnternehmen = new CellTable<EigenesUnternehmen>();
-		absolutePanelSimulation.add(tableEigenesUnternehmen, 0, 144);
-		tableEigenesUnternehmen.setSize("500px", "100px");
-		
-		TextColumn<EigenesUnternehmen> firmaEColumn = new TextColumn<EigenesUnternehmen>(){
+		TextColumn<EigenesUnternehmen> firmaEColumn = new TextColumn<EigenesUnternehmen>() {
 			@Override
 			public String getValue(EigenesUnternehmen unternehmen) {
 				return unternehmen.getFirma();
-			}			
+			}
 		};
-		TextColumn<EigenesUnternehmen> umsatzEColumn = new TextColumn<EigenesUnternehmen>(){
+		TextColumn<EigenesUnternehmen> umsatzEColumn = new TextColumn<EigenesUnternehmen>() {
 			@Override
 			public String getValue(EigenesUnternehmen unternehmen) {
 				return new Integer(unternehmen.getUmsatz()).toString();
-			}			
+			}
 		};
-		TextColumn<EigenesUnternehmen> gewinnEColumn = new TextColumn<EigenesUnternehmen>(){
+		TextColumn<EigenesUnternehmen> gewinnEColumn = new TextColumn<EigenesUnternehmen>() {
 			@Override
 			public String getValue(EigenesUnternehmen unternehmen) {
 				return new Integer(unternehmen.getGewinn()).toString();
-			}			
+			}
 		};
-		TextColumn<EigenesUnternehmen> marktAnteilEColumn = new TextColumn<EigenesUnternehmen>(){
+		TextColumn<EigenesUnternehmen> marktAnteilEColumn = new TextColumn<EigenesUnternehmen>() {
 			@Override
 			public String getValue(EigenesUnternehmen unternehmen) {
 				return new Double(unternehmen.getMarktAnteil()).toString();
-			}			
+			}
 		};
-		TextColumn<EigenesUnternehmen> produktMengeEColumn = new TextColumn<EigenesUnternehmen>(){
+		TextColumn<EigenesUnternehmen> produktMengeEColumn = new TextColumn<EigenesUnternehmen>() {
 			@Override
 			public String getValue(EigenesUnternehmen unternehmen) {
-				return new Integer(unternehmen.getProdukt().getMenge()).toString();
-			}			
+				return new Integer(unternehmen.getProdukt().getMenge())
+						.toString();
+			}
 		};
-		TextColumn<EigenesUnternehmen> produktPreisEColumn = new TextColumn<EigenesUnternehmen>(){
+		TextColumn<EigenesUnternehmen> produktPreisEColumn = new TextColumn<EigenesUnternehmen>() {
 			@Override
 			public String getValue(EigenesUnternehmen unternehmen) {
-				return new Double(unternehmen.getProdukt().getPreis()).toString();
-			}			
-		};
-
-		tableEigenesUnternehmen.addColumn(firmaEColumn, "Firma");
-		tableEigenesUnternehmen.addColumn(umsatzEColumn, "Umsatz");
-		tableEigenesUnternehmen.addColumn(gewinnEColumn, "Gewinn");
-		tableEigenesUnternehmen.addColumn(marktAnteilEColumn, "Marktanteil");
-		tableEigenesUnternehmen.addColumn(produktPreisEColumn, "Produktpreis");
-		tableEigenesUnternehmen.addColumn(produktMengeEColumn, "Absatzmenge");
-		
-		service.getEigenesUnternehmen(new GetEigenesUnternehmenCallback());
-		
-		
-		
-	}
-	public void unternehmenAktualisieren() {
-		// Asynchroner Service, der die Daten des eigenen Unternehmens aus der
-		// Datenbank holt
-		AsyncCallback<EigenesUnternehmen> callback2 = new AsyncCallback<EigenesUnternehmen>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				// TODO on Failure
-
-			}
-
-			@Override
-			public void onSuccess(EigenesUnternehmen result) {
-				// Daten des eigenen Unternehmens
-				eigenesUN.setFixkosten(result.getFixkosten());
-				eigenesUN.setGewinn(result.getGewinn());
-				eigenesUN.setMarktAnteil(result.getMarktAnteil());
-				eigenesUN.setMaschinen(result.getMaschinen());
-				eigenesUN.setMitarbeiterGehalt(result.getMitarbeiterGehalt());
-				eigenesUN.setNachfrageTendenz(result.getNachfrageTendenz());
-				eigenesUN.setProdukt(result.getProdukt());
-				eigenesUN.setUmsatz(result.getUmsatz());
-
-				labelUmsatzEUN.setText(eigenesUN.getUmsatz() + " €");
-				labelGewinnEUN.setText(eigenesUN.getGewinn() + " €");
-				labelMarktanteilEUN.setText(eigenesUN.getMarktAnteil() + " %");
-				labelNachfrageEUN.setText(eigenesUN.getNachfrageTendenz() + "");
-				labelAnzahlMitarbeiterWert.setText(eigenesUN
-						.getMitarbeiterAnzahl() + "");
-				labelKapazitaetWert.setText(eigenesUN.getMaschinen()
-						.getKapazitaet() + "");
+				return new Double(unternehmen.getProdukt().getPreis())
+						.toString();
 			}
 		};
 
-		service.getEigenesUnternehmen(callback2);
-		// Asynchroner Service, der die Daten der Konkurrenzunternehmen aus der
-		// Datenbank holt
-		AsyncCallback<List<Unternehmen>> callback = new AsyncCallback<List<Unternehmen>>() {
+		tableOwnCompany.addColumn(firmaEColumn, "Firma");
+		tableOwnCompany.addColumn(umsatzEColumn, "Umsatz");
+		tableOwnCompany.addColumn(gewinnEColumn, "Gewinn");
+		tableOwnCompany.addColumn(marktAnteilEColumn, "Marktanteil");
+		tableOwnCompany.addColumn(produktPreisEColumn, "Produktpreis");
+		tableOwnCompany.addColumn(produktMengeEColumn, "Absatzmenge");
 
-			@Override
-			public void onFailure(Throwable caught) {
-				// TODO on Failure
-
-			}
-
-			@Override
-			public void onSuccess(List<Unternehmen> result) {
-				// Unternehmen aus der DB übernehmen
-				anzahlUnternehmen = result.size();
-				for (int i = 0; i < result.size(); i++) {
-					unternehmen[i] = new Unternehmen();
-					unternehmen[i].setGewinn(result.get(i).getGewinn());
-					unternehmen[i].setMarktAnteil(result.get(i)
-							.getMarktAnteil());
-					unternehmen[i].setNachfrageTendenz(result.get(i)
-							.getNachfrageTendenz());
-					unternehmen[i].setProdukt(result.get(i).getProdukt());
-					unternehmen[i].setUmsatz(result.get(i).getUmsatz());
-
-				}
-				befuellen(anzahlUnternehmen);
-			}
-
-		};
-
-		service.getUnternehmen(callback);
+		service.getCompany(new GetCompanyCallback());
 
 	}
 
-	// befuellt die auf der Oberfläche angezeigten Labels mit den aus der
-	// Datenbank gelieferten Daten
-	public void befuellen(int anzahlUnternehmen) {
-		// Panel, auf dem die Unternehmeninformationen angezeigt werden
-		absolutePanelSimulation.add(horizontalPanel, 60, 77);
-		horizontalPanel.setSize("894px", "183px");
-		// Eigenes Unternehmen
-		horizontalPanel.add(absolutePanelEigenesUN);
-		absolutePanelEigenesUN.setHeight("184px");
-		// Label
-		labelEigenesUnternehmen.setStyleName("gwt-UnternehmenLabel");
-		labelEigenesUnternehmen
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		absolutePanelEigenesUN.add(labelEigenesUnternehmen, 0, 0);
-		labelEigenesUnternehmen.setSize("224px", "18px");
-		// Umsatz
-		absolutePanelEigenesUN.add(labelUmsatz, 10, 24);
-		absolutePanelEigenesUN.add(labelUmsatzEUN, 142, 24);
-		labelUmsatzEUN.setSize("61px", "18px");
-		// Gewinn
-		absolutePanelEigenesUN.add(labelGewinn, 10, 48);
-		absolutePanelEigenesUN.add(labelGewinnEUN, 142, 48);
-		labelGewinnEUN.setSize("61px", "18px");
-		// Marktanteil
-		absolutePanelEigenesUN.add(labelMarktanteil, 10, 72);
-		absolutePanelEigenesUN.add(labelMarktanteilEUN, 142, 72);
-		labelMarktanteilEUN.setSize("61px", "18px");
-		// Nachfragetendenz
-		absolutePanelEigenesUN.add(labelNachfrageTendenz, 10, 96);
-		absolutePanelEigenesUN.add(labelNachfrageEUN, 142, 96);
-		labelNachfrageEUN.setSize("61px", "18px");
-		// Anzahl der Mitarbeiter
-		absolutePanelEigenesUN.add(labelAnzahlMitarbeiter, 10, 120);
-		labelAnzahlMitarbeiter.setSize("109px", "18px");
-		absolutePanelEigenesUN.add(labelAnzahlMitarbeiterWert, 142, 120);
-		labelAnzahlMitarbeiterWert.setSize("61px", "18px");
-		// Maschinenkapazitaet
-		absolutePanelEigenesUN.add(labelKapazitaet, 10, 144);
-		absolutePanelEigenesUN.add(labelKapazitaetWert, 142, 144);
-		labelKapazitaetWert.setSize("61px", "18px");
+	private void investitionLaden() {
+		// Panel, um die Investitionen zu tätigen : absolutePanelSimulation
+		absolutePanelSimulation.add(absolutePanelInvest, 84, 248);
+		absolutePanelInvest.setSize("650px", "133px");
 
-		// weitere Unternehmen
-		for (int i = 0; i < anzahlUnternehmen; i++) {
-			int j = i + 1;
-			// neues Panel erzeugen
-			absolutePanelUnternehmen[i] = new AbsolutePanel();
-			horizontalPanel.add(absolutePanelUnternehmen[i]);
-			absolutePanelUnternehmen[i].setHeight("159px");
-			// "Überschrift" anbringen
-			labelUnternehmen[i] = new Label("Unternehmen " + j);
-			labelUnternehmen[i].setStyleName("gwt-UnternehmenLabel");
-			labelUnternehmen[i]
-					.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-			absolutePanelUnternehmen[i].add(labelUnternehmen[i], 0, 0);
-			labelUnternehmen[i].setSize("224px", "18px");
-			// neue Labels erzeugen und auf dem Panel anbringen
-			// Umsatz
-			labelUmsatzUnternehmen[i] = new Label("Umsatz:");
-			absolutePanelUnternehmen[i].add(labelUmsatzUnternehmen[i], 10, 24);
-			labelUmsatzUnternehmenWert[i] = new Label(
-					unternehmen[i].getUmsatz() + " €");
-			absolutePanelUnternehmen[i].add(labelUmsatzUnternehmenWert[i], 129,
-					24);
-			// Gewinn
-			labelGewinnUnternehmen[i] = new Label("Gewinn: ");
-			absolutePanelUnternehmen[i].add(labelGewinnUnternehmen[i], 10, 48);
-			labelGewinnUnternehmenWert[i] = new Label(
-					unternehmen[i].getGewinn() + " €");
-			absolutePanelUnternehmen[i].add(labelGewinnUnternehmenWert[i], 129,
-					48);
-			labelGewinnUnternehmenWert[i].setSize("32px", "18px");
-			// Marktanteil
-			labelMarktanteilUnternehmen[i] = new Label("Marktanteil:");
-			absolutePanelUnternehmen[i].add(labelMarktanteilUnternehmen[i], 10,
-					72);
-			labelMarktanteilUnternehmenWert[i] = new Label(
-					unternehmen[i].getMarktAnteil() + " %");
-			absolutePanelUnternehmen[i].add(labelMarktanteilUnternehmenWert[i],
-					129, 72);
-			labelMarktanteilUnternehmenWert[i].setSize("49px", "18px");
-			// Nachfragetendenz
-			labelNachfrageTendenzUnternehmen[i] = new Label("Nachfragetendenz:");
-			absolutePanelUnternehmen[i].add(
-					labelNachfrageTendenzUnternehmen[i], 10, 96);
-			labelNachfrageTendenzUnternehmenWert[i] = new Label(
-					unternehmen[i].getNachfrageTendenz());
-			absolutePanelUnternehmen[i].add(
-					labelNachfrageTendenzUnternehmenWert[i], 129, 96);
-			labelNachfrageTendenzUnternehmenWert[i].setSize("49px", "18px");
+		// Labels
+
+		lbInvest.setStyleName("gwt-UnternehmenLabel");
+		absolutePanelInvest.add(lbInvest, 10, 10);
+		lbInvest.setSize("282px", "18px");
+		// Marketing
+		absolutePanelInvest.add(lbMarketing, 20, 45);
+		// Maschinen
+		absolutePanelInvest.add(lbMachine, 14, 73);
+		// Maschinen Wert der Maschinen
+		absolutePanelInvest.add(lbMachineValue, 21, 103);
+		lbMachineValue.setSize("60px", "18px");
+		// Maschinen nötiges Personal
+		absolutePanelInvest.add(lbUsedPersonal, 410, 103);
+		// Maschinen Kapazität
+		absolutePanelInvest.add(lbMachineCapacity, 239, 103);
+		// Personal
+		absolutePanelInvest.add(lbPersonal, 239, 45);
+		// Produktpreis
+		absolutePanelInvest.add(lbPrice, 410, 47);
+		lbPrice.setSize("101px", "18px");
+		lbPrice.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+
+		// IntegerBoxen
+		// Marketing
+		absolutePanelInvest.add(integerBoxMarketing, 86, 34);
+		integerBoxMarketing.setSize("94px", "25px");
+		// Maschinenwert
+		absolutePanelInvest.add(integerBoxMachineValue, 86, 90);
+		integerBoxMachineValue.setSize("94px", "25px");
+		// Maschinenkapazität
+		absolutePanelInvest.add(integerBoxCapacity, 300, 90);
+		integerBoxCapacity.setSize("94px", "25px");
+		// Maschinen Anzahl der notwendigen Mitarbeiter
+		absolutePanelInvest.add(integerBoxMachineStaff, 520, 90);
+		integerBoxMachineStaff.setSize("94px", "25px");
+		// Personal
+		absolutePanelInvest.add(integerBoxPersonal, 300, 34);
+		integerBoxPersonal.setSize("94px", "25px");
+		// Produktpreis
+		absolutePanelInvest.add(integerBoxPrice, 520, 34);
+		integerBoxPrice.setSize("94px", "25px");
+
+	}
+
+	public class GetCompanyCallback implements
+			AsyncCallback<EigenesUnternehmen> {
+
+		@Override
+		public void onFailure(Throwable caught) {
+		}
+
+		@Override
+		public void onSuccess(EigenesUnternehmen result) {
+
+			ListDataProvider<EigenesUnternehmen> dataEProvider = new ListDataProvider<EigenesUnternehmen>();
+			// Connect the table to the data provider.
+			dataEProvider.addDataDisplay(tableOwnCompany);
+
+			// Add the data to the data provider, which automatically pushes it
+			// to the widget.
+			companyList = dataEProvider.getList();
+			companyList.add(result);
 
 		}
 	}
 
+	public class CreateSimulationCallback implements
+			AsyncCallback<SimulationVersion> {
+
+		@Override
+		public void onFailure(Throwable caught) {
+		}
+
+		@Override
+		public void onSuccess(SimulationVersion result) {
+			// TODO AbsolutePanel im TabPanel mit Marktanteilstorte etc.
+			// befüllen
+
+		}
+
+	}
 }

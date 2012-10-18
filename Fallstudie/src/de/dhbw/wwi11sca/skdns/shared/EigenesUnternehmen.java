@@ -8,6 +8,7 @@ public class EigenesUnternehmen extends Unternehmen implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	private double fixkosten;
+	private double variableKosten;
 	private Maschinen maschinen;
 	private int mitarbeiterGehalt;	
 	private int mitarbeiterAnzahl;
@@ -43,6 +44,12 @@ public class EigenesUnternehmen extends Unternehmen implements Serializable{
 	}
 	public void setFirma(String firma) {
 		this.firma = firma;
+	}
+	public double getVariableKosten() {
+		return variableKosten;
+	}
+	public void setVariableKosten(double variableKosten) {
+		this.variableKosten = variableKosten;
 	}
 	
 

@@ -28,8 +28,11 @@ public class UnternehmenServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public EigenesUnternehmen getEigenesUnternehmen() {
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
-		List<EigenesUnternehmen> dbEUN =  ds.createQuery(EigenesUnternehmen.class).asList();
+		List<EigenesUnternehmen> dbEUN =  ds.createQuery(EigenesUnternehmen.class).asList();		
 		EigenesUnternehmen singleUN = dbEUN.get(0);
+		
+//		Query<EigenesUnternehmen> dsd = ds.createQuery(EigenesUnternehmen.class).filter(user + "un1", Object);
+				
 		
 		return singleUN;
 	}
