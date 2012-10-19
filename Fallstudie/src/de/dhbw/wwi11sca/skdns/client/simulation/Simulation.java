@@ -119,6 +119,8 @@ public class Simulation implements EntryPoint {
 		// Simulation starten
 		btSimulation.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				// eine neue Simulationsversion des laufenden Jahres wird
+				// angebracht
 				absolutePanelYear[stackYear] = new AbsolutePanel();
 				absolutePanelYear[stackYear].setSize("100%", "250px");
 
@@ -147,24 +149,26 @@ public class Simulation implements EntryPoint {
 
 				stackYear++;
 				simulationVersion++;
-				// service.createSimulationCallback(version,
-				// new CreateSimulationCallback());
+				service.createSimulationCallback(version,
+						new CreateSimulationCallback());
 			}
-		});
+		}); // Ende btSimulation
 
 		// Simulation Folgejahr starten
 		btNextYear.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				// TODO: Kommentieren
+				// Alle Versionen (außer der letzten) des letzten Jahres werden
+				// aus der Ansicht gelöscht:
 				for (int i = deleteCounter; i < stackYear - 1; i++) {
 					tabPanelYears.remove(absolutePanelYear[i]);
 				}
 
 				deleteCounter = stackYear;
-				// TODO Ende
+
 				simulationYear++;
 				simulationVersion = 1;
 
+				// eine Simulationsversion des nächsten Jahres wird angebracht
 				absolutePanelYear[stackYear] = new AbsolutePanel();
 				absolutePanelYear[stackYear].setSize("100%", "250px");
 
@@ -184,6 +188,7 @@ public class Simulation implements EntryPoint {
 				if (integerBoxPrice.getValue() != null)
 					version.setPrice(integerBoxPrice.getValue());
 
+				// gefüllte Investitionsfelder werden geleert:
 				deleteValueInvestments();
 
 				tabPanelYears
@@ -193,11 +198,11 @@ public class Simulation implements EntryPoint {
 
 				stackYear++;
 				simulationVersion++;
-				// service.createSimulationCallback(version,
-				// new CreateSimulationCallback());
+				service.createSimulationCallback(version,
+						new CreateSimulationCallback());
 
 			}
-		});
+		}); // Ende btNextYear
 
 		// zur Home zurückkehren
 		lbHome.addClickHandler(new ClickHandler() {
@@ -206,7 +211,7 @@ public class Simulation implements EntryPoint {
 				HomeSimulation home = new HomeSimulation();
 				home.onModuleLoad();
 			}
-		});
+		}); // Ende lbHome
 
 		// Logout
 		btLogout.addClickHandler(new ClickHandler() {
@@ -214,9 +219,9 @@ public class Simulation implements EntryPoint {
 				RootPanel.get().clear();
 				RootPanel.get().add(lbLogout);
 			}
-		});
+		}); // btLogout
 
-	}
+	} // Ende onModuleLoad()
 
 	private void deleteValueInvestments() {
 		integerBoxMarketing.setValue(null);
@@ -226,7 +231,7 @@ public class Simulation implements EntryPoint {
 		integerBoxPersonal.setValue(null);
 		integerBoxPrice.setValue(null);
 
-	}
+	} // Ende  method deleteValueInvestments
 
 	public void summaryCompanies() {
 		tableOwnCompany = new CellTable<OwnCompany>();
@@ -280,7 +285,7 @@ public class Simulation implements EntryPoint {
 
 		service.getCompany(new GetCompanyCallback());
 
-	}
+	} // Ende method summaryCompanies
 
 	private void loadInvestment() {
 		// Panel, um die Investitionen zu tätigen : absolutePanelSimulation
@@ -330,13 +335,17 @@ public class Simulation implements EntryPoint {
 		absolutePanelInvestments.add(integerBoxPrice, 520, 34);
 		integerBoxPrice.setSize("94px", "25px");
 
-	}
+	} // Ende method loadInvestment
 
+	/**
+	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher angelegte
+	 * Unternehmen zurückgibt
+	 */
 	public class GetCompanyCallback implements AsyncCallback<OwnCompany> {
 
 		@Override
 		public void onFailure(Throwable caught) {
-		}
+		} // Ende method onFailure
 
 		@Override
 		public void onSuccess(OwnCompany result) {
@@ -350,22 +359,29 @@ public class Simulation implements EntryPoint {
 			companyList = dataOwnProvider.getList();
 			companyList.add(result);
 
-		}
-	}
+		} // Ende method onSuccess
+	} // Ende class GetCompanyCallback
 
+	/**
+	 * 
+	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher die
+	 * Berechnungen der Marktsimulation durchführt und eine SimulationVersion
+	 * zurückgibt
+	 * 
+	 */
 	public class CreateSimulationCallback implements
 			AsyncCallback<SimulationVersion> {
 
 		@Override
 		public void onFailure(Throwable caught) {
-		}
+		} // Ende method onFailure
 
 		@Override
 		public void onSuccess(SimulationVersion result) {
 			// TODO AbsolutePanel im TabPanel mit Marktanteilstorte etc.
 			// befüllen
 
-		}
+		} // Ende method onSuccess
 
-	}
-}
+	} // Ende class CreateSimulationCallback
+} // Ende class Simulation

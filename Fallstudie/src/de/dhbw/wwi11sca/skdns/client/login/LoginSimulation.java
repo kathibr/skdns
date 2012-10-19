@@ -45,12 +45,8 @@ public class LoginSimulation implements EntryPoint {
 
 	public void onModuleLoad() {
 
-		// RootPanel: root
-		RootPanel root = RootPanel.get();
-		root.setSize("1024px", "768px");
-
 		// AbsolutePanel: panelLogin
-		root.get().add(panelLogin, 0, 0);
+		RootPanel.get().add(panelLogin, 0, 0);
 		panelLogin.setSize("1024px", "768px");
 		lbInfo.setSize("310px", "12px");
 
@@ -91,7 +87,6 @@ public class LoginSimulation implements EntryPoint {
 				userOnline.setUsername(textBoxUsername.getText());
 				// Überprüfen, ob es sich bei dem einloggenden User um den admin
 				// handelt
-				// TODO funktioniert noch nicht
 				if (userOnline.getUsername().equals(admin)) {
 					LoginService.checkAdmin(userOnline,
 							new CheckAdminCallback());
@@ -100,7 +95,7 @@ public class LoginSimulation implements EntryPoint {
 							new CheckLoginCallback());
 				}
 			}
-		});
+		}); // Ende btLogin
 
 		// Eventhandler vergessenes Passwort
 		btForgotPassword.addClickHandler(new ClickHandler() {
@@ -110,7 +105,7 @@ public class LoginSimulation implements EntryPoint {
 				LoginService.forgotPassword(userOnline,
 						new ForgotPasswordCallback());
 			}
-		});
+		}); // Ende btForgortPassword
 
 		// Eventhandler Password TextBox: löscht den Textboxinhalt, damit der
 		// User Daten eingeben kann
@@ -119,7 +114,7 @@ public class LoginSimulation implements EntryPoint {
 				textBoxPassword.setText("");
 			}
 
-		});
+		}); // Ende textBoxPassword
 
 		// Eventhandler Username TextBox: löscht den Textboxinhalt, damit der
 		// User Daten eingeben kann
@@ -127,8 +122,8 @@ public class LoginSimulation implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				textBoxUsername.setText("");
 			}
-		});
-	}
+		}); // Ende textBoxUsername
+	} // Ende onModuleLoad
 
 	/**
 	 * 
@@ -142,7 +137,7 @@ public class LoginSimulation implements EntryPoint {
 		public void onFailure(Throwable caught) {
 			lbInfo.setText("Username oder Passwort falsch/ unbekannt.");
 
-		}
+		} // Ende method onFailure
 
 		@Override
 		public void onSuccess(Void result) {
@@ -151,8 +146,8 @@ public class LoginSimulation implements EntryPoint {
 			HomeSimulation home = new HomeSimulation();
 			home.onModuleLoad();
 
-		}
-	}
+		} // Ende method onSuccess
+	} // Ende class CheckLoginCallback
 
 	/**
 	 * 
@@ -167,15 +162,15 @@ public class LoginSimulation implements EntryPoint {
 		public void onFailure(Throwable caught) {
 			lbInfo.setText("Derzeit liegt leider ein Systemfehler vor. Versuchen Sie es später erneut.");
 
-		}
+		} // Ende method onFailure
 
 		@Override
 		public void onSuccess(Void result) {
 
 			lbInfo.setText("Der Admin wurde informiert.");
 
-		}
-	}
+		} // Ende method onSuccess
+	} // Ende class ForgotPasswordCallback
 
 	/**
 	 * 
@@ -189,7 +184,7 @@ public class LoginSimulation implements EntryPoint {
 		public void onFailure(Throwable caught) {
 			lbInfo.setText("Adminpasswort falsch.");
 
-		}
+		} // Ende method onFailure
 
 		@Override
 		public void onSuccess(Void result) {
@@ -198,6 +193,6 @@ public class LoginSimulation implements EntryPoint {
 			AdminSimulation admin = new AdminSimulation();
 			admin.onModuleLoad();
 
-		}
-	}
-}
+		} // Ende method onSuccess
+	} // Ende class CheckAdminCallback
+} // Ende classLoginSimulation

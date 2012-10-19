@@ -1,5 +1,12 @@
 package de.dhbw.wwi11sca.skdns.client.admin;
 
+/**
+ * 
+ * @author SKDNS Marktsimulationen
+ * 
+ *         Die AdminSimulation enthält das Frontend der Adminfunktionen.
+ * 
+ */
 import java.util.List;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -135,7 +142,7 @@ public class AdminSimulation implements EntryPoint {
 				// er dem entsprechenden User
 				// eine Email schreiben soll
 			}
-		});
+		}); // btSave
 
 		btDelete.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -144,7 +151,7 @@ public class AdminSimulation implements EntryPoint {
 				service.deleteUser(deleteUser, new DeleteUserCallback());
 
 			}
-		});
+		}); // Ende btDelete
 
 		btCreateUser.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -156,16 +163,16 @@ public class AdminSimulation implements EntryPoint {
 				newUser.setMail(textBoxMail.getText());
 				service.saveUser(newUser, new SaveUserCallback());
 			}
-		});
+		}); // Ende btCreateUser
 
 		btLogout.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get().clear();
 				RootPanel.get().add(lbLogout);
 			}
-		});
+		}); // Ende btLogout
 
-	}
+	} // Ende onModuleLoad
 
 	private void getUserTable() {
 		// die User werden in eine Tabelle geladen und angezeigt
@@ -180,7 +187,7 @@ public class AdminSimulation implements EntryPoint {
 				return new String(user.getUsername());
 			}
 
-		};
+		}; // Ende UsernameColumn
 
 		// Usertabelle mit DB-Usern befüllen: Kennwort
 		TextColumn<User> PasswordColumn = new TextColumn<User>() {
@@ -189,7 +196,7 @@ public class AdminSimulation implements EntryPoint {
 				return new String(user.getPassword());
 			}
 
-		};
+		}; // Ende PasswordColumn
 		// Usertabelle mit DB-Usern befüllen: E-Mail
 		TextColumn<User> EMailColumn = new TextColumn<User>() {
 			@Override
@@ -197,20 +204,20 @@ public class AdminSimulation implements EntryPoint {
 				return new String(user.getMail());
 			}
 
-		};
+		}; // Ende EMailColumn
 
 		// DB-Userdaten anzeigen lassen
 		cellTableUser.addColumn(UsernameColumn, "Username");
 		cellTableUser.addColumn(PasswordColumn, "Kennwort");
 		cellTableUser.addColumn(EMailColumn, "Email");
 
-	}
+	} // Ende method getUserTable
 
 	/**
 	 * 
 	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher die
 	 * Userdaten aus der Datenbank zurückgibt, deren Passwort geändert werden
-	 * muss
+	 * müssen
 	 * 
 	 */
 	public class GetChangeUserCallback implements AsyncCallback<List<User>> {
@@ -218,7 +225,7 @@ public class AdminSimulation implements EntryPoint {
 		@Override
 		public void onFailure(Throwable caught) {
 
-		}
+		} // Ende onFailure
 
 		@Override
 		public void onSuccess(List<User> result) {
@@ -232,10 +239,10 @@ public class AdminSimulation implements EntryPoint {
 
 			for (User user : result) {
 				userList.add(user);
-			}
-		}
+			} // Ende for-Schleife
+		} // Ende method onSuccess
 
-	}
+	} // Ende class GetChangeUserCallback
 
 	/**
 	 * 
@@ -248,7 +255,7 @@ public class AdminSimulation implements EntryPoint {
 		@Override
 		public void onFailure(Throwable caught) {
 
-		}
+		} // Ende onFailure
 
 		@Override
 		public void onSuccess(Void result) {
@@ -261,8 +268,8 @@ public class AdminSimulation implements EntryPoint {
 			// wurde newUser in der DB gespeichert, soll dem Admin ein Label
 			// angezeigt werden, dass das speichern erfolgreich war
 
-		}
-	}
+		} // Ende method onSuccess
+	} // Ende class SaveUserCallback
 
 	/**
 	 * 
@@ -275,7 +282,7 @@ public class AdminSimulation implements EntryPoint {
 		@Override
 		public void onFailure(Throwable caught) {
 
-		}
+		} // Ende method onFailure
 
 		@Override
 		public void onSuccess(Void result) {
@@ -287,12 +294,14 @@ public class AdminSimulation implements EntryPoint {
 			// User ein Label ausgegeben werden
 			// auf dem angegeben wurde, dass der User nun nicht mehr vorhanden
 			// ist
-		}
-	}
+		} // Ende method onSuccess
+	} // Ende class DeleteUserCallback
 
 	/**
 	 * 
-	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher die Anzahl der existierenden User und der bisher insgesamt getätigten Logins zurückgibt
+	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher die
+	 * Anzahl der existierenden User und der bisher insgesamt getätigten Logins
+	 * zurückgibt
 	 * 
 	 */
 	public class GetStatsCallback implements AsyncCallback<Admin> {
@@ -300,14 +309,14 @@ public class AdminSimulation implements EntryPoint {
 		@Override
 		public void onFailure(Throwable caught) {
 
-		}
+		} // Ende method onFailure
 
 		@Override
 		public void onSuccess(Admin result) {
 			lbLoginCounter.setText(result.getLoginCount() + "");
 			lbExistingUserCounter.setText(result.getExistingUserCount() + "");
 
-		}
+		} // Ende method onSuccess
 
-	}
-}
+	} // Ende class GetStatsCallback
+} // Ende class AdminSimulation

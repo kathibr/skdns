@@ -21,11 +21,18 @@ public class SimulationServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public OwnCompany getCompany() {
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
-		List<OwnCompany> dbOwnCompany = ds.createQuery(
-				OwnCompany.class).asList();
+		List<OwnCompany> dbOwnCompany = ds.createQuery(OwnCompany.class)
+				.asList();
+		// sucht alle Unternehmen raus, die nicht die UserID aus
+		// LoginServiceImpl haben und löscht sie aus der Liste
+		for (OwnCompany company : dbOwnCompany) {
+			if (company.getUserID() != LoginServiceImpl.getUserID()) {
+				dbOwnCompany.remove(company);
+			} // Ende if-Statement
+		} // Ende for-Schleife
 		OwnCompany single = dbOwnCompany.get(0);
 		return single;
-	}
+	} // Ende method getCompany
 
 	@Override
 	public SimulationVersion createSimulationCallback(SimulationVersion version) {
@@ -45,11 +52,12 @@ public class SimulationServiceImpl extends RemoteServiceServlet implements
 		// Feldern
 		// simulationYear (wie aus GUI vorgegeben), version (wie aus GUI
 		// vorgegeben),
-		// company, profit, topLine, marketShare, trendOfRequest, ownCompany, company1, company2, company3
+		// company, profit, topLine, marketShare, trendOfRequest, ownCompany,
+		// company1, company2, company3
 		// zurückgegeben werden
 
 		return null;
-	}
+	} // Ende method createSimulationCallback
 
 	private static Mongo getMongo() {
 		Mongo m = null;
@@ -61,6 +69,6 @@ public class SimulationServiceImpl extends RemoteServiceServlet implements
 			e.printStackTrace();
 		}
 		return m;
-	}
+	} // Ende method getMongo
 
-}
+} // Ende class SimulationServiceImpl

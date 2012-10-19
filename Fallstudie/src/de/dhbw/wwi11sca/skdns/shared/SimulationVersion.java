@@ -8,6 +8,7 @@ public class SimulationVersion implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private String userID = new String();
 	private int personal;
 	private int machineValue;
 	private int machineCapacity;
@@ -139,6 +140,14 @@ public class SimulationVersion implements Serializable {
 
 	public void setCompany3(Company company3) {
 		this.company3 = company3;
+	}
+
+	public String getUserID() {
+		return userID;
+	}
+
+	public void setUserID(String userID) {
+		this.userID = userID;
 	}
 
 }

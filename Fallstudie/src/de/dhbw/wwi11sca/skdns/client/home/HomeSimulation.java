@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import de.dhbw.wwi11sca.skdns.client.simulation.Simulation;
-import de.dhbw.wwi11sca.skdns.client.unternehmen.CompanySimulation;
+import de.dhbw.wwi11sca.skdns.client.company.CompanySimulation;
 import de.dhbw.wwi11sca.skdns.shared.Company;
 import de.dhbw.wwi11sca.skdns.shared.OwnCompany;
 
@@ -103,7 +103,7 @@ public class HomeSimulation implements EntryPoint {
 				CompanySimulation company = new CompanySimulation();
 				company.onModuleLoad();
 			}
-		});
+		}); // Ende btCompaniesChange
 
 		// Eventhandler Simualation starten
 		btSimulation.addClickHandler(new ClickHandler() {
@@ -112,7 +112,7 @@ public class HomeSimulation implements EntryPoint {
 				Simulation simulation = new Simulation();
 				simulation.onModuleLoad();
 			}
-		});
+		}); // Ende btSimulation
 
 		// Eventhandler ausloggen
 		btLogout.addClickHandler(new ClickHandler() {
@@ -120,7 +120,7 @@ public class HomeSimulation implements EntryPoint {
 				RootPanel.get().clear();
 				RootPanel.get().add(lbLogout);
 			}
-		});
+		}); // Ende btLogout
 		tableOwnCompany.setPageSize(1);
 
 		// Darstellung der vorhandenen Unternehmensdaten
@@ -135,37 +135,37 @@ public class HomeSimulation implements EntryPoint {
 			public String getValue(OwnCompany company) {
 				return new Integer(company.getTopLine()).toString();
 			}
-		};
-		// Unternehmensdaten des eigenen Unternehmens befüllen: Gewinn
+		}; // Ende topLineOwnColumn
+			// Unternehmensdaten des eigenen Unternehmens befüllen: Gewinn
 		TextColumn<OwnCompany> amountOwnColumn = new TextColumn<OwnCompany>() {
 			@Override
 			public String getValue(final OwnCompany company) {
 				return new Integer(company.getAmount()).toString();
 			}
-		};
-		// Unternehmensdaten des eigenen Unternehmens befüllen: Marktanteil
+		}; // Ende amountOwnColumn
+			// Unternehmensdaten des eigenen Unternehmens befüllen: Marktanteil
 		TextColumn<OwnCompany> marketShareOwnColumn = new TextColumn<OwnCompany>() {
 			@Override
 			public String getValue(final OwnCompany company) {
 				return new Double(company.getMarketShare()).toString();
 			}
-		};
-		// Unternehmensdaten des eigenen Unternehmens befüllen:
-		// Produktabsatzmenge
+		}; // Ende marketShareOwnColumn
+			// Unternehmensdaten des eigenen Unternehmens befüllen:
+			// Produktabsatzmenge
 		TextColumn<OwnCompany> salesVolumeOwnColumn = new TextColumn<OwnCompany>() {
 			@Override
 			public String getValue(final OwnCompany company) {
 				return new Integer(company.getProduct().getSalesVolume())
 						.toString();
 			}
-		};
-		// Unternehmensdaten des eigenen Unternehmens befüllen: Produktpreis
+		}; // Ende salesVolumeOwnColumn
+			// Unternehmensdaten des eigenen Unternehmens befüllen: Produktpreis
 		TextColumn<OwnCompany> productPriceOwnColumn = new TextColumn<OwnCompany>() {
 			@Override
 			public String getValue(final OwnCompany company) {
 				return new Double(company.getProduct().getPrice()).toString();
 			}
-		};
+		}; // Ende productPriceOwnColumn
 
 		// Unternehmensdaten des eigenen Unternehmens anzeigen lassen
 		tableOwnCompany.addColumn(topLineOwnColumn, "Umsatz");
@@ -184,36 +184,38 @@ public class HomeSimulation implements EntryPoint {
 			public String getValue(final Company company) {
 				return new Integer(company.getTopLine()).toString();
 			}
-		};
-		// Unternehmensdaten der Konkurrenzunternehmen befüllen: Gewinn
+		}; // Ende topLineColumn
+			// Unternehmensdaten der Konkurrenzunternehmen befüllen: Gewinn
 		TextColumn<Company> amountColumn = new TextColumn<Company>() {
 			@Override
 			public String getValue(final Company company) {
 				return new Integer(company.getAmount()).toString();
 			}
-		};
-		// Unternehmensdaten der Konkurrenzunternehmen befüllen: Marktanteil
+		}; // Ende amountColumn
+			// Unternehmensdaten der Konkurrenzunternehmen befüllen: Marktanteil
 		TextColumn<Company> marketShareColumn = new TextColumn<Company>() {
 			@Override
 			public String getValue(final Company company) {
 				return new Double(company.getMarketShare()).toString();
 			}
-		};
-		// Unternehmensdaten der Konkurrenzunternehmen befüllen: Produktmenge
+		}; // Ende marketShareColumn
+			// Unternehmensdaten der Konkurrenzunternehmen befüllen:
+			// Produktmenge
 		TextColumn<Company> salesVolumeColumn = new TextColumn<Company>() {
 			@Override
 			public String getValue(final Company company) {
 				return new Integer(company.getProduct().getSalesVolume())
 						.toString();
 			}
-		};
-		// Unternehmensdaten der Konkurrenzunternehmen befüllen: Produktpreis
+		}; // Ende salesVolumeColumn
+			// Unternehmensdaten der Konkurrenzunternehmen befüllen:
+			// Produktpreis
 		TextColumn<Company> productPriceColumn = new TextColumn<Company>() {
 			@Override
 			public String getValue(final Company company) {
 				return new Double(company.getProduct().getPrice()).toString();
 			}
-		};
+		}; // Ende productPriceColumn
 
 		// Unternehmensdaten der Konkurrenzunternehmen anzeigen lassen
 		tableCompanies.addColumn(topLineColumn, "Umsatz");
@@ -229,7 +231,7 @@ public class HomeSimulation implements EntryPoint {
 		// Konkurrenzunternehmen
 		service.getCompany(new GetCompanyCallback());
 
-	}
+	} // Ende method onModuleLoad
 
 	/**
 	 * 
@@ -240,7 +242,7 @@ public class HomeSimulation implements EntryPoint {
 	public class GetCompanyCallback implements AsyncCallback<List<Company>> {
 
 		public void onFailure(final Throwable caught) {
-		}
+		} // Ende method onFailure
 
 		public final void onSuccess(final List<Company> result) {
 
@@ -254,10 +256,10 @@ public class HomeSimulation implements EntryPoint {
 
 			for (Company company : result) {
 				companyList.add(company);
-			}
+			} // Ende for-Schleife
 
-		}
-	}
+		} // Ende method onSuccess
+	} // Ende class GetCompanyCallback
 
 	/**
 	 * 
@@ -269,7 +271,7 @@ public class HomeSimulation implements EntryPoint {
 
 		@Override
 		public void onFailure(final Throwable caught) {
-		}
+		} // Ende method onFailure
 
 		@Override
 		public final void onSuccess(OwnCompany result) {
@@ -284,7 +286,7 @@ public class HomeSimulation implements EntryPoint {
 			ownCompanyList.add(result);
 			lbOwnCompany.setText(result.getTradeName());
 
-		}
-	}
+		} // Ende method onSuccess
+	} // Ende class GetOwnCompanyCallback
 
-}
+} // Ende class HomeSimulation

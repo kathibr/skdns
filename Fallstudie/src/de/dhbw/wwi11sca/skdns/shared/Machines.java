@@ -5,10 +5,11 @@ import java.io.Serializable;
 public class Machines implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private String userID = new String();
 	private int capacity;
 	private int serviceLife;
 	private int staff;
-	private double accoutingValue;
+	private double accountingValue;
 
 	public Machines() {
 	}
@@ -18,7 +19,7 @@ public class Machines implements Serializable {
 		this.setCapacity(capacity);
 		this.setServiceLife(serviceLife);
 		this.setStaff(staff);
-		this.setAccoutingValue(accountingValue);
+		this.setAccountingValue(accountingValue);
 	}
 
 	public int getCapacity() {
@@ -37,12 +38,12 @@ public class Machines implements Serializable {
 		this.serviceLife = serviceLife;
 	}
 
-	public double getAccoutingValue() {
-		return accoutingValue;
+	public double getAccountingValue() {
+		return accountingValue;
 	}
 
-	public void setAccoutingValue(double accoutingValue) {
-		this.accoutingValue = accoutingValue;
+	public void setAccountingValue(double accountingValue) {
+		this.accountingValue = accountingValue;
 	}
 
 	public int getStaff() {
@@ -51,6 +52,14 @@ public class Machines implements Serializable {
 
 	public void setStaff(int staff) {
 		this.staff = staff;
+	}
+
+	public String getUserID() {
+		return userID;
+	}
+
+	public void setUserID(String userID) {
+		this.userID = userID;
 	}
 
 }

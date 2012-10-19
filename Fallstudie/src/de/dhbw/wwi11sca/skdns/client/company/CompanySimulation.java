@@ -1,5 +1,12 @@
-package de.dhbw.wwi11sca.skdns.client.unternehmen;
+package de.dhbw.wwi11sca.skdns.client.company;
 
+/**
+ * 
+ * @author SKDNS Marktsimulationen
+ * 
+ *         Die CompanySimulation enthält das Frontend, auf welchem Unternehmen angelegt und verändert werden können.
+ * 
+ */
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -144,15 +151,14 @@ public class CompanySimulation implements EntryPoint {
 				HomeSimulation home = new HomeSimulation();
 				home.onModuleLoad();
 			}
-		});
+		}); // Ende lbHome
 
 		btLogout.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				// TODO: Daten an DB übergeben?
 				RootPanel.get().clear();
 				RootPanel.get().add(lbLogout);
 			}
-		});
+		}); // Ende btLogout
 
 		// Asynchroner Call: Falls Daten vorhanden sind, aus der Datenbank
 		// auslesen, ansonsten Felder im TabPanelUnternehmenAnlegen frei lassen
@@ -160,7 +166,7 @@ public class CompanySimulation implements EntryPoint {
 
 		startCall();
 
-	}
+	} // Ende onModuleLoad
 
 	private void addTabPanelOwnCompany() {
 
@@ -191,7 +197,7 @@ public class CompanySimulation implements EntryPoint {
 				// TODO Maschinen in Oberfläche löschen
 				// TODO EigenesUnternehmen aus DB löschen
 			}
-		});
+		}); // Ende btDeleteOwnCompany
 		// Unternehmen speichern
 		btSaveOwnCompany.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -203,14 +209,14 @@ public class CompanySimulation implements EntryPoint {
 
 					ownCom.setTradeName(textBoxTradeName.getText());
 
-					service.addOwnCompany(ownCom, new AddEigenesUNCallback());
+					service.addOwnCompany(ownCom, new AddOwnCompanyCallback());
 
 				} else {
 					Window.alert("Bitte Eingabe \u00FCberpr\u00FCfen");
-				}
+				} // Ende if-else
 
 			}
-		});
+		}); // Ende btSaveOwnCompany
 
 		// Elemente
 		// Firma
@@ -254,32 +260,32 @@ public class CompanySimulation implements EntryPoint {
 			public String getValue(Machines machine) {
 				return new Integer(machine.getServiceLife()).toString();
 			}
-		};
+		}; // Ende serviceLifeColumn
 		TextColumn<Machines> capacityColumn = new TextColumn<Machines>() {
 			@Override
 			public String getValue(Machines machine) {
 				return new Integer(machine.getCapacity()).toString();
 			}
-		};
+		}; // Ende capacityColumn
 		TextColumn<Machines> accountingValueColumn = new TextColumn<Machines>() {
 			@Override
 			public String getValue(Machines machine) {
-				return new Double(machine.getAccoutingValue()).toString();
+				return new Double(machine.getAccountingValue()).toString();
 			}
-		};
+		}; // Ende accountingValueColumn
 		TextColumn<Machines> StaffColumn = new TextColumn<Machines>() {
 			@Override
 			public String getValue(Machines machine) {
 				// TODO Tabellenfeld Notwendige Mitarbeiter füllen
 				return new Integer(machine.getStaff()).toString();
 			}
-		};
+		}; // Ende StaffColumn
 		cellTableMachines.addColumn(serviceLifeColumn,
 				"bisherige Nutzungsdauer");
 		cellTableMachines.addColumn(capacityColumn, "Kapazit\u00e4t");
 		cellTableMachines.addColumn(accountingValueColumn, "Preis");
 		cellTableMachines.addColumn(StaffColumn, "Notwendige Mitarbeiter");
-	}
+	} // Ende method addTabPanelOwnCompany
 
 	private void addTabPanelCompanyOne() {
 		// Tab für Unternehmen 1 anbringen
@@ -304,7 +310,7 @@ public class CompanySimulation implements EntryPoint {
 				doubleBoxProductPriceCompany1.setValue(null);
 				integerBoxSalesVolumeCompany1.setValue(null);
 			}
-		});
+		}); // Ende btDeleteCompany1
 		// Unternehmen speichern
 		btSaveCompany1.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -318,7 +324,7 @@ public class CompanySimulation implements EntryPoint {
 				company[0].getProduct().setSalesVolume(
 						integerBoxSalesVolumeCompany1.getValue());
 			}
-		});
+		}); // Ende btSaveCompany1
 
 		// Elemente
 		// Umsatz
@@ -338,7 +344,7 @@ public class CompanySimulation implements EntryPoint {
 		absolutePanelCompany1.add(integerBoxSalesVolumeCompany1, 577, 92);
 		integerBoxSalesVolumeCompany1.setSize("161px", "24px");
 
-	}
+	} // Ende method addTabPanelCompanyOne
 
 	private void addTabPanelCompanyTwo() {
 		// Tab für Unternehmen 2 anbringen
@@ -361,7 +367,7 @@ public class CompanySimulation implements EntryPoint {
 				doubleBoxProductPriceCompany2.setValue(null);
 				integerBoxSalesVolumeCompany2.setValue(null);
 			}
-		});
+		}); // Ende btDeleteCompany2
 		// Unternehmen speichern
 		btSaveCompany2.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -375,7 +381,7 @@ public class CompanySimulation implements EntryPoint {
 				company[1].getProduct().setSalesVolume(
 						integerBoxSalesVolumeCompany2.getValue());
 			}
-		});
+		}); // Ende btSaveCompany2
 
 		// Elemente
 		// Umsatz
@@ -394,7 +400,7 @@ public class CompanySimulation implements EntryPoint {
 		absolutePanelCompany2.add(lbSalesVolumeCompany2, 432, 104);
 		absolutePanelCompany2.add(integerBoxSalesVolumeCompany2, 577, 92);
 		integerBoxSalesVolumeCompany2.setSize("161px", "24px");
-	}
+	} // Ende method addTabPanelCompany2
 
 	private void addTabPanelCompanyThree() {
 		// Tab für Unternehmen 3 anbringen
@@ -417,7 +423,7 @@ public class CompanySimulation implements EntryPoint {
 				doubleBoxProductPriceCompany3.setValue(null);
 				integerBoxSalesVolumeCompany3.setValue(null);
 			}
-		});
+		}); // Ende btDeleteCompany3
 		// Unternehmen speichern
 		btSaveCompany3.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -431,7 +437,7 @@ public class CompanySimulation implements EntryPoint {
 				company[2].getProduct().setSalesVolume(
 						integerBoxSalesVolumeCompany3.getValue());
 			}
-		});
+		}); // Ende btSaveCompany3
 
 		// Elemente
 		// Umsatz
@@ -450,13 +456,24 @@ public class CompanySimulation implements EntryPoint {
 		absolutePanelCompany3.add(lbSalesVolumeCompany3, 432, 104);
 		absolutePanelCompany3.add(integerBoxSalesVolumeCompany3, 577, 92);
 		integerBoxSalesVolumeCompany3.setSize("161px", "24px");
-	}
+	} // Ende method addTabPanelCompanyThree
 
-	public class AddEigenesUNCallback implements AsyncCallback<java.lang.Void> {
+	private void startCall() {
+		service.getOwnCompany(new GetOwnCompanyCallback());
+
+	} // Ende method startCall
+
+	/**
+	 * 
+	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher ein
+	 * angelegtes eigenes Unternehmen speichert
+	 * 
+	 */
+	public class AddOwnCompanyCallback implements AsyncCallback<java.lang.Void> {
 
 		@Override
 		public void onFailure(Throwable caught) {
-		}
+		} // Ende onFailure
 
 		@Override
 		public void onSuccess(Void result) {
@@ -468,14 +485,20 @@ public class CompanySimulation implements EntryPoint {
 			// newName.setText("");
 
 			Window.alert("Das eigene Unternehmen wurde aktualisiert");
-		}
-	}
+		} // Ende method onSuccess
+	} // Ende class AddOwnCompanyCallback
 
+	/**
+	 * 
+	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher ein
+	 * bereits angelegtes eigenes Unternehmen aus der Datenbank zurückgibt
+	 * 
+	 */
 	public class GetOwnCompanyCallback implements AsyncCallback<OwnCompany> {
 
 		@Override
 		public void onFailure(Throwable caught) {
-		}
+		} // Ende onFailure
 
 		@Override
 		public void onSuccess(OwnCompany result) {
@@ -503,11 +526,7 @@ public class CompanySimulation implements EntryPoint {
 			integerBoxNumberOfStaff.setValue(result.getNumberOfStaff());
 			integerBoxSalaryOfStaff.setValue(result.getSalaryStaff());
 
-		}
-	}
+		} // Ende method onSuccess
+	} // Ende class GetOwnCompanyCallback
 
-	private void startCall() {
-		service.getOwnCompany(new GetOwnCompanyCallback());
-
-	}
-}
+} // Ende class CompanySimulation

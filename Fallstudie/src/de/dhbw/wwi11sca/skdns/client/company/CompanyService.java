@@ -1,5 +1,12 @@
-package de.dhbw.wwi11sca.skdns.client.unternehmen;
+package de.dhbw.wwi11sca.skdns.client.company;
 
+/**
+ * 
+ * @author SKDNS Marktsimulationen
+ * 
+ * CompanyService ist ein Interface für die Kommunikation der CompanySimulation mit der CompanyServiceImpl im Server.
+ *
+ */
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;

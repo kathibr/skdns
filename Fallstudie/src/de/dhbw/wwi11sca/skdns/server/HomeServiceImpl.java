@@ -27,22 +27,38 @@ public class HomeServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public String loginServer(String name) throws IllegalArgumentException {
 		return null;
-	}
+	} // Ende method loginServer
 
 	@Override
 	public List<Company> getCompany() {
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
 		List<Company> dbCompany = ds.createQuery(Company.class).asList();
+		// sucht alle Unternehmen raus, die nicht die UserID aus
+		// LoginServiceImpl haben und löscht sie aus der Liste
+		for (Company company : dbCompany) {
+			if (company.getUserID() != LoginServiceImpl.getUserID()) {
+				dbCompany.remove(company);
+			} // Ende if-Statement
+		} // Ende for-Schleife
 		return dbCompany;
-	}
+	} // Ende method getCompany
 
 	@Override
 	public OwnCompany getOwnCompany() {
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
-		List<OwnCompany> dbOwnCompany = ds.createQuery(OwnCompany.class).asList();
+		List<OwnCompany> dbOwnCompany = ds.createQuery(OwnCompany.class)
+				.asList();
+		// sucht alle Unternehmen raus, die nicht die UserID aus
+		// LoginServiceImpl haben und löscht sie aus der Liste
+		for (OwnCompany company : dbOwnCompany) {
+			if (company.getUserID() != LoginServiceImpl.getUserID()) {
+				dbOwnCompany.remove(company);
+			} // Ende if-Statement
+		} // Ende for-Schleife
 		OwnCompany single = dbOwnCompany.get(0);
+
 		return single;
-	}
+	} // Ende method getOwnCompany
 
 	private static Mongo getMongo() {
 		Mongo m = null;
@@ -54,6 +70,6 @@ public class HomeServiceImpl extends RemoteServiceServlet implements
 			e.printStackTrace();
 		}
 		return m;
-	}
+	} // Ende method getMongo
 
-}
+} // Ende class HomeServiceImpl

@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class Product implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private String userID = new String();
 	private int salesVolume;
 	private double price;
 
@@ -30,6 +31,14 @@ public class Product implements Serializable {
 
 	public void setPrice(double price) {
 		this.price = price;
+	}
+
+	public String getUserID() {
+		return userID;
+	}
+
+	public void setUserID(String userID) {
+		this.userID = userID;
 	}
 
 }

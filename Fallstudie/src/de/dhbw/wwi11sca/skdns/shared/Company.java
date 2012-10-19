@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class Company implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private String userID = new String();
 	private int topLine;
 	private int amount;
 	private double marketShare;
@@ -70,6 +71,14 @@ public class Company implements Serializable {
 
 	public void setProduct(Product product) {
 		this.product = product;
+	}
+
+	public String getUserID() {
+		return userID;
+	}
+
+	public void setUserID(String userID) {
+		this.userID = userID;
 	}
 
 }

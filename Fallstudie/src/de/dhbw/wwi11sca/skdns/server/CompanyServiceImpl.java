@@ -10,7 +10,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 
-import de.dhbw.wwi11sca.skdns.client.unternehmen.CompanyService;
+import de.dhbw.wwi11sca.skdns.client.company.CompanyService;
 import de.dhbw.wwi11sca.skdns.shared.Company;
 import de.dhbw.wwi11sca.skdns.shared.OwnCompany;
 
@@ -21,18 +21,31 @@ public class CompanyServiceImpl extends RemoteServiceServlet implements
 	public List<Company> getCompany() {
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
 		List<Company> dbCompanies = ds.createQuery(Company.class).asList();
+		// sucht alle Unternehmen raus, die nicht die UserID aus
+		// LoginServiceImpl haben und löscht sie aus der Liste
+		for (Company company : dbCompanies) {
+			if (company.getUserID() != LoginServiceImpl.getUserID()) {
+				dbCompanies.remove(company);
+			}
+		}
 		return dbCompanies;
-	}
+	} // Ende method getCompany
 
-	@Override
 	public OwnCompany getOwnCompany() {
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
 		List<OwnCompany> dbOwnCompany = ds.createQuery(OwnCompany.class)
 				.asList();
+		// sucht alle Unternehmen raus, die nicht die UserID aus
+		// LoginServiceImpl haben und löscht sie aus der Liste
+		for (Company company : dbOwnCompany) {
+			if (company.getUserID() != LoginServiceImpl.getUserID()) {
+				dbOwnCompany.remove(company);
+			}
+		}
 		OwnCompany singleUN = dbOwnCompany.get(0);
 
 		return singleUN;
-	}
+	} // Ende method getOwnCompany
 
 	private static Mongo getMongo() {
 		Mongo m = null;
@@ -44,9 +57,8 @@ public class CompanyServiceImpl extends RemoteServiceServlet implements
 			e.printStackTrace();
 		}
 		return m;
-	}
+	} // Ende method getMongo
 
-	@Override
 	public void addOwnCompany(OwnCompany ownCompany) {
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
 		// ds.createQuery(EigenesUnternehmen.class);
@@ -55,6 +67,6 @@ public class CompanyServiceImpl extends RemoteServiceServlet implements
 		ds.save(ownCompany);
 		// PersistenceManager.getDatastore().save(student);
 
-	}
+	} // Ende method addOwnCompany
 
-}
+} // Ende class CompanyServiceImpl
