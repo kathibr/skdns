@@ -12,8 +12,8 @@ package de.dhbw.wwi11sca.skdns.server;
 import java.net.UnknownHostException;
 import java.util.List;
 import de.dhbw.wwi11sca.skdns.client.home.HomeService;
-import de.dhbw.wwi11sca.skdns.shared.EigenesUnternehmen;
-import de.dhbw.wwi11sca.skdns.shared.Unternehmen;
+import de.dhbw.wwi11sca.skdns.shared.Company;
+import de.dhbw.wwi11sca.skdns.shared.OwnCompany;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
@@ -30,18 +30,17 @@ public class HomeServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public List<Unternehmen> getUnternehmen() {
+	public List<Company> getCompany() {
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
-		List<Unternehmen> dbUN = ds.createQuery(Unternehmen.class).asList();
-		return dbUN;
+		List<Company> dbCompany = ds.createQuery(Company.class).asList();
+		return dbCompany;
 	}
 
 	@Override
-	public EigenesUnternehmen getEigenesUnternehmen() {
+	public OwnCompany getOwnCompany() {
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
-		List<EigenesUnternehmen> dbEUN = ds.createQuery(
-				EigenesUnternehmen.class).asList();
-		EigenesUnternehmen single = dbEUN.get(0);
+		List<OwnCompany> dbOwnCompany = ds.createQuery(OwnCompany.class).asList();
+		OwnCompany single = dbOwnCompany.get(0);
 		return single;
 	}
 

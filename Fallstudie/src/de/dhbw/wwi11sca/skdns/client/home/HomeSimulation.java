@@ -1,4 +1,5 @@
 package de.dhbw.wwi11sca.skdns.client.home;
+
 /**
  * 
  * @author SKDNS Marktsimulationen
@@ -8,9 +9,6 @@ package de.dhbw.wwi11sca.skdns.client.home;
  * 
  */
 import java.util.List;
-
-import de.dhbw.wwi11sca.skdns.shared.Unternehmen;
-import de.dhbw.wwi11sca.skdns.shared.EigenesUnternehmen;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -23,13 +21,14 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import de.dhbw.wwi11sca.skdns.client.simulation.Simulation;
-import de.dhbw.wwi11sca.skdns.client.unternehmen.UnternehmenSimulation;
+import de.dhbw.wwi11sca.skdns.client.unternehmen.CompanySimulation;
+import de.dhbw.wwi11sca.skdns.shared.Company;
+import de.dhbw.wwi11sca.skdns.shared.OwnCompany;
 
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.view.client.ListDataProvider;
-
 
 public class HomeSimulation implements EntryPoint {
 
@@ -37,8 +36,8 @@ public class HomeSimulation implements EntryPoint {
 	AbsolutePanel panelHome = new AbsolutePanel();
 
 	// Widgets
-	CellTable<Unternehmen> tableCompanies = new CellTable<Unternehmen>();
-	CellTable<EigenesUnternehmen> tableOwnCompany = new CellTable<EigenesUnternehmen>();
+	CellTable<Company> tableCompanies = new CellTable<Company>();
+	CellTable<OwnCompany> tableOwnCompany = new CellTable<OwnCompany>();
 	Image logo = new Image("fallstudie/gwt/clean/images/Logo.JPG");
 
 	Button btCompaniesChange = new Button("Unternehmen bearbeiten");
@@ -49,9 +48,9 @@ public class HomeSimulation implements EntryPoint {
 	Label lbCompanies = new Label("Konkurrenz:");
 	Label lbLogout = new Label("Sie wurden erfolgreich ausgeloggt.");
 
-	List<Unternehmen> dbCompany;
-	List<Unternehmen> companyList;
-	List<EigenesUnternehmen> ownCompanyList;
+	List<Company> dbCompany;
+	List<Company> companyList;
+	List<OwnCompany> ownCompanyList;
 
 	private HomeServiceAsync service = GWT.create(HomeService.class);
 
@@ -101,8 +100,8 @@ public class HomeSimulation implements EntryPoint {
 		btCompaniesChange.addClickHandler(new ClickHandler() {
 			public void onClick(final ClickEvent event) {
 				RootPanel.get().clear();
-				UnternehmenSimulation unternehmen = new UnternehmenSimulation();
-				unternehmen.onModuleLoad();
+				CompanySimulation company = new CompanySimulation();
+				company.onModuleLoad();
 			}
 		});
 
@@ -131,106 +130,104 @@ public class HomeSimulation implements EntryPoint {
 		tableOwnCompany.setSize("480px", "200px");
 
 		// Unternehmensdaten des eigenen Unternehmens befüllen: Umsatz
-		TextColumn<EigenesUnternehmen> umsatzEColumn = new TextColumn<EigenesUnternehmen>() {
+		TextColumn<OwnCompany> topLineOwnColumn = new TextColumn<OwnCompany>() {
 			@Override
-			public String getValue(final EigenesUnternehmen unternehmen) {
-				return new Integer(unternehmen.getUmsatz()).toString();
+			public String getValue(OwnCompany company) {
+				return new Integer(company.getTopLine()).toString();
 			}
 		};
 		// Unternehmensdaten des eigenen Unternehmens befüllen: Gewinn
-		TextColumn<EigenesUnternehmen> gewinnEColumn = new TextColumn<EigenesUnternehmen>() {
+		TextColumn<OwnCompany> amountOwnColumn = new TextColumn<OwnCompany>() {
 			@Override
-			public String getValue(final EigenesUnternehmen unternehmen) {
-				return new Integer(unternehmen.getGewinn()).toString();
+			public String getValue(final OwnCompany company) {
+				return new Integer(company.getAmount()).toString();
 			}
 		};
 		// Unternehmensdaten des eigenen Unternehmens befüllen: Marktanteil
-		TextColumn<EigenesUnternehmen> marktAnteilEColumn = new TextColumn<EigenesUnternehmen>() {
+		TextColumn<OwnCompany> marketShareOwnColumn = new TextColumn<OwnCompany>() {
 			@Override
-			public String getValue(final EigenesUnternehmen unternehmen) {
-				return new Double(unternehmen.getMarktAnteil()).toString();
+			public String getValue(final OwnCompany company) {
+				return new Double(company.getMarketShare()).toString();
 			}
 		};
 		// Unternehmensdaten des eigenen Unternehmens befüllen:
 		// Produktabsatzmenge
-		TextColumn<EigenesUnternehmen> produktMengeEColumn = new TextColumn<EigenesUnternehmen>() {
+		TextColumn<OwnCompany> salesVolumeOwnColumn = new TextColumn<OwnCompany>() {
 			@Override
-			public String getValue(final EigenesUnternehmen unternehmen) {
-				return new Integer(unternehmen.getProdukt().getMenge())
+			public String getValue(final OwnCompany company) {
+				return new Integer(company.getProduct().getSalesVolume())
 						.toString();
 			}
 		};
 		// Unternehmensdaten des eigenen Unternehmens befüllen: Produktpreis
-		TextColumn<EigenesUnternehmen> produktPreisEColumn = new TextColumn<EigenesUnternehmen>() {
+		TextColumn<OwnCompany> productPriceOwnColumn = new TextColumn<OwnCompany>() {
 			@Override
-			public String getValue(final EigenesUnternehmen unternehmen) {
-				return new Double(unternehmen.getProdukt().getPreis())
-						.toString();
+			public String getValue(final OwnCompany company) {
+				return new Double(company.getProduct().getPrice()).toString();
 			}
 		};
 
 		// Unternehmensdaten des eigenen Unternehmens anzeigen lassen
-		tableOwnCompany.addColumn(umsatzEColumn, "Umsatz");
-		tableOwnCompany.addColumn(gewinnEColumn, "Gewinn");
-		tableOwnCompany.addColumn(marktAnteilEColumn, "Marktanteil");
-		tableOwnCompany.addColumn(produktPreisEColumn, "Produktpreis");
-		tableOwnCompany.addColumn(produktMengeEColumn, "Absatzmenge");
+		tableOwnCompany.addColumn(topLineOwnColumn, "Umsatz");
+		tableOwnCompany.addColumn(amountOwnColumn, "Gewinn");
+		tableOwnCompany.addColumn(marketShareOwnColumn, "Marktanteil");
+		tableOwnCompany.addColumn(productPriceOwnColumn, "Produktpreis");
+		tableOwnCompany.addColumn(salesVolumeOwnColumn, "Absatzmenge");
 
 		// CellTable für Konkurrenzunternehmen
 		panelHome.add(tableCompanies, 518, 266);
 		tableCompanies.setSize("480px", "200px");
 
 		// Unternehmensdaten der Konkurrenzunternehmen befüllen: Umsatz
-		TextColumn<Unternehmen> umsatzColumn = new TextColumn<Unternehmen>() {
+		TextColumn<Company> topLineColumn = new TextColumn<Company>() {
 			@Override
-			public String getValue(final Unternehmen unternehmen) {
-				return new Integer(unternehmen.getUmsatz()).toString();
+			public String getValue(final Company company) {
+				return new Integer(company.getTopLine()).toString();
 			}
 		};
 		// Unternehmensdaten der Konkurrenzunternehmen befüllen: Gewinn
-		TextColumn<Unternehmen> gewinnColumn = new TextColumn<Unternehmen>() {
+		TextColumn<Company> amountColumn = new TextColumn<Company>() {
 			@Override
-			public String getValue(final Unternehmen unternehmen) {
-				return new Integer(unternehmen.getGewinn()).toString();
+			public String getValue(final Company company) {
+				return new Integer(company.getAmount()).toString();
 			}
 		};
 		// Unternehmensdaten der Konkurrenzunternehmen befüllen: Marktanteil
-		TextColumn<Unternehmen> marktAnteilColumn = new TextColumn<Unternehmen>() {
+		TextColumn<Company> marketShareColumn = new TextColumn<Company>() {
 			@Override
-			public String getValue(final Unternehmen unternehmen) {
-				return new Double(unternehmen.getMarktAnteil()).toString();
+			public String getValue(final Company company) {
+				return new Double(company.getMarketShare()).toString();
 			}
 		};
 		// Unternehmensdaten der Konkurrenzunternehmen befüllen: Produktmenge
-		TextColumn<Unternehmen> produktMengeColumn = new TextColumn<Unternehmen>() {
+		TextColumn<Company> salesVolumeColumn = new TextColumn<Company>() {
 			@Override
-			public String getValue(final Unternehmen unternehmen) {
-				return new Integer(unternehmen.getProdukt().getMenge())
+			public String getValue(final Company company) {
+				return new Integer(company.getProduct().getSalesVolume())
 						.toString();
 			}
 		};
 		// Unternehmensdaten der Konkurrenzunternehmen befüllen: Produktpreis
-		TextColumn<Unternehmen> produktPreisColumn = new TextColumn<Unternehmen>() {
+		TextColumn<Company> productPriceColumn = new TextColumn<Company>() {
 			@Override
-			public String getValue(final Unternehmen unternehmen) {
-				return new Double(unternehmen.getProdukt().getPreis())
-						.toString();
+			public String getValue(final Company company) {
+				return new Double(company.getProduct().getPrice()).toString();
 			}
 		};
 
 		// Unternehmensdaten der Konkurrenzunternehmen anzeigen lassen
-		tableCompanies.addColumn(umsatzColumn, "Umsatz");
-		tableCompanies.addColumn(gewinnColumn, "Gewinn");
-		tableCompanies.addColumn(marktAnteilColumn, "Marktanteil");
-		tableCompanies.addColumn(produktPreisColumn, "Produktpreis");
-		tableCompanies.addColumn(produktMengeColumn, "Absatzmenge");
+		tableCompanies.addColumn(topLineColumn, "Umsatz");
+		tableCompanies.addColumn(amountColumn, "Gewinn");
+		tableCompanies.addColumn(marketShareColumn, "Marktanteil");
+		tableCompanies.addColumn(productPriceColumn, "Produktpreis");
+		tableCompanies.addColumn(salesVolumeColumn, "Absatzmenge");
 
 		// Calls
 
 		// Eigenes Unternehmen
-		service.getEigenesUnternehmen(new GetEigenesUnternehmenCallback());
+		service.getOwnCompany(new GetOwnCompanyCallback());
 		// Konkurrenzunternehmen
-		service.getUnternehmen(new GetUnternehmenCallback());
+		service.getCompany(new GetCompanyCallback());
 
 	}
 
@@ -240,17 +237,14 @@ public class HomeSimulation implements EntryPoint {
 	 * der Konkurrenzunternehmen aus der Datenbank zurückgibt
 	 * 
 	 */
-	public class GetUnternehmenCallback implements
-			AsyncCallback<List<Unternehmen>> {
+	public class GetCompanyCallback implements AsyncCallback<List<Company>> {
 
-		@Override
 		public void onFailure(final Throwable caught) {
 		}
 
-		@Override
-		public final void onSuccess(final List<Unternehmen> result) {
+		public final void onSuccess(final List<Company> result) {
 
-			ListDataProvider<Unternehmen> dataProvider = new ListDataProvider<Unternehmen>();
+			ListDataProvider<Company> dataProvider = new ListDataProvider<Company>();
 			// Connect the table to the data provider.
 			dataProvider.addDataDisplay(tableCompanies);
 
@@ -258,8 +252,8 @@ public class HomeSimulation implements EntryPoint {
 			// to the widget.
 			companyList = dataProvider.getList();
 
-			for (Unternehmen unternehmen : result) {
-				companyList.add(unternehmen);
+			for (Company company : result) {
+				companyList.add(company);
 			}
 
 		}
@@ -271,25 +265,24 @@ public class HomeSimulation implements EntryPoint {
 	 * des eigenen Unternehmen aus der Datenbank zurückgibt
 	 * 
 	 */
-	public class GetEigenesUnternehmenCallback implements
-			AsyncCallback<EigenesUnternehmen> {
+	public class GetOwnCompanyCallback implements AsyncCallback<OwnCompany> {
 
 		@Override
 		public void onFailure(final Throwable caught) {
 		}
 
 		@Override
-		public final void onSuccess(EigenesUnternehmen result) {
+		public final void onSuccess(OwnCompany result) {
 
-			ListDataProvider<EigenesUnternehmen> dataEProvider = new ListDataProvider<EigenesUnternehmen>();
+			ListDataProvider<OwnCompany> dataOwnProvider = new ListDataProvider<OwnCompany>();
 			// Connect the table to the data provider.
-			dataEProvider.addDataDisplay(tableOwnCompany);
+			dataOwnProvider.addDataDisplay(tableOwnCompany);
 
 			// Add the data to the data provider, which automatically pushes it
 			// to the widget.
-			ownCompanyList = dataEProvider.getList();
+			ownCompanyList = dataOwnProvider.getList();
 			ownCompanyList.add(result);
-			lbOwnCompany.setText(result.getFirma());
+			lbOwnCompany.setText(result.getTradeName());
 
 		}
 	}

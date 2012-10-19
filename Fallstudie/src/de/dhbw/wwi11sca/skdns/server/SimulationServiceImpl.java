@@ -19,11 +19,11 @@ public class SimulationServiceImpl extends RemoteServiceServlet implements
 		SimulationService {
 
 	@Override
-	public EigenesUnternehmen getCompany() {
+	public OwnCompany getCompany() {
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
-		List<EigenesUnternehmen> dbEUN = ds.createQuery(
-				EigenesUnternehmen.class).asList();
-		EigenesUnternehmen single = dbEUN.get(0);
+		List<OwnCompany> dbOwnCompany = ds.createQuery(
+				OwnCompany.class).asList();
+		OwnCompany single = dbOwnCompany.get(0);
 		return single;
 	}
 

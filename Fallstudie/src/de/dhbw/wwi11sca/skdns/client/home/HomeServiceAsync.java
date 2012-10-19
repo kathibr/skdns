@@ -10,15 +10,15 @@ package de.dhbw.wwi11sca.skdns.client.home;
 import java.util.List;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import de.dhbw.wwi11sca.skdns.shared.EigenesUnternehmen;
-import de.dhbw.wwi11sca.skdns.shared.Unternehmen;
+import de.dhbw.wwi11sca.skdns.shared.Company;
+import de.dhbw.wwi11sca.skdns.shared.OwnCompany;
 
 public interface HomeServiceAsync {
 
-	void getUnternehmen(AsyncCallback<List<Unternehmen>> callback);
-
-	void getEigenesUnternehmen(AsyncCallback<EigenesUnternehmen> callback);
+	void getCompany(AsyncCallback<List<Company>> callback);
 
 	void loginServer(String name, AsyncCallback<String> callback);
+
+	void getOwnCompany(AsyncCallback<OwnCompany> callback);
 
 }

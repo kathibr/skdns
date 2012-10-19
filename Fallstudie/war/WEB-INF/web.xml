@@ -28,12 +28,12 @@
   </servlet-mapping>
   
     <servlet>
-    <servlet-name>unternehmen</servlet-name>
-    <servlet-class>de.dhbw.wwi11sca.skdns.server.UnternehmenServiceImpl</servlet-class>
+    <servlet-name>company</servlet-name>
+    <servlet-class>de.dhbw.wwi11sca.skdns.server.CompanyServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
-    <servlet-name>unternehmen</servlet-name>
+    <servlet-name>company</servlet-name>
     <url-pattern>/fallstudie/unternehmen</url-pattern>
   </servlet-mapping>
   

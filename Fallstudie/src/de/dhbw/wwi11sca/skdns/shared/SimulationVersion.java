@@ -19,10 +19,10 @@ public class SimulationVersion implements Serializable {
 	private int simulationYear;
 	private int version;
 
-	private EigenesUnternehmen ownCompany;
-	private Unternehmen company1;
-	private Unternehmen company2;
-	private Unternehmen company3;
+	private OwnCompany ownCompany;
+	private Company company1;
+	private Company company2;
+	private Company company3;
 
 	// Konstruktor
 	public SimulationVersion() {
@@ -101,44 +101,44 @@ public class SimulationVersion implements Serializable {
 		this.price = price;
 	}
 
-	public EigenesUnternehmen getOwnCompany() {
-		return ownCompany;
-	}
-
-	public void setOwnCompany(EigenesUnternehmen ownCompany) {
-		this.ownCompany = ownCompany;
-	}
-
-	public Unternehmen getCompany1() {
-		return company1;
-	}
-
-	public void setCompany1(Unternehmen company1) {
-		this.company1 = company1;
-	}
-
-	public Unternehmen getCompany2() {
-		return company2;
-	}
-
-	public void setCompany2(Unternehmen company2) {
-		this.company2 = company2;
-	}
-
-	public Unternehmen getCompany3() {
-		return company3;
-	}
-
-	public void setCompany3(Unternehmen company3) {
-		this.company3 = company3;
-	}
-
 	public int getMarketIncrease() {
 		return marketIncrease;
 	}
 
 	public void setMarketIncrease(int marketIncrease) {
 		this.marketIncrease = marketIncrease;
+	}
+
+	public OwnCompany getOwnCompany() {
+		return ownCompany;
+	}
+
+	public void setOwnCompany(OwnCompany ownCompany) {
+		this.ownCompany = ownCompany;
+	}
+
+	public Company getCompany1() {
+		return company1;
+	}
+
+	public void setCompany1(Company company1) {
+		this.company1 = company1;
+	}
+
+	public Company getCompany2() {
+		return company2;
+	}
+
+	public void setCompany2(Company company2) {
+		this.company2 = company2;
+	}
+
+	public Company getCompany3() {
+		return company3;
+	}
+
+	public void setCompany3(Company company3) {
+		this.company3 = company3;
 	}
 
 }

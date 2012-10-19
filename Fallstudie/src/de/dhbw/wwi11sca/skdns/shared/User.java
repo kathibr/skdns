@@ -9,8 +9,6 @@ package de.dhbw.wwi11sca.skdns.shared;
  */
 import java.io.Serializable;
 
-import com.google.gwt.user.client.ui.SimpleCheckBox;
-
 public class User implements Serializable {
 
 	/**
@@ -18,16 +16,16 @@ public class User implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private String username = new String();
-	private String kennwort = new String();
+	private String password = new String();
 	private String mail = new String();
 	private boolean forgottenPassword = false;
-	
+
 	public User() {
 	}
 
-	public User(String username, String kennwort, String mail) {
+	public User(String username, String password, String mail) {
 		this.username = username;
-		this.kennwort = kennwort;
+		this.setPassword(password);
 		this.mail = mail;
 		this.forgottenPassword = false;
 	}
@@ -38,14 +36,6 @@ public class User implements Serializable {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public String getKennwort() {
-		return kennwort;
-	}
-
-	public void setKennwort(String kennwort) {
-		this.kennwort = kennwort;
 	}
 
 	public String getMail() {
@@ -62,6 +52,14 @@ public class User implements Serializable {
 
 	public void setForgottenPassword(boolean forgottenPassword) {
 		this.forgottenPassword = forgottenPassword;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }

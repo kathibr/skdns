@@ -1,4 +1,5 @@
 package de.dhbw.wwi11sca.skdns.client.login;
+
 /**
  * 
  * @author SKDNS Marktsimulationen
@@ -20,9 +21,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.Image;
 import de.dhbw.wwi11sca.skdns.shared.User;
+import de.dhbw.wwi11sca.skdns.client.admin.AdminSimulation;
 import de.dhbw.wwi11sca.skdns.client.home.HomeSimulation;
-
-
 
 public class LoginSimulation implements EntryPoint {
 
@@ -87,7 +87,7 @@ public class LoginSimulation implements EntryPoint {
 		btLogin.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				userOnline = new User();
-				userOnline.setKennwort(textBoxPassword.getText());
+				userOnline.setPassword(textBoxPassword.getText());
 				userOnline.setUsername(textBoxUsername.getText());
 				// Überprüfen, ob es sich bei dem einloggenden User um den admin
 				// handelt
@@ -195,8 +195,8 @@ public class LoginSimulation implements EntryPoint {
 		public void onSuccess(Void result) {
 
 			RootPanel.get().clear();
-			// TODO: AdminSimulation admin = new AdminSimulation();
-			// admin.onModuleLoad();
+			AdminSimulation admin = new AdminSimulation();
+			admin.onModuleLoad();
 
 		}
 	}

@@ -12,14 +12,16 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import de.dhbw.wwi11sca.skdns.shared.*;
+
+import de.dhbw.wwi11sca.skdns.shared.Company;
+import de.dhbw.wwi11sca.skdns.shared.OwnCompany;
 
 @RemoteServiceRelativePath("home")
 public interface HomeService extends RemoteService {
 
 	String loginServer(String name) throws IllegalArgumentException;
 
-	public List<Unternehmen> getUnternehmen();
+	public List<Company> getCompany();
 
-	public EigenesUnternehmen getEigenesUnternehmen();
+	public OwnCompany getOwnCompany();
 }

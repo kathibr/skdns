@@ -18,7 +18,7 @@ import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.view.client.ListDataProvider;
 
 import de.dhbw.wwi11sca.skdns.client.home.HomeSimulation;
-import de.dhbw.wwi11sca.skdns.shared.EigenesUnternehmen;
+import de.dhbw.wwi11sca.skdns.shared.OwnCompany;
 import de.dhbw.wwi11sca.skdns.shared.SimulationVersion;
 
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -28,7 +28,7 @@ public class Simulation implements EntryPoint {
 
 	// Panels
 	AbsolutePanel absolutePanelSimulation = new AbsolutePanel();
-	AbsolutePanel absolutePanelInvest = new AbsolutePanel();
+	AbsolutePanel absolutePanelInvestments = new AbsolutePanel();
 
 	// Widgets
 	Label lbHome = new Label("Home");
@@ -39,7 +39,7 @@ public class Simulation implements EntryPoint {
 	Button btNextYear = new Button("Folgejahr");
 	Button btLogout = new Button("Logout");
 
-	Label lbInvest = new Label("Investitionen:");
+	Label lbInvestments = new Label("Investitionen:");
 	Label lbMarketing = new Label("Marketing:");
 	Label lbMachine = new Label("Maschinen:");
 	Label lbMachineValue = new Label("Wert:");
@@ -57,8 +57,8 @@ public class Simulation implements EntryPoint {
 
 	ScrollPanel scrollPanelYears = new ScrollPanel();
 	TabPanel tabPanelYears = new TabPanel();
-	CellTable<EigenesUnternehmen> tableOwnCompany;
-	List<EigenesUnternehmen> companyList;
+	CellTable<OwnCompany> tableOwnCompany;
+	List<OwnCompany> companyList;
 	AbsolutePanel[] absolutePanelYear = new AbsolutePanel[1000];
 
 	int stackYear = 0;
@@ -95,10 +95,10 @@ public class Simulation implements EntryPoint {
 		tabPanelYears.setSize("100%", "100%");
 
 		// Darstellung der Unternehmen
-		uebersicht();
+		summaryCompanies();
 
 		// Investitionen
-		investitionLaden();
+		loadInvestment();
 
 		// Buttons
 
@@ -138,7 +138,7 @@ public class Simulation implements EntryPoint {
 				if (integerBoxPrice.getValue() != null)
 					version.setPrice(integerBoxPrice.getValue());
 
-				deleteValueInvest();
+				deleteValueInvestments();
 
 				tabPanelYears
 						.add(absolutePanelYear[stackYear], "Jahr "
@@ -184,7 +184,7 @@ public class Simulation implements EntryPoint {
 				if (integerBoxPrice.getValue() != null)
 					version.setPrice(integerBoxPrice.getValue());
 
-				deleteValueInvest();
+				deleteValueInvestments();
 
 				tabPanelYears
 						.add(absolutePanelYear[stackYear], "Jahr "
@@ -218,7 +218,7 @@ public class Simulation implements EntryPoint {
 
 	}
 
-	private void deleteValueInvest() {
+	private void deleteValueInvestments() {
 		integerBoxMarketing.setValue(null);
 		integerBoxMachineValue.setValue(null);
 		integerBoxCapacity.setValue(null);
@@ -228,47 +228,46 @@ public class Simulation implements EntryPoint {
 
 	}
 
-	public void uebersicht() {
-		tableOwnCompany = new CellTable<EigenesUnternehmen>();
+	public void summaryCompanies() {
+		tableOwnCompany = new CellTable<OwnCompany>();
 		absolutePanelSimulation.add(tableOwnCompany, 60, 79);
 		tableOwnCompany.setSize("894px", "135px");
 
-		TextColumn<EigenesUnternehmen> firmaEColumn = new TextColumn<EigenesUnternehmen>() {
+		TextColumn<OwnCompany> firmaEColumn = new TextColumn<OwnCompany>() {
 			@Override
-			public String getValue(EigenesUnternehmen unternehmen) {
-				return unternehmen.getFirma();
+			public String getValue(OwnCompany company) {
+				return company.getTradeName();
 			}
 		};
-		TextColumn<EigenesUnternehmen> umsatzEColumn = new TextColumn<EigenesUnternehmen>() {
+		TextColumn<OwnCompany> umsatzEColumn = new TextColumn<OwnCompany>() {
 			@Override
-			public String getValue(EigenesUnternehmen unternehmen) {
-				return new Integer(unternehmen.getUmsatz()).toString();
+			public String getValue(OwnCompany company) {
+				return new Integer(company.getTopLine()).toString();
 			}
 		};
-		TextColumn<EigenesUnternehmen> gewinnEColumn = new TextColumn<EigenesUnternehmen>() {
+		TextColumn<OwnCompany> gewinnEColumn = new TextColumn<OwnCompany>() {
 			@Override
-			public String getValue(EigenesUnternehmen unternehmen) {
-				return new Integer(unternehmen.getGewinn()).toString();
+			public String getValue(OwnCompany company) {
+				return new Integer(company.getAmount()).toString();
 			}
 		};
-		TextColumn<EigenesUnternehmen> marktAnteilEColumn = new TextColumn<EigenesUnternehmen>() {
+		TextColumn<OwnCompany> marktAnteilEColumn = new TextColumn<OwnCompany>() {
 			@Override
-			public String getValue(EigenesUnternehmen unternehmen) {
-				return new Double(unternehmen.getMarktAnteil()).toString();
+			public String getValue(OwnCompany company) {
+				return new Double(company.getMarketShare()).toString();
 			}
 		};
-		TextColumn<EigenesUnternehmen> produktMengeEColumn = new TextColumn<EigenesUnternehmen>() {
+		TextColumn<OwnCompany> produktMengeEColumn = new TextColumn<OwnCompany>() {
 			@Override
-			public String getValue(EigenesUnternehmen unternehmen) {
-				return new Integer(unternehmen.getProdukt().getMenge())
+			public String getValue(OwnCompany company) {
+				return new Integer(company.getProduct().getSalesVolume())
 						.toString();
 			}
 		};
-		TextColumn<EigenesUnternehmen> produktPreisEColumn = new TextColumn<EigenesUnternehmen>() {
+		TextColumn<OwnCompany> produktPreisEColumn = new TextColumn<OwnCompany>() {
 			@Override
-			public String getValue(EigenesUnternehmen unternehmen) {
-				return new Double(unternehmen.getProdukt().getPreis())
-						.toString();
+			public String getValue(OwnCompany company) {
+				return new Double(company.getProduct().getPrice()).toString();
 			}
 		};
 
@@ -283,73 +282,72 @@ public class Simulation implements EntryPoint {
 
 	}
 
-	private void investitionLaden() {
+	private void loadInvestment() {
 		// Panel, um die Investitionen zu tätigen : absolutePanelSimulation
-		absolutePanelSimulation.add(absolutePanelInvest, 84, 248);
-		absolutePanelInvest.setSize("650px", "133px");
+		absolutePanelSimulation.add(absolutePanelInvestments, 84, 248);
+		absolutePanelInvestments.setSize("650px", "133px");
 
 		// Labels
 
-		lbInvest.setStyleName("gwt-UnternehmenLabel");
-		absolutePanelInvest.add(lbInvest, 10, 10);
-		lbInvest.setSize("282px", "18px");
+		lbInvestments.setStyleName("gwt-UnternehmenLabel");
+		absolutePanelInvestments.add(lbInvestments, 10, 10);
+		lbInvestments.setSize("282px", "18px");
 		// Marketing
-		absolutePanelInvest.add(lbMarketing, 20, 45);
+		absolutePanelInvestments.add(lbMarketing, 20, 45);
 		// Maschinen
-		absolutePanelInvest.add(lbMachine, 14, 73);
+		absolutePanelInvestments.add(lbMachine, 14, 73);
 		// Maschinen Wert der Maschinen
-		absolutePanelInvest.add(lbMachineValue, 21, 103);
+		absolutePanelInvestments.add(lbMachineValue, 21, 103);
 		lbMachineValue.setSize("60px", "18px");
 		// Maschinen nötiges Personal
-		absolutePanelInvest.add(lbUsedPersonal, 410, 103);
+		absolutePanelInvestments.add(lbUsedPersonal, 410, 103);
 		// Maschinen Kapazität
-		absolutePanelInvest.add(lbMachineCapacity, 239, 103);
+		absolutePanelInvestments.add(lbMachineCapacity, 239, 103);
 		// Personal
-		absolutePanelInvest.add(lbPersonal, 239, 45);
+		absolutePanelInvestments.add(lbPersonal, 239, 45);
 		// Produktpreis
-		absolutePanelInvest.add(lbPrice, 410, 47);
+		absolutePanelInvestments.add(lbPrice, 410, 47);
 		lbPrice.setSize("101px", "18px");
 		lbPrice.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 
 		// IntegerBoxen
 		// Marketing
-		absolutePanelInvest.add(integerBoxMarketing, 86, 34);
+		absolutePanelInvestments.add(integerBoxMarketing, 86, 34);
 		integerBoxMarketing.setSize("94px", "25px");
 		// Maschinenwert
-		absolutePanelInvest.add(integerBoxMachineValue, 86, 90);
+		absolutePanelInvestments.add(integerBoxMachineValue, 86, 90);
 		integerBoxMachineValue.setSize("94px", "25px");
 		// Maschinenkapazität
-		absolutePanelInvest.add(integerBoxCapacity, 300, 90);
+		absolutePanelInvestments.add(integerBoxCapacity, 300, 90);
 		integerBoxCapacity.setSize("94px", "25px");
 		// Maschinen Anzahl der notwendigen Mitarbeiter
-		absolutePanelInvest.add(integerBoxMachineStaff, 520, 90);
+		absolutePanelInvestments.add(integerBoxMachineStaff, 520, 90);
 		integerBoxMachineStaff.setSize("94px", "25px");
 		// Personal
-		absolutePanelInvest.add(integerBoxPersonal, 300, 34);
+		absolutePanelInvestments.add(integerBoxPersonal, 300, 34);
 		integerBoxPersonal.setSize("94px", "25px");
 		// Produktpreis
-		absolutePanelInvest.add(integerBoxPrice, 520, 34);
+		absolutePanelInvestments.add(integerBoxPrice, 520, 34);
 		integerBoxPrice.setSize("94px", "25px");
 
 	}
 
-	public class GetCompanyCallback implements
-			AsyncCallback<EigenesUnternehmen> {
+	public class GetCompanyCallback implements AsyncCallback<OwnCompany> {
 
 		@Override
 		public void onFailure(Throwable caught) {
 		}
 
 		@Override
-		public void onSuccess(EigenesUnternehmen result) {
+		public void onSuccess(OwnCompany result) {
 
-			ListDataProvider<EigenesUnternehmen> dataEProvider = new ListDataProvider<EigenesUnternehmen>();
+			ListDataProvider<OwnCompany> dataOwnProvider = new ListDataProvider<OwnCompany>();
 			// Connect the table to the data provider.
-			dataEProvider.addDataDisplay(tableOwnCompany);
+			dataOwnProvider.addDataDisplay(tableOwnCompany);
 
 			// Add the data to the data provider, which automatically pushes it
 			// to the widget.
-			companyList = dataEProvider.getList();
+			companyList = dataOwnProvider.getList();
 			companyList.add(result);
 
 		}

@@ -24,16 +24,16 @@ import com.mongodb.MongoException;
 public class LoginServiceImpl extends RemoteServiceServlet implements
 		LoginService {
 
-	boolean kontrolle = false;
+	boolean control = false;
 	private String username;
-	private String kennwort;
+	private String password;
 	private static final long serialVersionUID = -179774088492873807L;
 	User userForgottenPassword;
 
 	@Override
 	public void checkLogin(User user) throws DelistedException {
 		username = (String) user.getUsername().trim();
-		kennwort = (String) user.getKennwort().trim();
+		password = (String) user.getPassword().trim();
 
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
 
@@ -42,9 +42,9 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 		User first = dbUser.get(0);
 
 		String dbUsername = (String) first.getUsername();
-		String dbKennwort = (String) first.getKennwort();
+		String dbPassword = (String) first.getPassword();
 
-		if ((username.equals(dbUsername)) && (kennwort.equals(dbKennwort))) {
+		if ((username.equals(dbUsername)) && (password.equals(dbPassword))) {
 			AdminServiceImpl.getAdmin().setLoginCount(1);
 			// success
 		} else {
@@ -88,7 +88,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void checkAdmin(User admin) throws DelistedException {
 		username = (String) admin.getUsername().trim();
-		kennwort = (String) admin.getKennwort().trim();
+		password = (String) admin.getPassword().trim();
 
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
 
@@ -96,9 +96,9 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 				.filter("username =", username).asList();
 		User first = dbUser.get(0);
 
-		String dbKennwort = (String) first.getKennwort();
+		String dbPassword = (String) first.getPassword();
 
-		if (kennwort.equals(dbKennwort)) {
+		if (password.equals(dbPassword)) {
 			// success
 		} else {
 			throw new DelistedException("ERR");
