@@ -1,7 +1,11 @@
 package de.dhbw.wwi11sca.skdns.shared;
 
-public class Admin {
+import java.io.Serializable;
 
+public class Admin implements Serializable{
+
+	private static final long serialVersionUID = -5553597271197251395L;
+	
 	private int loginCount;
 	private int existingUserCount;
 

@@ -152,7 +152,7 @@ public class AdminSimulation implements EntryPoint {
 				// Daten aus Textboxen übernehmen und neuen User erzeugen
 				newUser = new User();
 				newUser.setUsername(textBoxUsername.getText());
-				newUser.setKennwort(textBoxPassword.getText());
+				newUser.setPassword(textBoxPassword.getText());
 				newUser.setMail(textBoxMail.getText());
 				service.saveUser(newUser, new SaveUserCallback());
 			}
@@ -186,7 +186,7 @@ public class AdminSimulation implements EntryPoint {
 		TextColumn<User> PasswordColumn = new TextColumn<User>() {
 			@Override
 			public String getValue(User user) {
-				return new String(user.getKennwort());
+				return new String(user.getPassword());
 			}
 
 		};

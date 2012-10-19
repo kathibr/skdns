@@ -34,7 +34,7 @@
   
   <servlet-mapping>
     <servlet-name>company</servlet-name>
-    <url-pattern>/fallstudie/unternehmen</url-pattern>
+    <url-pattern>/fallstudie/company</url-pattern>
   </servlet-mapping>
   
       <servlet>
