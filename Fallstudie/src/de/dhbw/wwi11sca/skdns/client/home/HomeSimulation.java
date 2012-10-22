@@ -33,24 +33,24 @@ import com.google.gwt.view.client.ListDataProvider;
 public class HomeSimulation implements EntryPoint {
 
 	// Panels
-	AbsolutePanel panelHome = new AbsolutePanel();
+	private AbsolutePanel panelHome = new AbsolutePanel();
 
 	// Widgets
-	CellTable<Company> tableCompanies = new CellTable<Company>();
-	CellTable<OwnCompany> tableOwnCompany = new CellTable<OwnCompany>();
-	Image logo = new Image("fallstudie/gwt/clean/images/Logo.JPG");
+	private CellTable<Company> tableCompanies = new CellTable<Company>();
+	private CellTable<OwnCompany> tableOwnCompany = new CellTable<OwnCompany>();
+	private Image logo = new Image("fallstudie/gwt/clean/images/Logo.JPG");
 
-	Button btCompaniesChange = new Button("Unternehmen bearbeiten");
-	Button btSimulation = new Button("Simulation starten");
-	Button btLogout = new Button("Logout");
+	private Button btCompaniesChange = new Button("Unternehmen bearbeiten");
+	private Button btSimulation = new Button("Simulation starten");
+	private Button btLogout = new Button("Logout");
 
-	Label lbOwnCompany = new Label();
-	Label lbCompanies = new Label("Konkurrenz:");
-	Label lbLogout = new Label("Sie wurden erfolgreich ausgeloggt.");
+	private Label lbOwnCompany = new Label();
+	private Label lbCompanies = new Label("Konkurrenz:");
+	private Label lbLogout = new Label("Sie wurden erfolgreich ausgeloggt.");
 
-	List<Company> dbCompany;
-	List<Company> companyList;
-	List<OwnCompany> ownCompanyList;
+	private List<Company> dbCompany;
+	private List<Company> companyList;
+	private List<OwnCompany> ownCompanyList;
 
 	private HomeServiceAsync service = GWT.create(HomeService.class);
 
@@ -181,14 +181,14 @@ public class HomeSimulation implements EntryPoint {
 		// Unternehmensdaten der Konkurrenzunternehmen befüllen: Umsatz
 		TextColumn<Company> topLineColumn = new TextColumn<Company>() {
 			@Override
-			public String getValue(final Company company) {
+			public String getValue(Company company) {
 				return new Integer(company.getTopLine()).toString();
 			}
 		}; // Ende topLineColumn
 			// Unternehmensdaten der Konkurrenzunternehmen befüllen: Gewinn
 		TextColumn<Company> amountColumn = new TextColumn<Company>() {
 			@Override
-			public String getValue(final Company company) {
+			public String getValue(Company company) {
 				return new Integer(company.getAmount()).toString();
 			}
 		}; // Ende amountColumn
@@ -204,8 +204,7 @@ public class HomeSimulation implements EntryPoint {
 		TextColumn<Company> salesVolumeColumn = new TextColumn<Company>() {
 			@Override
 			public String getValue(final Company company) {
-				return new Integer(company.getProduct().getSalesVolume())
-						.toString();
+				return new Integer(company.getProduct().getSalesVolume()).toString();
 			}
 		}; // Ende salesVolumeColumn
 			// Unternehmensdaten der Konkurrenzunternehmen befüllen:
@@ -240,11 +239,11 @@ public class HomeSimulation implements EntryPoint {
 	 * 
 	 */
 	public class GetCompanyCallback implements AsyncCallback<List<Company>> {
-
+		@Override
 		public void onFailure(final Throwable caught) {
 		} // Ende method onFailure
-
-		public final void onSuccess(final List<Company> result) {
+		@Override
+		public final void onSuccess(List<Company> result) {
 
 			ListDataProvider<Company> dataProvider = new ListDataProvider<Company>();
 			// Connect the table to the data provider.

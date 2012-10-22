@@ -56,13 +56,13 @@ public class CompanySimulation implements EntryPoint {
 	Label lbNumberOfStaff = new Label("Anzahl Mitarbeiter:");
 	Label lbSalaryOfStaff = new Label("durch. Mitarbeitergehalt:");
 	TextBox textBoxTradeName = new TextBox();
-	IntegerBox integerBoxTopLineOwnCompany = new IntegerBox();
+	TextBox integerBoxTopLineOwnCompany = new TextBox();
 	DoubleBox doubleBoxMarketShareOwnCompany = new DoubleBox();
 	DoubleBox doubleBoxFixedCosts = new DoubleBox();
 	DoubleBox doubleBoxProductPriceOwnCompany = new DoubleBox();
-	IntegerBox integerBoxSalesVolume = new IntegerBox();
-	IntegerBox integerBoxNumberOfStaff = new IntegerBox();
-	IntegerBox integerBoxSalaryOfStaff = new IntegerBox();
+	TextBox integerBoxSalesVolume = new TextBox();
+	TextBox integerBoxNumberOfStaff = new TextBox();
+	TextBox integerBoxSalaryOfStaff = new TextBox();
 	Button btDeleteOwnCompany = new Button("L\u00F6schen");
 	Button btSaveOwnCompany = new Button("\u00DCbernehmen");
 	CellTable<Machines> cellTableMachines;
@@ -202,15 +202,28 @@ public class CompanySimulation implements EntryPoint {
 		btSaveOwnCompany.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 
-				if (Pattern
-						.matches(
-								"[\u00C4\u00DC\u00D6A-Z][a-z\u00E4\u00FC\u00F6\u00C4\u00DC\u00DF\u00D6A-Z\\s]*",
-								textBoxTradeName.getText())) {
-
+				if (
+						(Pattern.matches(
+								"[\u00C4\u00DC\u00D6A-Z][0-9a-z\u00E4\u00FC\u00F6\u00C4\u00DC\u00DF\u00D6A-Z\\s]*",
+								textBoxTradeName.getText())
+						)
+						&&	
+						(Pattern.matches("[0-9][0-9]*",
+								integerBoxTopLineOwnCompany.getText())
+						)
+					)
+				{	
 					ownCom.setTradeName(textBoxTradeName.getText());
-
+					ownCom.setTopLine(new Integer(integerBoxTopLineOwnCompany.getText()));
+					ownCom.setMarketShare(new Double(doubleBoxMarketShareOwnCompany.getText()));
+					ownCom.setFixedCosts(new Double(doubleBoxFixedCosts.getText()));
+					ownCom.setNumberOfStaff(new Integer(integerBoxNumberOfStaff.getText()));
+					ownCom.setSalaryStaff(new Integer(integerBoxSalaryOfStaff.getText()));
+					ownCom.getProduct().setPrice(new Double(doubleBoxProductPriceOwnCompany.getText()));
+					ownCom.getProduct().setSalesVolume(new Integer(integerBoxSalesVolume.getText()));
+					
+					
 					service.addOwnCompany(ownCom, new AddOwnCompanyCallback());
-
 				} else {
 					Window.alert("Bitte Eingabe \u00FCberpr\u00FCfen");
 				} // Ende if-else
@@ -460,7 +473,7 @@ public class CompanySimulation implements EntryPoint {
 
 	private void startCall() {
 		service.getOwnCompany(new GetOwnCompanyCallback());
-
+		service.getCompany(new GetCompanyCallback());
 	} // Ende method startCall
 
 	/**
@@ -516,15 +529,48 @@ public class CompanySimulation implements EntryPoint {
 			machinesOwnCompany.add(result.getMachines());
 
 			textBoxTradeName.setText(result.getTradeName());
-			integerBoxTopLineOwnCompany.setValue(result.getTopLine());
+			integerBoxTopLineOwnCompany.setText(new Integer(result.getTopLine()).toString());
 			doubleBoxMarketShareOwnCompany.setValue(result.getMarketShare());
 			doubleBoxFixedCosts.setValue(result.getFixedCosts());
 			doubleBoxProductPriceOwnCompany.setValue(result.getProduct()
 					.getPrice());
 			integerBoxSalesVolume
-					.setValue(result.getProduct().getSalesVolume());
-			integerBoxNumberOfStaff.setValue(result.getNumberOfStaff());
-			integerBoxSalaryOfStaff.setValue(result.getSalaryStaff());
+					.setText(new Integer(result.getProduct().getSalesVolume()).toString());
+			integerBoxNumberOfStaff.setText(new Integer(result.getNumberOfStaff()).toString());
+			integerBoxSalaryOfStaff.setText(new Integer(result.getSalaryStaff()).toString());
+
+		} // Ende method onSuccess
+	} // Ende class GetOwnCompanyCallback
+	/**
+	 * 
+	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher
+	 * bereits angelegte Unternehmen aus der Datenbank zurückgibt
+	 * 
+	 */
+	public class GetCompanyCallback implements AsyncCallback<List<Company>> {
+
+		@Override
+		public void onFailure(Throwable caught) {
+		} // Ende onFailure
+
+		@Override
+		public void onSuccess(List<Company> result) {
+			integerBoxTopLineCompany1.setValue(result.get(0).getTopLine());
+			doubleBoxMarketShareCompany1.setValue(result.get(0).getMarketShare());
+			doubleBoxProductPriceCompany1.setValue(result.get(0).getProduct().getPrice());
+			integerBoxSalesVolumeCompany1.setValue(result.get(0).getProduct().getSalesVolume());
+			
+			integerBoxTopLineCompany2.setValue(result.get(1).getTopLine());
+			doubleBoxMarketShareCompany2.setValue(result.get(1).getMarketShare());
+			doubleBoxProductPriceCompany2.setValue(result.get(1).getProduct().getPrice());
+			integerBoxSalesVolumeCompany2.setValue(result.get(1).getProduct().getSalesVolume());
+			
+			integerBoxTopLineCompany3.setValue(result.get(2).getTopLine());
+			doubleBoxMarketShareCompany3.setValue(result.get(2).getMarketShare());
+			doubleBoxProductPriceCompany3.setValue(result.get(2).getProduct().getPrice());
+			integerBoxSalesVolumeCompany3.setValue(result.get(2).getProduct().getSalesVolume());
+			
+
 
 		} // Ende method onSuccess
 	} // Ende class GetOwnCompanyCallback

@@ -21,15 +21,15 @@ public class SimulationServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public OwnCompany getCompany() {
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
-		List<OwnCompany> dbOwnCompany = ds.createQuery(OwnCompany.class)
+		List<OwnCompany> dbOwnCompany = ds.createQuery(OwnCompany.class).filter("userID = ", LoginServiceImpl.getUserID())
 				.asList();
 		// sucht alle Unternehmen raus, die nicht die UserID aus
 		// LoginServiceImpl haben und löscht sie aus der Liste
-		for (OwnCompany company : dbOwnCompany) {
-			if (company.getUserID() != LoginServiceImpl.getUserID()) {
-				dbOwnCompany.remove(company);
-			} // Ende if-Statement
-		} // Ende for-Schleife
+//		for (OwnCompany company : dbOwnCompany) {
+//			if (company.getUserID() != LoginServiceImpl.getUserID()) {
+//				dbOwnCompany.remove(company);
+//			} // Ende if-Statement
+//		} // Ende for-Schleife
 		OwnCompany single = dbOwnCompany.get(0);
 		return single;
 	} // Ende method getCompany
