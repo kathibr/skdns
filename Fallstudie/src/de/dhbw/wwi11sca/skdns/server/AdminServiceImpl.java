@@ -13,6 +13,7 @@ import com.mongodb.MongoException;
 
 import de.dhbw.wwi11sca.skdns.client.admin.AdminService;
 import de.dhbw.wwi11sca.skdns.shared.Admin;
+import de.dhbw.wwi11sca.skdns.shared.Company;
 import de.dhbw.wwi11sca.skdns.shared.User;
 
 public class AdminServiceImpl extends RemoteServiceServlet implements
@@ -61,6 +62,10 @@ public class AdminServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void deleteUser(String deleteUser) {
 		// TODO Auto-generated method stub
+		
+		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
+//		Query<User> deleteQuery = ds.createQuery(User.class).filter("userID =", deleteUser);
+		ds.delete(ds.createQuery(User.class).filter("username = ", deleteUser));
 
 	} // Ende method deleteUser
 

@@ -159,7 +159,7 @@ public class AdminSimulation implements EntryPoint {
 		btDelete.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				// User löschen, dessen Name angezeigt wurde
-				deleteUser = textBoxUsernameDelete.getText();
+				deleteUser = textBoxUsernameDelete.getText().trim();
 				service.deleteUser(deleteUser, new DeleteUserCallback());
 
 			}
@@ -393,6 +393,7 @@ public class AdminSimulation implements EntryPoint {
 			// User ein Label ausgegeben werden
 			// auf dem angegeben wurde, dass der User nun nicht mehr vorhanden
 			// ist
+			Window.alert("User wurde entfernt.");
 		} // Ende method onSuccess
 	} // Ende class DeleteUserCallback
 
