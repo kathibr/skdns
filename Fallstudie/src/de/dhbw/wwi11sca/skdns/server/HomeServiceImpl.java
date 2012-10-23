@@ -32,21 +32,21 @@ public class HomeServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public List<Company> getCompany() {
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
+			
+		
 		List<Company> dbCompany = ds.createQuery(Company.class).filter("userID =", LoginServiceImpl.getUserID()).asList();
-
-		return dbCompany;
-	} // Ende method getCompany
-
-	@Override
-	public OwnCompany getOwnCompany() {
-		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
+		
 		List<OwnCompany> dbOwnCompany = ds.createQuery(OwnCompany.class).filter("userID = ", LoginServiceImpl.getUserID())
 				.asList();
 
+		// Eigenes Unternehmen aus der Datenbank laden und am Anfang der Liste in die Liste aufnehmen
 		OwnCompany single = dbOwnCompany.get(0);
+		
+		dbCompany.add(0, single);
+		
+		return dbCompany;
+	} // Ende method getCompany
 
-		return single;
-	} // Ende method getOwnCompany
 
 	private static Mongo getMongo() {
 		Mongo m = null;

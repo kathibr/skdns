@@ -24,6 +24,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.TextBox;
 import de.dhbw.wwi11sca.skdns.client.home.HomeSimulation;
+import de.dhbw.wwi11sca.skdns.client.login.LoginSimulation;
 import de.dhbw.wwi11sca.skdns.shared.Company;
 import de.dhbw.wwi11sca.skdns.shared.Machines;
 import de.dhbw.wwi11sca.skdns.shared.OwnCompany;
@@ -45,6 +46,7 @@ public class CompanySimulation implements EntryPoint {
 	Label lbCreate = new Label("> Unternehmen anlegen");
 	Label lbLogout = new Label("Sie wurden erfolgreich ausgeloggt.");
 	Button btLogout = new Button("Logout");
+	Button btRelogin = new Button("erneuter Login?");
 
 	AbsolutePanel absolutePanelOwnCompany = new AbsolutePanel();
 	Label lbTradeName = new Label("Firma:");
@@ -153,12 +155,21 @@ public class CompanySimulation implements EntryPoint {
 			}
 		}); // Ende lbHome
 
+		// Eventhandler ausloggen
 		btLogout.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get().clear();
+				RootPanel.get().add(btRelogin);
 				RootPanel.get().add(lbLogout);
+				btRelogin.addClickHandler(new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						RootPanel.get().clear();
+						LoginSimulation login = new LoginSimulation();
+						login.onModuleLoad();
+					}
+				}); // btLogout
 			}
-		}); // Ende btLogout
+		});
 
 		// Asynchroner Call: Falls Daten vorhanden sind, aus der Datenbank
 		// auslesen, ansonsten Felder im TabPanelUnternehmenAnlegen frei lassen
@@ -202,27 +213,29 @@ public class CompanySimulation implements EntryPoint {
 		btSaveOwnCompany.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 
-				if (
-						(Pattern.matches(
+				if ((Pattern
+						.matches(
 								"[\u00C4\u00DC\u00D6A-Z][0-9a-z\u00E4\u00FC\u00F6\u00C4\u00DC\u00DF\u00D6A-Z\\s]*",
-								textBoxTradeName.getText())
-						)
-						&&	
-						(Pattern.matches("[0-9][0-9]*",
-								integerBoxTopLineOwnCompany.getText())
-						)
-					)
-				{	
+								textBoxTradeName.getText()))
+						&& (Pattern.matches("[0-9][0-9]*",
+								integerBoxTopLineOwnCompany.getText()))) {
 					ownCom.setTradeName(textBoxTradeName.getText());
-					ownCom.setTopLine(new Integer(integerBoxTopLineOwnCompany.getText()));
-					ownCom.setMarketShare(new Double(doubleBoxMarketShareOwnCompany.getText()));
-					ownCom.setFixedCosts(new Double(doubleBoxFixedCosts.getText()));
-					ownCom.setNumberOfStaff(new Integer(integerBoxNumberOfStaff.getText()));
-					ownCom.setSalaryStaff(new Integer(integerBoxSalaryOfStaff.getText()));
-					ownCom.getProduct().setPrice(new Double(doubleBoxProductPriceOwnCompany.getText()));
-					ownCom.getProduct().setSalesVolume(new Integer(integerBoxSalesVolume.getText()));
-					
-					
+					ownCom.setTopLine(new Integer(integerBoxTopLineOwnCompany
+							.getText()));
+					ownCom.setMarketShare(new Double(
+							doubleBoxMarketShareOwnCompany.getText()));
+					ownCom.setFixedCosts(new Double(doubleBoxFixedCosts
+							.getText()));
+					ownCom.setNumberOfStaff(new Integer(integerBoxNumberOfStaff
+							.getText()));
+					ownCom.setSalaryStaff(new Integer(integerBoxSalaryOfStaff
+							.getText()));
+					ownCom.getProduct().setPrice(
+							new Double(doubleBoxProductPriceOwnCompany
+									.getText()));
+					ownCom.getProduct().setSalesVolume(
+							new Integer(integerBoxSalesVolume.getText()));
+
 					service.addOwnCompany(ownCom, new AddOwnCompanyCallback());
 				} else {
 					Window.alert("Bitte Eingabe \u00FCberpr\u00FCfen");
@@ -529,22 +542,26 @@ public class CompanySimulation implements EntryPoint {
 			machinesOwnCompany.add(result.getMachines());
 
 			textBoxTradeName.setText(result.getTradeName());
-			integerBoxTopLineOwnCompany.setText(new Integer(result.getTopLine()).toString());
+			integerBoxTopLineOwnCompany
+					.setText(new Integer(result.getTopLine()).toString());
 			doubleBoxMarketShareOwnCompany.setValue(result.getMarketShare());
 			doubleBoxFixedCosts.setValue(result.getFixedCosts());
 			doubleBoxProductPriceOwnCompany.setValue(result.getProduct()
 					.getPrice());
-			integerBoxSalesVolume
-					.setText(new Integer(result.getProduct().getSalesVolume()).toString());
-			integerBoxNumberOfStaff.setText(new Integer(result.getNumberOfStaff()).toString());
-			integerBoxSalaryOfStaff.setText(new Integer(result.getSalaryStaff()).toString());
+			integerBoxSalesVolume.setText(new Integer(result.getProduct()
+					.getSalesVolume()).toString());
+			integerBoxNumberOfStaff.setText(new Integer(result
+					.getNumberOfStaff()).toString());
+			integerBoxSalaryOfStaff
+					.setText(new Integer(result.getSalaryStaff()).toString());
 
 		} // Ende method onSuccess
 	} // Ende class GetOwnCompanyCallback
+
 	/**
 	 * 
-	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher
-	 * bereits angelegte Unternehmen aus der Datenbank zurückgibt
+	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher bereits
+	 * angelegte Unternehmen aus der Datenbank zurückgibt
 	 * 
 	 */
 	public class GetCompanyCallback implements AsyncCallback<List<Company>> {
@@ -556,21 +573,28 @@ public class CompanySimulation implements EntryPoint {
 		@Override
 		public void onSuccess(List<Company> result) {
 			integerBoxTopLineCompany1.setValue(result.get(0).getTopLine());
-			doubleBoxMarketShareCompany1.setValue(result.get(0).getMarketShare());
-			doubleBoxProductPriceCompany1.setValue(result.get(0).getProduct().getPrice());
-			integerBoxSalesVolumeCompany1.setValue(result.get(0).getProduct().getSalesVolume());
-			
-			integerBoxTopLineCompany2.setValue(result.get(1).getTopLine());
-			doubleBoxMarketShareCompany2.setValue(result.get(1).getMarketShare());
-			doubleBoxProductPriceCompany2.setValue(result.get(1).getProduct().getPrice());
-			integerBoxSalesVolumeCompany2.setValue(result.get(1).getProduct().getSalesVolume());
-			
-			integerBoxTopLineCompany3.setValue(result.get(2).getTopLine());
-			doubleBoxMarketShareCompany3.setValue(result.get(2).getMarketShare());
-			doubleBoxProductPriceCompany3.setValue(result.get(2).getProduct().getPrice());
-			integerBoxSalesVolumeCompany3.setValue(result.get(2).getProduct().getSalesVolume());
-			
+			doubleBoxMarketShareCompany1.setValue(result.get(0)
+					.getMarketShare());
+			doubleBoxProductPriceCompany1.setValue(result.get(0).getProduct()
+					.getPrice());
+			integerBoxSalesVolumeCompany1.setValue(result.get(0).getProduct()
+					.getSalesVolume());
 
+			integerBoxTopLineCompany2.setValue(result.get(1).getTopLine());
+			doubleBoxMarketShareCompany2.setValue(result.get(1)
+					.getMarketShare());
+			doubleBoxProductPriceCompany2.setValue(result.get(1).getProduct()
+					.getPrice());
+			integerBoxSalesVolumeCompany2.setValue(result.get(1).getProduct()
+					.getSalesVolume());
+
+			integerBoxTopLineCompany3.setValue(result.get(2).getTopLine());
+			doubleBoxMarketShareCompany3.setValue(result.get(2)
+					.getMarketShare());
+			doubleBoxProductPriceCompany3.setValue(result.get(2).getProduct()
+					.getPrice());
+			integerBoxSalesVolumeCompany3.setValue(result.get(2).getProduct()
+					.getSalesVolume());
 
 		} // Ende method onSuccess
 	} // Ende class GetOwnCompanyCallback

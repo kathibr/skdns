@@ -19,6 +19,4 @@ public interface HomeServiceAsync {
 
 	void loginServer(String name, AsyncCallback<String> callback);
 
-	void getOwnCompany(AsyncCallback<OwnCompany> callback);
-
 }

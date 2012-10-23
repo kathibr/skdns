@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.view.client.ListDataProvider;
 
 import de.dhbw.wwi11sca.skdns.client.home.HomeSimulation;
+import de.dhbw.wwi11sca.skdns.client.login.LoginSimulation;
 import de.dhbw.wwi11sca.skdns.shared.OwnCompany;
 import de.dhbw.wwi11sca.skdns.shared.SimulationVersion;
 
@@ -34,6 +35,7 @@ public class Simulation implements EntryPoint {
 	Label lbHome = new Label("Home");
 	Label lbSimulation = new Label(">  Simulation");
 	Label lbLogout = new Label("Sie wurden erfolgreich ausgeloggt.");
+	Button btRelogin = new Button("erneuter Login?");
 
 	Button btSimulation = new Button("Simulation starten");
 	Button btNextYear = new Button("Folgejahr");
@@ -109,6 +111,7 @@ public class Simulation implements EntryPoint {
 		// Simulation für das Folgejahr starten : buttonFolgejahr
 		absolutePanelSimulation.add(btNextYear, 795, 334);
 		btNextYear.setSize("127px", "35px");
+		btNextYear.setEnabled(false);
 
 		// Logout : btLogout
 		absolutePanelSimulation.add(btLogout, 914, 10);
@@ -151,6 +154,8 @@ public class Simulation implements EntryPoint {
 				simulationVersion++;
 				service.createSimulationCallback(version,
 						new CreateSimulationCallback());
+				
+				btNextYear.setEnabled(true);
 			}
 		}); // Ende btSimulation
 
@@ -217,7 +222,15 @@ public class Simulation implements EntryPoint {
 		btLogout.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get().clear();
+				RootPanel.get().add(btRelogin);
 				RootPanel.get().add(lbLogout);
+				btRelogin.addClickHandler(new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						RootPanel.get().clear();
+						LoginSimulation login = new LoginSimulation();
+						login.onModuleLoad();
+					}
+				}); // btLogout
 			}
 		}); // btLogout
 
