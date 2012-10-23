@@ -37,6 +37,16 @@
     <url-pattern>/fallstudie/company</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+    <servlet-name>admin</servlet-name>
+    <servlet-class>de.dhbw.wwi11sca.skdns.server.AdminServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>admin</servlet-name>
+    <url-pattern>/fallstudie/admin</url-pattern>
+  </servlet-mapping>
+  
       <servlet>
     <servlet-name>simulation</servlet-name>
     <servlet-class>de.dhbw.wwi11sca.skdns.server.SimulationServiceImpl</servlet-class>

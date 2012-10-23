@@ -119,13 +119,15 @@ public class AdminSimulation implements EntryPoint {
 		getUserTable();
 
 		// Calls
-		service.getUser(new GetChangeUserCallback());
+		service.getUser(new GetUserCallback());
 		service.getStats(new GetStatsCallback());
 
 		// Eventhandler
 
 		btSave.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				
+				
 				// TODO geänderte User speichern Passwörter oder Email o.ä.
 				// Daten sollen direkt in der cellTableUser bearbeitet werden
 				// können
@@ -220,7 +222,7 @@ public class AdminSimulation implements EntryPoint {
 	 * müssen
 	 * 
 	 */
-	public class GetChangeUserCallback implements AsyncCallback<List<User>> {
+	public class GetUserCallback implements AsyncCallback<List<User>> {
 
 		@Override
 		public void onFailure(Throwable caught) {
@@ -228,7 +230,7 @@ public class AdminSimulation implements EntryPoint {
 		} // Ende onFailure
 
 		@Override
-		public void onSuccess(List<User> result) {
+		public final void onSuccess(List<User> result) {
 			ListDataProvider<User> dataProvider = new ListDataProvider<User>();
 			// Connect the table to the data provider.
 			dataProvider.addDataDisplay(cellTableUser);

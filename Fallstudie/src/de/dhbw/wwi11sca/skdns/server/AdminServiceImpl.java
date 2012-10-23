@@ -29,8 +29,7 @@ public class AdminServiceImpl extends RemoteServiceServlet implements
 		// soll,
 		// da der User dieses vergessen hat
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
-		List<User> dbUser = ds.createQuery(User.class)
-				.filter("forgottenPassword =", true).asList();
+		List<User> dbUser = ds.createQuery(User.class).asList();
 		return dbUser;
 	} // Enge methode getUser
 
@@ -52,6 +51,9 @@ public class AdminServiceImpl extends RemoteServiceServlet implements
 		// User newUser aus AdminSimulation holen und in der db speichern
 		// anschließend true zurückgeben, damit dem Admin angezeigt werden kann,
 		// dass das Erzeugen erfolgreich war
+		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
+		ds.save(newUser);
+		
 	} // Ende method saveUser
 
 	@Override

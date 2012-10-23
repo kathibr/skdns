@@ -18,7 +18,7 @@ import de.dhbw.wwi11sca.skdns.shared.User;
 @RemoteServiceRelativePath("admin")
 public interface AdminService extends RemoteService {
 
-	public List<User> getUser();
+	List<User> getUser();
 
 	void saveUser(User newUser);
 
