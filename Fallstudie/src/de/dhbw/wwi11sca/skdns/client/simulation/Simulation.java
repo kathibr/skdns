@@ -19,6 +19,7 @@ import com.google.gwt.view.client.ListDataProvider;
 
 import de.dhbw.wwi11sca.skdns.client.home.HomeSimulation;
 import de.dhbw.wwi11sca.skdns.client.login.LoginSimulation;
+import de.dhbw.wwi11sca.skdns.shared.Company;
 import de.dhbw.wwi11sca.skdns.shared.OwnCompany;
 import de.dhbw.wwi11sca.skdns.shared.SimulationVersion;
 
@@ -59,9 +60,13 @@ public class Simulation implements EntryPoint {
 
 	ScrollPanel scrollPanelYears = new ScrollPanel();
 	TabPanel tabPanelYears = new TabPanel();
-	CellTable<OwnCompany> tableOwnCompany;
-	List<OwnCompany> companyList;
+	CellTable<Company> tableCompanies = new CellTable<Company>();
+	List<Company> companyList;
 	AbsolutePanel[] absolutePanelYear = new AbsolutePanel[1000];
+	Label lbOwnCompany = new Label();
+	Label lbCompany2 = new Label("Konkurrenz 2:");
+	Label lbCompany3 = new Label("Konkurrenz 3:");
+	Label lbCompany1 = new Label("Konkurrenz 1:");
 
 	int stackYear = 0;
 	int simulationYear = 1;
@@ -70,6 +75,7 @@ public class Simulation implements EntryPoint {
 
 	private SimulationServiceAsync service = GWT
 			.create(SimulationService.class);
+
 
 	public void onModuleLoad() {
 		// RootPanel : root
@@ -154,7 +160,7 @@ public class Simulation implements EntryPoint {
 				simulationVersion++;
 				service.createSimulationCallback(version,
 						new CreateSimulationCallback());
-				
+
 				btNextYear.setEnabled(true);
 			}
 		}); // Ende btSimulation
@@ -244,57 +250,60 @@ public class Simulation implements EntryPoint {
 		integerBoxPersonal.setValue(null);
 		integerBoxPrice.setValue(null);
 
-	} // Ende  method deleteValueInvestments
+	} // Ende method deleteValueInvestments
 
 	public void summaryCompanies() {
-		tableOwnCompany = new CellTable<OwnCompany>();
-		absolutePanelSimulation.add(tableOwnCompany, 60, 79);
-		tableOwnCompany.setSize("894px", "135px");
+		absolutePanelSimulation.add(lbOwnCompany, 60, 124);
+		lbOwnCompany.setSize("85px", "18px");
+		absolutePanelSimulation.add(lbCompany1, 60, 148);
+		
+		absolutePanelSimulation.add(lbCompany2, 60, 172);
+		lbCompany2.setSize("81px", "18px");
+		
+		absolutePanelSimulation.add(lbCompany3, 60, 198);
+		lbCompany3.setSize("81px", "18px");
+		
+		tableCompanies = new CellTable<Company>();
+		absolutePanelSimulation.add(tableCompanies, 150, 79);
+		tableCompanies.setSize("804px", "156px");
 
-		TextColumn<OwnCompany> firmaEColumn = new TextColumn<OwnCompany>() {
+		TextColumn<Company> umsatzEColumn = new TextColumn<Company>() {
 			@Override
-			public String getValue(OwnCompany company) {
-				return company.getTradeName();
-			}
-		};
-		TextColumn<OwnCompany> umsatzEColumn = new TextColumn<OwnCompany>() {
-			@Override
-			public String getValue(OwnCompany company) {
+			public String getValue(Company company) {
 				return new Integer(company.getTopLine()).toString();
 			}
 		};
-		TextColumn<OwnCompany> gewinnEColumn = new TextColumn<OwnCompany>() {
+		TextColumn<Company> gewinnEColumn = new TextColumn<Company>() {
 			@Override
-			public String getValue(OwnCompany company) {
+			public String getValue(Company company) {
 				return new Integer(company.getAmount()).toString();
 			}
 		};
-		TextColumn<OwnCompany> marktAnteilEColumn = new TextColumn<OwnCompany>() {
+		TextColumn<Company> marktAnteilEColumn = new TextColumn<Company>() {
 			@Override
-			public String getValue(OwnCompany company) {
+			public String getValue(Company company) {
 				return new Double(company.getMarketShare()).toString();
 			}
 		};
-		TextColumn<OwnCompany> produktMengeEColumn = new TextColumn<OwnCompany>() {
+		TextColumn<Company> produktMengeEColumn = new TextColumn<Company>() {
 			@Override
-			public String getValue(OwnCompany company) {
+			public String getValue(Company company) {
 				return new Integer(company.getProduct().getSalesVolume())
 						.toString();
 			}
 		};
-		TextColumn<OwnCompany> produktPreisEColumn = new TextColumn<OwnCompany>() {
+		TextColumn<Company> produktPreisEColumn = new TextColumn<Company>() {
 			@Override
-			public String getValue(OwnCompany company) {
+			public String getValue(Company company) {
 				return new Double(company.getProduct().getPrice()).toString();
 			}
 		};
 
-		tableOwnCompany.addColumn(firmaEColumn, "Firma");
-		tableOwnCompany.addColumn(umsatzEColumn, "Umsatz");
-		tableOwnCompany.addColumn(gewinnEColumn, "Gewinn");
-		tableOwnCompany.addColumn(marktAnteilEColumn, "Marktanteil");
-		tableOwnCompany.addColumn(produktPreisEColumn, "Produktpreis");
-		tableOwnCompany.addColumn(produktMengeEColumn, "Absatzmenge");
+		tableCompanies.addColumn(umsatzEColumn, "Umsatz");
+		tableCompanies.addColumn(gewinnEColumn, "Gewinn");
+		tableCompanies.addColumn(marktAnteilEColumn, "Marktanteil");
+		tableCompanies.addColumn(produktPreisEColumn, "Produktpreis");
+		tableCompanies.addColumn(produktMengeEColumn, "Absatzmenge");
 
 		service.getCompany(new GetCompanyCallback());
 
@@ -354,24 +363,28 @@ public class Simulation implements EntryPoint {
 	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher angelegte
 	 * Unternehmen zurückgibt
 	 */
-	public class GetCompanyCallback implements AsyncCallback<OwnCompany> {
-
+	public class GetCompanyCallback implements AsyncCallback<List<Company>> {
 		@Override
-		public void onFailure(Throwable caught) {
+		public void onFailure(final Throwable caught) {
 		} // Ende method onFailure
 
 		@Override
-		public void onSuccess(OwnCompany result) {
+		public final void onSuccess(List<Company> result) {
 
-			ListDataProvider<OwnCompany> dataOwnProvider = new ListDataProvider<OwnCompany>();
+			ListDataProvider<Company> dataProvider = new ListDataProvider<Company>();
 			// Connect the table to the data provider.
-			dataOwnProvider.addDataDisplay(tableOwnCompany);
+			dataProvider.addDataDisplay(tableCompanies);
 
 			// Add the data to the data provider, which automatically pushes it
 			// to the widget.
-			companyList = dataOwnProvider.getList();
-			companyList.add(result);
+			companyList = dataProvider.getList();
 
+			for (Company company : result) {
+				companyList.add(company);
+			} // Ende for-Schleife
+
+			 lbOwnCompany.setText(((OwnCompany)
+			 result.get(0)).getTradeName());
 		} // Ende method onSuccess
 	} // Ende class GetCompanyCallback
 
