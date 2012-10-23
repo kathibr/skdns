@@ -56,7 +56,9 @@ public class MarketSimulation {
 
 		// Schritt 1
 		// Berechnung des Gesamtumsatz des Marktes
-		calculateTopLineMarket(topLineMarketArithmetic,
+		
+		//habs einfach mal gleichgesetzt um dafür nen wert zu haben .. wenn du "topLineMarketArithmetic =  " entfernst ist alles wie vorher
+		topLineMarketArithmetic =  calculateTopLineMarket(topLineMarketArithmetic,
 				ownCompany.getTopLine(), company1.getTopLine(),
 				company2.getTopLine(), company3.getTopLine());
 

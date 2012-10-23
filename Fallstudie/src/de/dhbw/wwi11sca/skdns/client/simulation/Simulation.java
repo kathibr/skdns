@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -14,6 +15,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.view.client.ListDataProvider;
 
@@ -59,7 +61,7 @@ public class Simulation implements EntryPoint {
 	IntegerBox integerBoxPrice = new IntegerBox();
 
 	ScrollPanel scrollPanelYears = new ScrollPanel();
-	TabPanel tabPanelYears = new TabPanel();
+	TabLayoutPanel tabPanelYears = new TabLayoutPanel(1.5, Unit.EM);
 	CellTable<Company> tableCompanies = new CellTable<Company>();
 	List<Company> companyList;
 	AbsolutePanel[] absolutePanelYear = new AbsolutePanel[1000];
@@ -406,6 +408,7 @@ public class Simulation implements EntryPoint {
 		public void onSuccess(SimulationVersion result) {
 			// TODO AbsolutePanel im TabPanel mit Marktanteilstorte etc.
 			// befüllen
+			
 
 		} // Ende method onSuccess
 
