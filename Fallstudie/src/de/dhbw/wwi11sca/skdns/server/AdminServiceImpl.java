@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
+import com.google.code.morphia.query.Query;
+import com.google.code.morphia.query.UpdateOperations;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
@@ -79,5 +81,18 @@ public class AdminServiceImpl extends RemoteServiceServlet implements
 	public void setAdmin(Admin admin) {
 		AdminServiceImpl.admin = admin;
 	} // Ende method setAdmin
+
+	@Override
+	public void updateTable(User user) {
+		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
+		Query<User> updateQuery = ds.createQuery(User.class).field("userID").equal(user.getUserID());
+		// ds.createQuery(EigenesUnternehmen.class);
+		UpdateOperations<User> ops;
+		ops = ds.createUpdateOperations(User.class)
+				.set("password", user.getPassword())
+				.set("forgottenPassword", user.isForgottenPassword());
+								
+		ds.update(updateQuery,ops);
+	}
 
 } // Ende class AdminServiceImpl

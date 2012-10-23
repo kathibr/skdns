@@ -19,9 +19,9 @@ import de.dhbw.wwi11sca.skdns.shared.User;
 public interface AdminService extends RemoteService {
 
 	List<User> getUser();
-
+	void updateTable(User user);
 	void saveUser(User newUser);
-
+	
 	void deleteUser(String deleteUser);
 
 	Admin getStats();

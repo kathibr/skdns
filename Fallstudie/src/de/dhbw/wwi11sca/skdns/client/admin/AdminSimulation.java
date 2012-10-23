@@ -7,20 +7,28 @@ package de.dhbw.wwi11sca.skdns.client.admin;
  *         Die AdminSimulation enthält das Frontend der Adminfunktionen.
  * 
  */
+import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.cell.client.SelectionCell;
+import com.google.gwt.cell.client.TextInputCell;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 
+import de.dhbw.wwi11sca.skdns.client.login.LoginSimulation.ForgotPasswordCallback;
 import de.dhbw.wwi11sca.skdns.shared.Admin;
 import de.dhbw.wwi11sca.skdns.shared.User;
 import com.google.gwt.view.client.ListDataProvider;
@@ -35,7 +43,7 @@ public class AdminSimulation implements EntryPoint {
 	// Widgets
 	CellTable<User> cellTableUser = new CellTable<User>();
 	List<User> userList;
-	Button btSave = new Button("geänderte Daten speichern");
+	Button btSave = new Button("Refresh");
 
 	Button btLogout = new Button("Logout");
 	Label lbLogout = new Label("Sie wurden erfolgreich ausgeloggt.");
@@ -127,7 +135,7 @@ public class AdminSimulation implements EntryPoint {
 		btSave.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				
-				
+				service.getUser(new GetUserCallback());	
 				// TODO geänderte User speichern Passwörter oder Email o.ä.
 				// Daten sollen direkt in der cellTableUser bearbeitet werden
 				// können
@@ -192,13 +200,22 @@ public class AdminSimulation implements EntryPoint {
 		}; // Ende UsernameColumn
 
 		// Usertabelle mit DB-Usern befüllen: Kennwort
-		TextColumn<User> PasswordColumn = new TextColumn<User>() {
+		final TextInputCell passwordCell = new TextInputCell();
+		Column<User, String> PasswordColumn = new Column<User, String>(passwordCell){
 			@Override
-			public String getValue(User user) {
-				return new String(user.getPassword());
+			public String getValue(User object) {
+				// TODO Auto-generated method stub
+				return object.getPassword();
 			}
+		};
+		
+//		TextColumn<User> PasswordColumn = new TextColumn<User>() {
+//			@Override
+//			public String getValue(User user) {
+//				return new String(user.getPassword());
+//			}
 
-		}; // Ende PasswordColumn
+//		}; // Ende PasswordColumn
 		// Usertabelle mit DB-Usern befüllen: E-Mail
 		TextColumn<User> EMailColumn = new TextColumn<User>() {
 			@Override
@@ -207,13 +224,81 @@ public class AdminSimulation implements EntryPoint {
 			}
 
 		}; // Ende EMailColumn
+		
+//		TextColumn<User> forgottenPwdColumn = new TextColumn<User>() {
+//			@Override
+//			public String getValue(User user){
+//				return new String( new Boolean(user.isForgottenPassword()).toString());
+//			}
+//		};
+//		forgottenPwdColumn.setSortable(true);
+		List<String> pwdCell = new ArrayList<String>();
+		pwdCell.add("true");
+		pwdCell.add("false");
+		SelectionCell forgottenPasswordCell = new SelectionCell(pwdCell);
+		Column<User, String> forgottenPasswordColumn = new Column<User, String>(forgottenPasswordCell){
 
+			@Override
+			public String getValue(User object) {
+				// TODO Auto-generated method stub
+				return new String( new Boolean(object.isForgottenPassword()).toString());
+			}
+			
+		};
+		
 		// DB-Userdaten anzeigen lassen
 		cellTableUser.addColumn(UsernameColumn, "Username");
 		cellTableUser.addColumn(PasswordColumn, "Kennwort");
 		cellTableUser.addColumn(EMailColumn, "Email");
-
+		cellTableUser.addColumn(forgottenPasswordColumn, "Passwort vergessen");
+		
+		PasswordColumn.setFieldUpdater(new FieldUpdater<User, String>(){
+			@Override
+			public void update(int index, User object, String value) {
+				Window.alert("\u00C4nderung erfolgreich.");
+				((User) object).setPassword((String) value);
+				service.updateTable((User) object, new UpdateTableCallback());
+				cellTableUser.redraw();
+			}			
+		});
+		forgottenPasswordColumn.setFieldUpdater(new FieldUpdater<User, String>(){
+			@Override
+			public void update(int index, User object, String value) {
+				Window.alert("\u00C4nderung erfolgreich.");
+				((User) object).setForgottenPassword(new Boolean(value));
+				service.updateTable((User) object, new UpdateTableCallback());
+				cellTableUser.redraw();
+			}			
+		});
+		
+		
 	} // Ende method getUserTable
+	/**
+	 * 
+	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher den neu
+	 * erzeugten User in der db speichert
+	 * 
+	 */
+	public class UpdateTableCallback implements AsyncCallback<java.lang.Void> {
+
+		@Override
+		public void onFailure(Throwable caught) {
+
+		} // Ende onFailure
+
+		@Override
+		public void onSuccess(Void result) {
+			// TODO: User ist gespeichert worden uns soll nun in der
+			// cellTableUser auch für den Anwender angezeigt werden
+			// Daten wurden durch Textboxen im Eventhandler btCreaseUser.onClick
+			// in newUser gespeichert
+			// und mit service.saveUser(newUser, new SaveUserCallback())
+			// gestartet
+			// wurde newUser in der DB gespeichert, soll dem Admin ein Label
+			// angezeigt werden, dass das speichern erfolgreich war
+
+		} // Ende method onSuccess
+	} // Ende class SaveUserCallback
 
 	/**
 	 * 
@@ -242,6 +327,7 @@ public class AdminSimulation implements EntryPoint {
 			for (User user : result) {
 				userList.add(user);
 			} // Ende for-Schleife
+	
 		} // Ende method onSuccess
 
 	} // Ende class GetChangeUserCallback
