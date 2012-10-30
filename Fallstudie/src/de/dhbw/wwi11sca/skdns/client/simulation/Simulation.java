@@ -16,7 +16,6 @@ import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
-import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.view.client.ListDataProvider;
 
 import de.dhbw.wwi11sca.skdns.client.home.HomeSimulation;
@@ -27,6 +26,7 @@ import de.dhbw.wwi11sca.skdns.shared.SimulationVersion;
 
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class Simulation implements EntryPoint {
 
@@ -65,10 +65,16 @@ public class Simulation implements EntryPoint {
 	CellTable<Company> tableCompanies = new CellTable<Company>();
 	List<Company> companyList;
 	AbsolutePanel[] absolutePanelYear = new AbsolutePanel[1000];
-	Label lbOwnCompany = new Label();
-	Label lbCompany2 = new Label("Konkurrenz 2:");
-	Label lbCompany3 = new Label("Konkurrenz 3:");
-	Label lbCompany1 = new Label("Konkurrenz 1:");
+
+	AbsolutePanel absolutePanel = new AbsolutePanel();
+	VerticalPanel verticalPanelInput = new VerticalPanel();
+	Label lbResults = new Label("Ihre Eingaben:");
+	Label lbInvestMarketing = new Label();
+	Label lbInvestPersonal = new Label();
+	Label lbInvestPrice = new Label();
+	Label lbInvestMachineValue = new Label();
+	Label lbInvestMachinesCapacity = new Label();
+	Label lbInvestMachinePersonal = new Label();
 
 	int stackYear = 0;
 	int simulationYear = 1;
@@ -77,7 +83,6 @@ public class Simulation implements EntryPoint {
 
 	private SimulationServiceAsync service = GWT
 			.create(SimulationService.class);
-
 
 	public void onModuleLoad() {
 		// RootPanel : root
@@ -102,7 +107,7 @@ public class Simulation implements EntryPoint {
 
 		// TabPanel, auf dem die Ergebnisse der Simulation angezeigt werden
 		scrollPanelYears.add(tabPanelYears);
-		tabPanelYears.setSize("100%", "100%");
+		tabPanelYears.setSize("100%", "300px");
 
 		// Darstellung der Unternehmen
 		summaryCompanies();
@@ -153,16 +158,11 @@ public class Simulation implements EntryPoint {
 
 				deleteValueInvestments();
 
-				tabPanelYears
-						.add(absolutePanelYear[stackYear], "Jahr "
-								+ simulationYear + " (" + simulationVersion
-								+ ")", true);
-
-				stackYear++;
-				simulationVersion++;
 				service.createSimulationCallback(version,
 						new CreateSimulationCallback());
 
+				stackYear++;
+				simulationVersion++;
 				btNextYear.setEnabled(true);
 			}
 		}); // Ende btSimulation
@@ -244,6 +244,22 @@ public class Simulation implements EntryPoint {
 
 	} // Ende onModuleLoad()
 
+	private void createResults(int stackYear) {
+		tabPanelYears.add(absolutePanelYear[stackYear - 1], "Jahr "
+				+ simulationYear + " (" + simulationVersion + ")", true);
+
+		absolutePanelYear[stackYear - 1].add(lbResults, 10, 10);
+		absolutePanelYear[stackYear - 1].add(verticalPanelInput, 10, 34);
+		verticalPanelInput.setSize("210px", "236px");
+		verticalPanelInput.add(lbInvestMarketing);
+		verticalPanelInput.add(lbInvestPersonal);
+		verticalPanelInput.add(lbInvestPrice);
+		verticalPanelInput.add(lbInvestMachineValue);
+		verticalPanelInput.add(lbInvestMachinesCapacity);
+		verticalPanelInput.add(lbInvestMachinePersonal);
+
+	}
+
 	private void deleteValueInvestments() {
 		integerBoxMarketing.setValue(null);
 		integerBoxMachineValue.setValue(null);
@@ -255,57 +271,55 @@ public class Simulation implements EntryPoint {
 	} // Ende method deleteValueInvestments
 
 	public void summaryCompanies() {
-		absolutePanelSimulation.add(lbOwnCompany, 60, 124);
-		lbOwnCompany.setSize("85px", "18px");
-		absolutePanelSimulation.add(lbCompany1, 60, 148);
-		
-		absolutePanelSimulation.add(lbCompany2, 60, 172);
-		lbCompany2.setSize("81px", "18px");
-		
-		absolutePanelSimulation.add(lbCompany3, 60, 198);
-		lbCompany3.setSize("81px", "18px");
-		
-		tableCompanies = new CellTable<Company>();
-		absolutePanelSimulation.add(tableCompanies, 150, 79);
-		tableCompanies.setSize("804px", "156px");
 
-		TextColumn<Company> umsatzEColumn = new TextColumn<Company>() {
+		tableCompanies = new CellTable<Company>();
+		absolutePanelSimulation.add(tableCompanies, 60, 79);
+		tableCompanies.setSize("894px", "156px");
+
+		TextColumn<Company> tradeNameColumn = new TextColumn<Company>() {
+			@Override
+			public String getValue(Company company) {
+				return new String(company.getTradeName()).toString();
+			}
+		};
+		TextColumn<Company> umsatzColumn = new TextColumn<Company>() {
 			@Override
 			public String getValue(Company company) {
 				return new Integer(company.getTopLine()).toString();
 			}
 		};
-		TextColumn<Company> gewinnEColumn = new TextColumn<Company>() {
+		TextColumn<Company> gewinnColumn = new TextColumn<Company>() {
 			@Override
 			public String getValue(Company company) {
 				return new Integer(company.getAmount()).toString();
 			}
 		};
-		TextColumn<Company> marktAnteilEColumn = new TextColumn<Company>() {
+		TextColumn<Company> marktAnteilColumn = new TextColumn<Company>() {
 			@Override
 			public String getValue(Company company) {
 				return new Double(company.getMarketShare()).toString();
 			}
 		};
-		TextColumn<Company> produktMengeEColumn = new TextColumn<Company>() {
+		TextColumn<Company> produktMengeColumn = new TextColumn<Company>() {
 			@Override
 			public String getValue(Company company) {
 				return new Integer(company.getProduct().getSalesVolume())
 						.toString();
 			}
 		};
-		TextColumn<Company> produktPreisEColumn = new TextColumn<Company>() {
+		TextColumn<Company> produktPreisColumn = new TextColumn<Company>() {
 			@Override
 			public String getValue(Company company) {
 				return new Double(company.getProduct().getPrice()).toString();
 			}
 		};
 
-		tableCompanies.addColumn(umsatzEColumn, "Umsatz");
-		tableCompanies.addColumn(gewinnEColumn, "Gewinn");
-		tableCompanies.addColumn(marktAnteilEColumn, "Marktanteil");
-		tableCompanies.addColumn(produktPreisEColumn, "Produktpreis");
-		tableCompanies.addColumn(produktMengeEColumn, "Absatzmenge");
+		tableCompanies.addColumn(tradeNameColumn, "Firma");
+		tableCompanies.addColumn(umsatzColumn, "Umsatz");
+		tableCompanies.addColumn(gewinnColumn, "Gewinn");
+		tableCompanies.addColumn(marktAnteilColumn, "Marktanteil");
+		tableCompanies.addColumn(produktPreisColumn, "Produktpreis");
+		tableCompanies.addColumn(produktMengeColumn, "Absatzmenge");
 
 		service.getCompany(new GetCompanyCallback());
 
@@ -343,6 +357,12 @@ public class Simulation implements EntryPoint {
 		// Marketing
 		absolutePanelInvestments.add(integerBoxMarketing, 86, 34);
 		integerBoxMarketing.setSize("94px", "25px");
+		// Personal
+		absolutePanelInvestments.add(integerBoxPersonal, 300, 34);
+		integerBoxPersonal.setSize("94px", "25px");
+		// Produktpreis
+		absolutePanelInvestments.add(integerBoxPrice, 520, 34);
+		integerBoxPrice.setSize("94px", "25px");
 		// Maschinenwert
 		absolutePanelInvestments.add(integerBoxMachineValue, 86, 90);
 		integerBoxMachineValue.setSize("94px", "25px");
@@ -352,12 +372,6 @@ public class Simulation implements EntryPoint {
 		// Maschinen Anzahl der notwendigen Mitarbeiter
 		absolutePanelInvestments.add(integerBoxMachineStaff, 520, 90);
 		integerBoxMachineStaff.setSize("94px", "25px");
-		// Personal
-		absolutePanelInvestments.add(integerBoxPersonal, 300, 34);
-		integerBoxPersonal.setSize("94px", "25px");
-		// Produktpreis
-		absolutePanelInvestments.add(integerBoxPrice, 520, 34);
-		integerBoxPrice.setSize("94px", "25px");
 
 	} // Ende method loadInvestment
 
@@ -385,8 +399,6 @@ public class Simulation implements EntryPoint {
 				companyList.add(company);
 			} // Ende for-Schleife
 
-			 lbOwnCompany.setText(((OwnCompany)
-			 result.get(0)).getTradeName());
 		} // Ende method onSuccess
 	} // Ende class GetCompanyCallback
 
@@ -408,8 +420,20 @@ public class Simulation implements EntryPoint {
 		public void onSuccess(SimulationVersion result) {
 			// TODO AbsolutePanel im TabPanel mit Marktanteilstorte etc.
 			// befüllen
-			
 
+			// Eingegebene Investitionen werden angezeigt
+			lbInvestMarketing.setText("Marketing: " + result.getMarketing());
+			lbInvestPersonal.setText("Personal: " + result.getPersonal());
+			lbInvestPrice.setText("Produktpreis: " + result.getPrice());
+			lbInvestMachineValue.setText("Maschinenwert: "
+					+ result.getMachineValue());
+			lbInvestMachinesCapacity.setText("Maschinenkapazität: "
+					+ result.getMachineCapacity());
+			lbInvestMachinePersonal.setText("Maschinenpersonal: "
+					+ result.getMachineStaff());
+
+			// Alle Elemente auf der Oberfläche anbringen
+			createResults(stackYear);
 		} // Ende method onSuccess
 
 	} // Ende class CreateSimulationCallback

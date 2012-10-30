@@ -34,6 +34,7 @@ import com.google.gwt.user.client.ui.DoubleBox;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.widget.client.TextButton;
 
 public class CompanySimulation implements EntryPoint {
 
@@ -116,7 +117,8 @@ public class CompanySimulation implements EntryPoint {
 	public void onModuleLoad() {
 
 		// AbsolutePanel : absolutePanelCreate
-		RootPanel.get().add(absolutePanelCreate, 0, 0);
+		RootPanel rootPanel = RootPanel.get();
+		rootPanel.add(absolutePanelCreate, 0, 0);
 		absolutePanelCreate.setSize("1024px", "768px");
 
 		// Informationsfelder
@@ -135,16 +137,6 @@ public class CompanySimulation implements EntryPoint {
 		// tabPanelCreateCompanies
 		absolutePanelCreate.add(tabPanelCreateCompanies, 90, 78);
 		tabPanelCreateCompanies.setSize("844px", "605px");
-
-		// AbsolutePanels für die Unternehmen anbringen
-		// Tab für das eigene Unternehmen
-		addTabPanelOwnCompany();
-		// Tab für das erste Unternehmen
-		addTabPanelCompanyOne();
-		// Tab für das zweite Unternehmen
-		addTabPanelCompanyTwo();
-		// tab für das dritte Unternehmen
-		addTabPanelCompanyThree();
 
 		// Eventhandler
 		lbHome.addClickHandler(new ClickHandler() {
@@ -170,6 +162,50 @@ public class CompanySimulation implements EntryPoint {
 				}); // btLogout
 			}
 		});
+		// Maschinen
+		cellTableMachines = new CellTable<Machines>();
+		absolutePanelOwnCompany.add(cellTableMachines, 88, 277);
+		cellTableMachines.setSize("656px", "100px");
+
+		TextColumn<Machines> serviceLifeColumn = new TextColumn<Machines>() {
+			@Override
+			public String getValue(Machines machine) {
+				return new Integer(machine.getServiceLife()).toString();
+			}
+		}; // Ende serviceLifeColumn
+		TextColumn<Machines> capacityColumn = new TextColumn<Machines>() {
+			@Override
+			public String getValue(Machines machine) {
+				return new Integer(machine.getCapacity()).toString();
+			}
+		}; // Ende capacityColumn
+		TextColumn<Machines> accountingValueColumn = new TextColumn<Machines>() {
+			@Override
+			public String getValue(Machines machine) {
+				return new Double(machine.getAccountingValue()).toString();
+			}
+		}; // Ende accountingValueColumn
+		TextColumn<Machines> StaffColumn = new TextColumn<Machines>() {
+			@Override
+			public String getValue(Machines machine) {
+				return new Integer(machine.getStaff()).toString();
+			}
+		}; // Ende StaffColumn
+		cellTableMachines.addColumn(serviceLifeColumn,
+				"bisherige Nutzungsdauer");
+		cellTableMachines.addColumn(capacityColumn, "Kapazit\u00e4t");
+		cellTableMachines.addColumn(accountingValueColumn, "Preis");
+		cellTableMachines.addColumn(StaffColumn, "Notwendige Mitarbeiter");
+
+		// AbsolutePanels für die Unternehmen anbringen
+		// Tab für das eigene Unternehmen
+		addTabPanelOwnCompany();
+		// Tab für das erste Unternehmen
+		addTabPanelCompanyOne();
+		// Tab für das zweite Unternehmen
+		addTabPanelCompanyTwo();
+		// tab für das dritte Unternehmen
+		addTabPanelCompanyThree();
 
 		// Asynchroner Call: Falls Daten vorhanden sind, aus der Datenbank
 		// auslesen, ansonsten Felder im TabPanelUnternehmenAnlegen frei lassen
@@ -198,6 +234,7 @@ public class CompanySimulation implements EntryPoint {
 		// Unternehmen löschen
 		btDeleteOwnCompany.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				// TODO: Meldung: Sind sie sich sicher
 				textBoxTradeName.setText(null);
 				integerBoxTopLineOwnCompany.setValue(null);
 				doubleBoxMarketShareOwnCompany.setValue(null);
@@ -276,41 +313,6 @@ public class CompanySimulation implements EntryPoint {
 		absolutePanelOwnCompany.add(lbSalaryOfStaff, 432, 105);
 		absolutePanelOwnCompany.add(integerBoxSalaryOfStaff, 577, 93);
 		integerBoxSalaryOfStaff.setSize("161px", "24px");
-		// Maschinen
-		cellTableMachines = new CellTable<Machines>();
-		absolutePanelOwnCompany.add(cellTableMachines, 88, 277);
-		cellTableMachines.setSize("656px", "100px");
-
-		TextColumn<Machines> serviceLifeColumn = new TextColumn<Machines>() {
-			@Override
-			public String getValue(Machines machine) {
-				return new Integer(machine.getServiceLife()).toString();
-			}
-		}; // Ende serviceLifeColumn
-		TextColumn<Machines> capacityColumn = new TextColumn<Machines>() {
-			@Override
-			public String getValue(Machines machine) {
-				return new Integer(machine.getCapacity()).toString();
-			}
-		}; // Ende capacityColumn
-		TextColumn<Machines> accountingValueColumn = new TextColumn<Machines>() {
-			@Override
-			public String getValue(Machines machine) {
-				return new Double(machine.getAccountingValue()).toString();
-			}
-		}; // Ende accountingValueColumn
-		TextColumn<Machines> StaffColumn = new TextColumn<Machines>() {
-			@Override
-			public String getValue(Machines machine) {
-				// TODO Tabellenfeld Notwendige Mitarbeiter füllen
-				return new Integer(machine.getStaff()).toString();
-			}
-		}; // Ende StaffColumn
-		cellTableMachines.addColumn(serviceLifeColumn,
-				"bisherige Nutzungsdauer");
-		cellTableMachines.addColumn(capacityColumn, "Kapazit\u00e4t");
-		cellTableMachines.addColumn(accountingValueColumn, "Preis");
-		cellTableMachines.addColumn(StaffColumn, "Notwendige Mitarbeiter");
 	} // Ende method addTabPanelOwnCompany
 
 	private void addTabPanelCompanyOne() {
@@ -598,5 +600,4 @@ public class CompanySimulation implements EntryPoint {
 
 		} // Ende method onSuccess
 	} // Ende class GetOwnCompanyCallback
-
 } // Ende class CompanySimulation

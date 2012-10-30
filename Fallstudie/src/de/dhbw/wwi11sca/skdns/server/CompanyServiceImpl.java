@@ -21,28 +21,21 @@ public class CompanyServiceImpl extends RemoteServiceServlet implements
 
 	public List<Company> getCompany() {
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
-		List<Company> dbCompanies = ds.createQuery(Company.class).filter("userID = ", LoginServiceImpl.getUserID()).asList();
+		List<Company> dbCompanies = ds.createQuery(Company.class)
+				.filter("userID = ", LoginServiceImpl.getUserID()).asList();
 		// sucht alle Unternehmen raus, die nicht die UserID aus
 		// LoginServiceImpl haben und löscht sie aus der Liste
-//		for (Company company : dbCompanies) {
-//			if (company.getUserID() != LoginServiceImpl.getUserID()) {
-//				dbCompanies.remove(company);
-//			}
-//		}
+
 		return dbCompanies;
 	} // Ende method getCompany
 
 	public OwnCompany getOwnCompany() {
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
-		List<OwnCompany> dbOwnCompany = ds.createQuery(OwnCompany.class).filter("userID = ", LoginServiceImpl.getUserID())
-				.asList();
+		List<OwnCompany> dbOwnCompany = ds.createQuery(OwnCompany.class)
+				.filter("userID = ", LoginServiceImpl.getUserID()).asList();
 		// sucht alle Unternehmen raus, die nicht die UserID aus
 		// LoginServiceImpl haben und löscht sie aus der Liste
-//		for (Company company : dbOwnCompany) {
-//			if (company.getUserID() != LoginServiceImpl.getUserID()) {
-//				dbOwnCompany.remove(company);
-//			}
-//		}
+
 		OwnCompany singleUN = dbOwnCompany.get(0);
 
 		return singleUN;
@@ -62,7 +55,8 @@ public class CompanyServiceImpl extends RemoteServiceServlet implements
 
 	public void addOwnCompany(OwnCompany ownCompany) {
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
-		Query<OwnCompany> updateQuery = ds.createQuery(OwnCompany.class).field("userID").equal(LoginServiceImpl.getUserID());
+		Query<OwnCompany> updateQuery = ds.createQuery(OwnCompany.class)
+				.field("userID").equal(LoginServiceImpl.getUserID());
 		// ds.createQuery(EigenesUnternehmen.class);
 		UpdateOperations<OwnCompany> ops;
 		ops = ds.createUpdateOperations(OwnCompany.class)
@@ -70,15 +64,11 @@ public class CompanyServiceImpl extends RemoteServiceServlet implements
 				.set("topLine", ownCompany.getTopLine())
 				.set("marketShare", ownCompany.getMarketShare())
 				.set("fixedCosts", ownCompany.getFixedCosts())
-				.set("numberOfStaff",ownCompany.getNumberOfStaff())
-				.set("salaryStaff",ownCompany.getSalaryStaff())
+				.set("numberOfStaff", ownCompany.getNumberOfStaff())
+				.set("salaryStaff", ownCompany.getSalaryStaff())
 				.set("product", ownCompany.getProduct());
-								
-		ds.update(updateQuery,ops);
-//		Query<OwnCompany> q = ds.createQuery(OwnCompany.class);
-//		ds.delete(q);
-//		ds.save(ownCompany);
-		// PersistenceManager.getDatastore().save(student);
+
+		ds.update(updateQuery, ops);
 
 	} // Ende method addOwnCompany
 

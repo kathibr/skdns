@@ -38,24 +38,6 @@ public class SimulationServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public SimulationVersion createSimulationCallback(SimulationVersion version) {
-		// TODO Simulationsberechnung
-		// eine SimulationVersion wurde erzeugt und ist mit den Feldern
-		// simulationYear, version, personal,
-		// machineValue, machineCapacity, machineStaff, marketing, price
-		// gefüllt worden
-		// nun sollen passend dazu die Felder ownCompany, company1, company2,
-		// company3 gefüllt werden, indem die passenden Daten dazu aus der DB
-		// geholt werden
-
-		// berechnungen ausführen lassen: MarketSimulation(version);
-
-		// nach der Berechnung soll eine SimulationVersion mit den gefüllten
-		// Feldern
-		// simulationYear (wie aus GUI vorgegeben), version (wie aus GUI
-		// vorgegeben),
-		// company, profit, topLine, marketShare, trendOfRequest, ownCompany,
-		// company1, company2, company3
-		// zurückgegeben werden
 		
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
 		

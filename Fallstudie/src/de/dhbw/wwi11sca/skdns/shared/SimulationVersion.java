@@ -15,6 +15,7 @@ public class SimulationVersion implements Serializable {
 	private int machineStaff;
 	private int marketing;
 	private int price;
+	
 	private int marketIncrease;
 
 	private int simulationYear;

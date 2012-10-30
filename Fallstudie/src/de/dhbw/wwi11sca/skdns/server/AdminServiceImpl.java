@@ -13,7 +13,6 @@ import com.mongodb.MongoException;
 
 import de.dhbw.wwi11sca.skdns.client.admin.AdminService;
 import de.dhbw.wwi11sca.skdns.shared.Admin;
-import de.dhbw.wwi11sca.skdns.shared.Company;
 import de.dhbw.wwi11sca.skdns.shared.User;
 
 public class AdminServiceImpl extends RemoteServiceServlet implements
@@ -27,10 +26,6 @@ public class AdminServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public List<User> getUser() {
-		// TODO: nur User ausgeben, bei denen forgottenPassword = true
-		// damit werden nur die User angezeigt, deren Passwort geändert werden
-		// soll,
-		// da der User dieses vergessen hat
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
 		List<User> dbUser = ds.createQuery(User.class).asList();
 		return dbUser;

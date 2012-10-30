@@ -25,13 +25,11 @@ import de.dhbw.wwi11sca.skdns.client.login.LoginSimulation;
 import de.dhbw.wwi11sca.skdns.client.simulation.Simulation;
 import de.dhbw.wwi11sca.skdns.client.company.CompanySimulation;
 import de.dhbw.wwi11sca.skdns.shared.Company;
-import de.dhbw.wwi11sca.skdns.shared.OwnCompany;
 
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.view.client.ListDataProvider;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
 public class HomeSimulation implements EntryPoint {
 
@@ -46,8 +44,6 @@ public class HomeSimulation implements EntryPoint {
 	private Button btSimulation = new Button("Simulation starten");
 	private Button btLogout = new Button("Logout");
 
-	private Label lbOwnCompany = new Label();
-	private Label lbCompanies = new Label("Konkurrenz:");
 	private Label lbLogout = new Label("Sie wurden erfolgreich ausgeloggt.");
 	private Button btRelogin = new Button("erneuter Login?");
 
@@ -69,20 +65,6 @@ public class HomeSimulation implements EntryPoint {
 		// Firmenlogo: logo
 		panelHome.add(logo, 333, 96);
 		logo.setSize("359px", "93px");
-		lbOwnCompany.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-
-		// Informationsfelder
-
-		// Label eigenes Unternehmen: labelEigenesUN
-		lbOwnCompany.setStyleName("gwt-Home-Label");
-		panelHome.add(lbOwnCompany, 100, 302);
-		lbOwnCompany.setSize("151px", "24px");
-		lbCompanies.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-
-		// Label andere Unternehmen: labelAndereUN
-		lbCompanies.setStyleName("gwt-Home-Label");
-		panelHome.add(lbCompanies, 100, 328);
-		lbCompanies.setSize("151px", "24px");
 
 		// Buttons
 
@@ -94,7 +76,7 @@ public class HomeSimulation implements EntryPoint {
 		panelHome.add(btSimulation, 569, 533);
 		btSimulation.setSize("200px", "35px");
 
-		// Button Logout> byLogout
+		// Button Logout: btLogout
 		panelHome.add(btLogout, 914, 10);
 		btLogout.setSize("100px", "35px");
 
@@ -135,10 +117,18 @@ public class HomeSimulation implements EntryPoint {
 		});
 
 		// CellTable für Konkurrenzunternehmen
-		panelHome.add(tableCompanies, 257, 266);
-		tableCompanies.setSize("690px", "200px");
+		panelHome.add(tableCompanies, 110, 268);
+		tableCompanies.setSize("805px", "200px");
 
 		// Unternehmensdaten der Konkurrenzunternehmen befüllen: Umsatz
+		TextColumn<Company> tradeNameColumn = new TextColumn<Company>() {
+			@Override
+			public String getValue(Company company) {
+				return new String(company.getTradeName()).toString();
+			}
+
+		}; // Ende tradeNameColumn
+			// Unternehmensdaten der Konkurrenzunternehmen befüllen: Umsatz
 		TextColumn<Company> topLineColumn = new TextColumn<Company>() {
 			@Override
 			public String getValue(Company company) {
@@ -178,6 +168,7 @@ public class HomeSimulation implements EntryPoint {
 		}; // Ende productPriceColumn
 
 		// Unternehmensdaten der Konkurrenzunternehmen anzeigen lassen
+		tableCompanies.addColumn(tradeNameColumn, "Firma");
 		tableCompanies.addColumn(topLineColumn, "Umsatz");
 		tableCompanies.addColumn(amountColumn, "Gewinn");
 		tableCompanies.addColumn(marketShareColumn, "Marktanteil");
@@ -216,7 +207,13 @@ public class HomeSimulation implements EntryPoint {
 				companyList.add(company);
 			} // Ende for-Schleife
 
-			lbOwnCompany.setText(((OwnCompany) result.get(0)).getTradeName());
+			// Wenn weniger als zwei Unternehmen aus der DB zurückgeliefert
+			// werden, kann die Simulation nicht stattfinden.
+			// Daher wird der Button btSimulation deaktiviert
+			if (result.size() < 2) {
+				btSimulation.setEnabled(false);
+			} // Ende if-Statement
+
 		} // Ende method onSuccess
 	} // Ende class GetCompanyCallback
 } // Ende class HomeSimulation

@@ -11,7 +11,6 @@ public class OwnCompany extends Company implements Serializable {
 	private Machines machines;
 	private int salaryStaff;
 	private int numberOfStaff;
-	private String tradeName;
 
 	public OwnCompany() {
 	}
@@ -54,14 +53,6 @@ public class OwnCompany extends Company implements Serializable {
 
 	public void setNumberOfStaff(int numberOfStaff) {
 		this.numberOfStaff = numberOfStaff;
-	}
-
-	public String getTradeName() {
-		return tradeName;
-	}
-
-	public void setTradeName(String tradeName) {
-		this.tradeName = tradeName;
 	}
 
 	public String getUserID() {

@@ -23,6 +23,8 @@ import com.google.gwt.user.client.ui.Image;
 import de.dhbw.wwi11sca.skdns.shared.User;
 import de.dhbw.wwi11sca.skdns.client.admin.AdminSimulation;
 import de.dhbw.wwi11sca.skdns.client.home.HomeSimulation;
+import com.google.gwt.event.dom.client.DragEnterHandler;
+import com.google.gwt.event.dom.client.DragEnterEvent;
 
 public class LoginSimulation implements EntryPoint {
 
@@ -64,15 +66,6 @@ public class LoginSimulation implements EntryPoint {
 		textBoxPassword.setText("Kennwort");
 		textBoxPassword.setSize("300px", "24px");
 
-		// Informationsfeld: lfInfo
-		panelLogin.add(lbInfo, 236, 404);
-
-		// Buttons
-
-		// Button vergessenes Passwort: btForgotPassword
-		panelLogin.add(btForgotPassword, 397, 353);
-		btForgotPassword.setSize("149px", "30px");
-
 		// Button einloggen: btLogin
 		panelLogin.add(btLogin, 236, 353);
 		btLogin.setSize("100px", "30px");
@@ -95,7 +88,29 @@ public class LoginSimulation implements EntryPoint {
 							new CheckLoginCallback());
 				}
 			}
-		}); // Ende btLogin
+		}); // Ende btLogin Click-Handler
+		btLogin.addDragEnterHandler(new DragEnterHandler() {
+			public void onDragEnter(DragEnterEvent event) {
+				userOnline = new User();
+				userOnline.setPassword(textBoxPassword.getText());
+				userOnline.setUsername(textBoxUsername.getText());
+				// Überprüfen, ob es sich bei dem einloggenden User um den admin
+				// handelt
+				if (userOnline.getUsername().equals(admin)) {
+					LoginService.checkAdmin(userOnline,
+							new CheckAdminCallback());
+				} else {
+					LoginService.checkLogin(userOnline,
+							new CheckLoginCallback());
+				}
+			}
+		}); // Ende btLogin Enter-Handler
+
+		// Buttons
+
+		// Button vergessenes Passwort: btForgotPassword
+		panelLogin.add(btForgotPassword, 397, 353);
+		btForgotPassword.setSize("149px", "30px");
 
 		// Eventhandler vergessenes Passwort
 		btForgotPassword.addClickHandler(new ClickHandler() {
@@ -105,7 +120,18 @@ public class LoginSimulation implements EntryPoint {
 				LoginService.forgotPassword(userOnline,
 						new ForgotPasswordCallback());
 			}
-		}); // Ende btForgortPassword
+		}); // Ende btForgortPassword Click-Handler
+		btForgotPassword.addDragEnterHandler(new DragEnterHandler() {
+			public void onDragEnter(DragEnterEvent event) {
+				userOnline = new User();
+				userOnline.setUsername(textBoxUsername.getText());
+				LoginService.forgotPassword(userOnline,
+						new ForgotPasswordCallback());
+			}
+		}); // Ende btForgottPassword Enter-Handler
+
+		// Informationsfeld: lfInfo
+		panelLogin.add(lbInfo, 236, 404);
 
 		// Eventhandler Password TextBox: löscht den Textboxinhalt, damit der
 		// User Daten eingeben kann

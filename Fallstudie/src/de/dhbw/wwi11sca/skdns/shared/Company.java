@@ -11,6 +11,7 @@ public class Company implements Serializable {
 	private double marketShare;
 	private String trendOfRequest;
 	private Product product;
+	private String tradeName;
 
 	public Company() {
 	}
@@ -79,6 +80,14 @@ public class Company implements Serializable {
 
 	public void setUserID(String userID) {
 		this.userID = userID;
+	}
+
+	public String getTradeName() {
+		return tradeName;
+	}
+
+	public void setTradeName(String tradeName) {
+		this.tradeName = tradeName;
 	}
 
 }
