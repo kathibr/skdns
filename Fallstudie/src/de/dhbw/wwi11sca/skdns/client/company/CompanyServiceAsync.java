@@ -20,4 +20,6 @@ public interface CompanyServiceAsync {
 	void getOwnCompany(AsyncCallback<OwnCompany> callback);
 
 	void addOwnCompany(OwnCompany ownCompany, AsyncCallback<Void> callback);
+	void addCompany(Company company, AsyncCallback<Void> callback);
+	
 }

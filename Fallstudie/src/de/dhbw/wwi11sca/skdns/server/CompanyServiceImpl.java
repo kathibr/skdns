@@ -72,4 +72,21 @@ public class CompanyServiceImpl extends RemoteServiceServlet implements
 
 	} // Ende method addOwnCompany
 
+	@Override
+	public void addCompany(Company company) {
+		// TODO Auto-generated method stub
+		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
+		Query<Company> updateQuery = ds.createQuery(Company.class)
+				.filter("userID = ", LoginServiceImpl.getUserID()).filter("companyID = ", company.getCompanyID());
+		// ds.createQuery(EigenesUnternehmen.class);
+		UpdateOperations<Company> ops;
+		ops = ds.createUpdateOperations(Company.class)
+				.set("topLine", company.getTopLine())
+				.set("marketShare", company.getMarketShare())
+				.set("product", company.getProduct());
+		ds.update(updateQuery, ops);
+
+		
+	}
+
 } // Ende class CompanyServiceImpl

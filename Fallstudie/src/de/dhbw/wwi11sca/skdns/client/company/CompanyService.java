@@ -23,4 +23,5 @@ public interface CompanyService extends RemoteService {
 	public OwnCompany getOwnCompany();
 
 	void addOwnCompany(OwnCompany ownCompany);
+	void addCompany(Company company);
 }

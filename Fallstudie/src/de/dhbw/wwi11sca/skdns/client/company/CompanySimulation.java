@@ -8,8 +8,7 @@ package de.dhbw.wwi11sca.skdns.client.company;
  * 
  */
 import java.util.List;
-import java.util.regex.Pattern;
-
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
@@ -28,13 +27,9 @@ import de.dhbw.wwi11sca.skdns.client.login.LoginSimulation;
 import de.dhbw.wwi11sca.skdns.shared.Company;
 import de.dhbw.wwi11sca.skdns.shared.Machines;
 import de.dhbw.wwi11sca.skdns.shared.OwnCompany;
-
-import com.google.gwt.user.client.ui.IntegerBox;
-import com.google.gwt.user.client.ui.DoubleBox;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.view.client.ListDataProvider;
-import com.google.gwt.widget.client.TextButton;
 
 public class CompanySimulation implements EntryPoint {
 
@@ -59,13 +54,13 @@ public class CompanySimulation implements EntryPoint {
 	Label lbNumberOfStaff = new Label("Anzahl Mitarbeiter:");
 	Label lbSalaryOfStaff = new Label("durch. Mitarbeitergehalt:");
 	TextBox textBoxTradeName = new TextBox();
-	TextBox integerBoxTopLineOwnCompany = new TextBox();
-	DoubleBox doubleBoxMarketShareOwnCompany = new DoubleBox();
-	DoubleBox doubleBoxFixedCosts = new DoubleBox();
-	DoubleBox doubleBoxProductPriceOwnCompany = new DoubleBox();
-	TextBox integerBoxSalesVolume = new TextBox();
-	TextBox integerBoxNumberOfStaff = new TextBox();
-	TextBox integerBoxSalaryOfStaff = new TextBox();
+	TextBox textBoxTopLineOwnCompany = new TextBox();
+	TextBox textBoxMarketShareOwnCompany = new TextBox();
+	TextBox textBoxFixedCosts = new TextBox();
+	TextBox textBoxProductPriceOwnCompany = new TextBox();
+	TextBox textBoxSalesVolume = new TextBox();
+	TextBox textBoxNumberOfStaff = new TextBox();
+	TextBox textBoxSalaryOfStaff = new TextBox();
 	Button btDeleteOwnCompany = new Button("L\u00F6schen");
 	Button btSaveOwnCompany = new Button("\u00DCbernehmen");
 	CellTable<Machines> cellTableMachines;
@@ -76,10 +71,10 @@ public class CompanySimulation implements EntryPoint {
 	Label lbMarketShareCompany1 = new Label("Marktanteil:");
 	Label lbProductPriceCompany1 = new Label("Produktpreis:");
 	Label lbSalesVolumeCompany1 = new Label("Absatzmenge:");
-	IntegerBox integerBoxTopLineCompany1 = new IntegerBox();
-	DoubleBox doubleBoxMarketShareCompany1 = new DoubleBox();
-	DoubleBox doubleBoxProductPriceCompany1 = new DoubleBox();
-	IntegerBox integerBoxSalesVolumeCompany1 = new IntegerBox();
+	TextBox textBoxTopLineCompany1 = new TextBox();
+	TextBox textBoxMarketShareCompany1 = new TextBox();
+	TextBox textBoxProductPriceCompany1 = new TextBox();
+	TextBox textBoxSalesVolumeCompany1 = new TextBox();
 	Button btDeleteCompany1 = new Button("L\u00F6schen");
 	Button btSaveCompany1 = new Button("\u00DCbernehmen");
 
@@ -88,10 +83,10 @@ public class CompanySimulation implements EntryPoint {
 	Label lbMarketShareCompany2 = new Label("Marktanteil:");
 	Label lbProductPriceCompany2 = new Label("Produktpreis:");
 	Label lbSalesVolumeCompany2 = new Label("Absatzmenge:");
-	IntegerBox integerBoxTopLineCompany2 = new IntegerBox();
-	DoubleBox doubleBoxMarketShareCompany2 = new DoubleBox();
-	DoubleBox doubleBoxProductPriceCompany2 = new DoubleBox();
-	IntegerBox integerBoxSalesVolumeCompany2 = new IntegerBox();
+	TextBox textBoxTopLineCompany2 = new TextBox();
+	TextBox textBoxMarketShareCompany2 = new TextBox();
+	TextBox textBoxProductPriceCompany2 = new TextBox();
+	TextBox textBoxSalesVolumeCompany2 = new TextBox();
 	Button btDeleteCompany2 = new Button("L\u00F6schen");
 	Button btSaveCompany2 = new Button("\u00DCbernehmen");
 
@@ -100,17 +95,23 @@ public class CompanySimulation implements EntryPoint {
 	Label lbMarketShareCompany3 = new Label("Marktanteil:");
 	Label lbProductPriceCompany3 = new Label("Produktpreis:");
 	Label lbSalesVolumeCompany3 = new Label("Absatzmenge:");
-	IntegerBox integerBoxTopLineCompany3 = new IntegerBox();
-	DoubleBox doubleBoxMarketShareCompany3 = new DoubleBox();
-	DoubleBox doubleBoxProductPriceCompany3 = new DoubleBox();
-	IntegerBox integerBoxSalesVolumeCompany3 = new IntegerBox();
+	TextBox textBoxTopLineCompany3 = new TextBox();
+	TextBox textBoxMarketShareCompany3 = new TextBox();
+	TextBox textBoxProductPriceCompany3 = new TextBox();
+	TextBox textBoxSalesVolumeCompany3 = new TextBox();
 	Button btDeleteCompany3 = new Button("L\u00F6schen");
 	Button btSaveCompany3 = new Button("\u00DCbernehmen");
-
-	OwnCompany ownCom;
+	
+		OwnCompany ownCom;
 	Company[] company = new Company[3];
+	List<Company> companies;
+	
 	OwnCompany ownCompany = new OwnCompany();
-
+	RegExp expTradeName = RegExp.compile("^([\u00C4\u00DC\u00D6A-Z])[0-9a-z\u00E4\u00FC\u00F6\u00C4\u00DC\u00DF\u00D6A-Z\\s]*");
+	RegExp expInteger = RegExp.compile("^([0-9])[0-9]*");
+	RegExp expDouble = RegExp.compile("^([1-9]\\d*|0)(\\.\\d)?$");
+	
+	
 	private CompanyServiceAsync service = GWT.create(CompanyService.class);
 
 	@Override
@@ -141,9 +142,21 @@ public class CompanySimulation implements EntryPoint {
 		// Eventhandler
 		lbHome.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				RootPanel.get().clear();
-				HomeSimulation home = new HomeSimulation();
-				home.onModuleLoad();
+		
+				if( ( ownCom.getMarketShare() + companies.get(0).getMarketShare() + companies.get(1).getMarketShare() + companies.get(2).getMarketShare()) == 100
+						){
+					
+					RootPanel.get().clear();
+					HomeSimulation home = new HomeSimulation();
+					home.onModuleLoad();
+						
+						
+					
+				}else{
+					Window.alert("Der Marktanteil aller Unternehmen muss zusammen 100 betragen!");
+				}
+				
+				
 			}
 		}); // Ende lbHome
 
@@ -155,9 +168,22 @@ public class CompanySimulation implements EntryPoint {
 				RootPanel.get().add(lbLogout);
 				btRelogin.addClickHandler(new ClickHandler() {
 					public void onClick(ClickEvent event) {
-						RootPanel.get().clear();
-						LoginSimulation login = new LoginSimulation();
-						login.onModuleLoad();
+						
+						if( ( ownCom.getMarketShare() + companies.get(0).getMarketShare() + companies.get(1).getMarketShare() + companies.get(2).getMarketShare()) == 100
+								){
+							
+
+							RootPanel.get().clear();
+							LoginSimulation login = new LoginSimulation();
+							login.onModuleLoad();
+								
+								
+							
+						}else{
+							Window.alert("Der Marktanteil aller Unternehmen muss zusammen 100 betragen!");
+						}
+						
+						
 					}
 				}); // btLogout
 			}
@@ -236,12 +262,12 @@ public class CompanySimulation implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				// TODO: Meldung: Sind sie sich sicher
 				textBoxTradeName.setText(null);
-				integerBoxTopLineOwnCompany.setValue(null);
-				doubleBoxMarketShareOwnCompany.setValue(null);
-				doubleBoxProductPriceOwnCompany.setValue(null);
-				integerBoxSalesVolume.setValue(null);
-				integerBoxNumberOfStaff.setValue(null);
-				integerBoxSalaryOfStaff.setValue(null);
+				textBoxTopLineOwnCompany.setValue(null);
+				textBoxMarketShareOwnCompany.setValue(null);
+				textBoxProductPriceOwnCompany.setValue(null);
+				textBoxSalesVolume.setValue(null);
+				textBoxNumberOfStaff.setValue(null);
+				textBoxSalaryOfStaff.setValue(null);
 				// TODO Maschinen in Oberfläche löschen
 				// TODO EigenesUnternehmen aus DB löschen
 			}
@@ -249,34 +275,76 @@ public class CompanySimulation implements EntryPoint {
 		// Unternehmen speichern
 		btSaveOwnCompany.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+						
+				if(	
+						expTradeName.test(textBoxTradeName.getText())
+						&& expInteger.test(textBoxTopLineOwnCompany.getText())
+						&& expDouble.test(textBoxMarketShareOwnCompany.getText())
+						&& expDouble.test(textBoxFixedCosts.getText())
+						&& expInteger.test(textBoxNumberOfStaff.getText())
+						&& expInteger.test(textBoxSalaryOfStaff.getText())
+						&& expDouble.test(textBoxProductPriceOwnCompany.getText())
+						&& expInteger.test(textBoxSalesVolume.getText())
+			
+						){
+					ownCom.setTradeName(textBoxTradeName.getText());
+					ownCom.setTopLine(new Integer(textBoxTopLineOwnCompany
+							.getText()));
+					ownCom.setMarketShare(new Double(
+							textBoxMarketShareOwnCompany.getText()));
+					ownCom.setFixedCosts(new Double(textBoxFixedCosts
+							.getText()));
+					ownCom.setNumberOfStaff(new Integer(textBoxNumberOfStaff
+							.getText()));
+					ownCom.setSalaryStaff(new Integer(textBoxSalaryOfStaff
+							.getText()));
+					ownCom.getProduct().setPrice(
+							new Double(textBoxProductPriceOwnCompany
+									.getText()));
+					ownCom.getProduct().setSalesVolume(
+							new Integer(textBoxSalesVolume.getText()));
 
-				if ((Pattern
+					service.addOwnCompany(ownCom, new AddOwnCompanyCallback());
+					
+				}else{
+					Window.alert("Bitte Eingabe \u00FCberpr\u00FCfen");
+					
+				}
+				/*if ((Pattern
 						.matches(
 								"[\u00C4\u00DC\u00D6A-Z][0-9a-z\u00E4\u00FC\u00F6\u00C4\u00DC\u00DF\u00D6A-Z\\s]*",
 								textBoxTradeName.getText()))
 						&& (Pattern.matches("[0-9][0-9]*",
-								integerBoxTopLineOwnCompany.getText()))) {
+								textBoxTopLineOwnCompany.getText()))
+						&& (Pattern.matches("^([1-9]\\d*|0)(\\.\\d)?$",textBoxMarketShareOwnCompany.getText())) //double
+						&& (Pattern.matches("^([1-9]\\d*|0)(\\.\\d)?$",textBoxFixedCosts.getText())) //double
+						&& (Pattern.matches("[0-9][0-9]*",textBoxNumberOfStaff.getText()))
+						&& (Pattern.matches("[0-9][0-9]*",textBoxSalaryOfStaff.getText()))
+						&& (Pattern.matches("^([1-9]\\d*|0)(\\.\\d)?$",textBoxProductPriceOwnCompany.getText()))//double
+						&& (Pattern.matches("[0-9][0-9]*",textBoxSalesVolume.getText()))	
+					)
+				{
 					ownCom.setTradeName(textBoxTradeName.getText());
-					ownCom.setTopLine(new Integer(integerBoxTopLineOwnCompany
+					ownCom.setTopLine(new Integer(textBoxTopLineOwnCompany
 							.getText()));
 					ownCom.setMarketShare(new Double(
-							doubleBoxMarketShareOwnCompany.getText()));
-					ownCom.setFixedCosts(new Double(doubleBoxFixedCosts
+							textBoxMarketShareOwnCompany.getText()));
+					ownCom.setFixedCosts(new Double(textBoxFixedCosts
 							.getText()));
-					ownCom.setNumberOfStaff(new Integer(integerBoxNumberOfStaff
+					ownCom.setNumberOfStaff(new Integer(textBoxNumberOfStaff
 							.getText()));
-					ownCom.setSalaryStaff(new Integer(integerBoxSalaryOfStaff
+					ownCom.setSalaryStaff(new Integer(textBoxSalaryOfStaff
 							.getText()));
 					ownCom.getProduct().setPrice(
-							new Double(doubleBoxProductPriceOwnCompany
+							new Double(textBoxProductPriceOwnCompany
 									.getText()));
 					ownCom.getProduct().setSalesVolume(
-							new Integer(integerBoxSalesVolume.getText()));
+							new Integer(textBoxSalesVolume.getText()));
 
 					service.addOwnCompany(ownCom, new AddOwnCompanyCallback());
 				} else {
 					Window.alert("Bitte Eingabe \u00FCberpr\u00FCfen");
-				} // Ende if-else
+				} // Ende if-else */
 
 			}
 		}); // Ende btSaveOwnCompany
@@ -287,32 +355,32 @@ public class CompanySimulation implements EntryPoint {
 		absolutePanelOwnCompany.add(textBoxTradeName, 136, 36);
 		// Umsatz
 		absolutePanelOwnCompany.add(lbTopLineOwnCompany, 41, 105);
-		absolutePanelOwnCompany.add(integerBoxTopLineOwnCompany, 136, 93);
-		integerBoxTopLineOwnCompany.setSize("162px", "24px");
+		absolutePanelOwnCompany.add(textBoxTopLineOwnCompany, 136, 93);
+		textBoxTopLineOwnCompany.setSize("162px", "24px");
 		// Marktanteil
 		absolutePanelOwnCompany.add(lbMarketShareOwnCompany, 41, 159);
-		absolutePanelOwnCompany.add(doubleBoxMarketShareOwnCompany, 136, 147);
-		doubleBoxMarketShareOwnCompany.setSize("161px", "24px");
+		absolutePanelOwnCompany.add(textBoxMarketShareOwnCompany, 136, 147);
+		textBoxMarketShareOwnCompany.setSize("161px", "24px");
 		// Fixkosten
 		absolutePanelOwnCompany.add(lbFixedCosts, 41, 211);
-		absolutePanelOwnCompany.add(doubleBoxFixedCosts, 136, 199);
-		doubleBoxFixedCosts.setSize("161px", "24px");
+		absolutePanelOwnCompany.add(textBoxFixedCosts, 136, 199);
+		textBoxFixedCosts.setSize("161px", "24px");
 		// Produktpreis
 		absolutePanelOwnCompany.add(lbProductPriceOwnCompany, 432, 159);
-		absolutePanelOwnCompany.add(doubleBoxProductPriceOwnCompany, 577, 147);
-		doubleBoxProductPriceOwnCompany.setSize("161px", "24px");
+		absolutePanelOwnCompany.add(textBoxProductPriceOwnCompany, 577, 147);
+		textBoxProductPriceOwnCompany.setSize("161px", "24px");
 		// Absatzmenge
 		absolutePanelOwnCompany.add(lbSalesVolume, 432, 211);
-		absolutePanelOwnCompany.add(integerBoxSalesVolume, 577, 199);
-		integerBoxSalesVolume.setSize("161px", "24px");
+		absolutePanelOwnCompany.add(textBoxSalesVolume, 577, 199);
+		textBoxSalesVolume.setSize("161px", "24px");
 		// Anzahl Mitarbeiter
 		absolutePanelOwnCompany.add(lbNumberOfStaff, 432, 48);
-		absolutePanelOwnCompany.add(integerBoxNumberOfStaff, 577, 36);
-		integerBoxNumberOfStaff.setSize("161px", "24px");
+		absolutePanelOwnCompany.add(textBoxNumberOfStaff, 577, 36);
+		textBoxNumberOfStaff.setSize("161px", "24px");
 		// durchschnittliches Mitarbeitergehalt
 		absolutePanelOwnCompany.add(lbSalaryOfStaff, 432, 105);
-		absolutePanelOwnCompany.add(integerBoxSalaryOfStaff, 577, 93);
-		integerBoxSalaryOfStaff.setSize("161px", "24px");
+		absolutePanelOwnCompany.add(textBoxSalaryOfStaff, 577, 93);
+		textBoxSalaryOfStaff.setSize("161px", "24px");
 	} // Ende method addTabPanelOwnCompany
 
 	private void addTabPanelCompanyOne() {
@@ -333,44 +401,76 @@ public class CompanySimulation implements EntryPoint {
 		btDeleteCompany1.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				// TODO Daten Unternehmen 1 aus DB löschen
-				integerBoxTopLineCompany1.setValue(null);
-				doubleBoxMarketShareCompany1.setValue(null);
-				doubleBoxProductPriceCompany1.setValue(null);
-				integerBoxSalesVolumeCompany1.setValue(null);
+				textBoxTopLineCompany1.setValue(null);
+				textBoxMarketShareCompany1.setValue(null);
+				textBoxProductPriceCompany1.setValue(null);
+				textBoxSalesVolumeCompany1.setValue(null);
 			}
 		}); // Ende btDeleteCompany1
 		// Unternehmen speichern
 		btSaveCompany1.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				// TODO Daten Unternehmen 1 in DB übernehmen
-				company[0] = new Company();
-				company[0].setTopLine(integerBoxTopLineCompany1.getValue());
-				company[0].setMarketShare(doubleBoxMarketShareCompany1
-						.getValue());
-				company[0].getProduct().setPrice(
-						doubleBoxProductPriceCompany1.getValue());
-				company[0].getProduct().setSalesVolume(
-						integerBoxSalesVolumeCompany1.getValue());
+				
+				
+				
+								
+				if(	
+						expInteger.test(textBoxTopLineCompany1.getText())
+						&& expDouble.test(textBoxMarketShareCompany1.getText())
+						&& expDouble.test(textBoxProductPriceCompany1.getText())
+						&& expInteger.test(textBoxSalesVolumeCompany1.getText())
+			
+						)
+				{
+				
+					//company[0] = new Company();
+					
+					companies.get(0).setTopLine(new Integer(textBoxTopLineCompany1
+									.getText()));
+					companies.get(0).setMarketShare(new Double(
+									textBoxMarketShareCompany1.getText()));
+					companies.get(0).getProduct().setPrice(new Double(textBoxProductPriceCompany1
+							.getText()));
+					companies.get(0).getProduct().setSalesVolume(new Integer(textBoxSalesVolumeCompany1.getText()));
+					
+					
+					/* company[0].setTopLine(new Integer(textBoxTopLineCompany1
+					*		.getText()));
+					* company[0].setMarketShare(new Double(
+					*		textBoxMarketShareCompany1.getText()));
+					company[0].getProduct().setPrice(
+							new Double(textBoxProductPriceCompany1
+									.getText()));
+					company[0].getProduct().setSalesVolume(
+							new Integer(textBoxSalesVolumeCompany1.getText()));*/
+
+					service.addCompany(companies.get(0), new AddCompanyCallback());
+				} else {
+					Window.alert("Bitte Eingabe \u00FCberpr\u00FCfen");
+				} // Ende if-else
+				
+		
 			}
 		}); // Ende btSaveCompany1
 
 		// Elemente
 		// Umsatz
 		absolutePanelCompany1.add(lbTopLineCompany1, 41, 48);
-		absolutePanelCompany1.add(integerBoxTopLineCompany1, 136, 36);
-		integerBoxTopLineCompany1.setSize("161", "24");
+		absolutePanelCompany1.add(textBoxTopLineCompany1, 136, 36);
+		textBoxTopLineCompany1.setSize("161", "24");
 		// Marktanteil
 		absolutePanelCompany1.add(lbMarketShareCompany1, 432, 48);
-		absolutePanelCompany1.add(doubleBoxMarketShareCompany1, 577, 36);
-		doubleBoxMarketShareCompany1.setSize("161", "24");
+		absolutePanelCompany1.add(textBoxMarketShareCompany1, 577, 36);
+		textBoxMarketShareCompany1.setSize("161", "24");
 		// Produktpreis
 		absolutePanelCompany1.add(lbProductPriceCompany1, 41, 104);
-		absolutePanelCompany1.add(doubleBoxProductPriceCompany1, 136, 92);
-		doubleBoxProductPriceCompany1.setSize("161px", "24px");
+		absolutePanelCompany1.add(textBoxProductPriceCompany1, 136, 92);
+		textBoxProductPriceCompany1.setSize("161px", "24px");
 		// Absatzmenge
 		absolutePanelCompany1.add(lbSalesVolumeCompany1, 432, 104);
-		absolutePanelCompany1.add(integerBoxSalesVolumeCompany1, 577, 92);
-		integerBoxSalesVolumeCompany1.setSize("161px", "24px");
+		absolutePanelCompany1.add(textBoxSalesVolumeCompany1, 577, 92);
+		textBoxSalesVolumeCompany1.setSize("161px", "24px");
 
 	} // Ende method addTabPanelCompanyOne
 
@@ -390,44 +490,69 @@ public class CompanySimulation implements EntryPoint {
 		btDeleteCompany2.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				// TODO Daten Unternehmen 2 aus DB löschen
-				integerBoxTopLineCompany2.setValue(null);
-				doubleBoxMarketShareCompany2.setValue(null);
-				doubleBoxProductPriceCompany2.setValue(null);
-				integerBoxSalesVolumeCompany2.setValue(null);
+				textBoxTopLineCompany2.setValue(null);
+				textBoxMarketShareCompany2.setValue(null);
+				textBoxProductPriceCompany2.setValue(null);
+				textBoxSalesVolumeCompany2.setValue(null);
 			}
 		}); // Ende btDeleteCompany2
 		// Unternehmen speichern
 		btSaveCompany2.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				// TODO Daten Unternehmen 2 in DB übernehmen
-				company[1] = new Company();
-				company[1].setTopLine(integerBoxTopLineCompany2.getValue());
-				company[1].setMarketShare(doubleBoxMarketShareCompany2
-						.getValue());
-				company[1].getProduct().setPrice(
-						doubleBoxProductPriceCompany2.getValue());
-				company[1].getProduct().setSalesVolume(
-						integerBoxSalesVolumeCompany2.getValue());
+				if(	
+						expInteger.test(textBoxTopLineCompany2.getText())
+						&& expDouble.test(textBoxMarketShareCompany2.getText())
+						&& expDouble.test(textBoxProductPriceCompany2.getText())
+						&& expInteger.test(textBoxSalesVolumeCompany2.getText())
+			
+						)
+				{
+					//company[0] = new Company();
+					
+					companies.get(1).setTopLine(new Integer(textBoxTopLineCompany2
+									.getText()));
+					companies.get(1).setMarketShare(new Double(
+									textBoxMarketShareCompany2.getText()));
+					companies.get(1).getProduct().setPrice(new Double(textBoxProductPriceCompany2
+							.getText()));
+					companies.get(1).getProduct().setSalesVolume(new Integer(textBoxSalesVolumeCompany2.getText()));
+					
+					
+					/* company[0].setTopLine(new Integer(textBoxTopLineCompany1
+					*		.getText()));
+					* company[0].setMarketShare(new Double(
+					*		textBoxMarketShareCompany1.getText()));
+					company[0].getProduct().setPrice(
+							new Double(textBoxProductPriceCompany1
+									.getText()));
+					company[0].getProduct().setSalesVolume(
+							new Integer(textBoxSalesVolumeCompany1.getText()));*/
+
+					service.addCompany(companies.get(1), new AddCompanyCallback());
+				} else {
+					Window.alert("Bitte Eingabe \u00FCberpr\u00FCfen");
+				} // Ende if-else
 			}
 		}); // Ende btSaveCompany2
 
 		// Elemente
 		// Umsatz
 		absolutePanelCompany2.add(lbTopLineCompany2, 41, 48);
-		absolutePanelCompany2.add(integerBoxTopLineCompany2, 136, 36);
-		integerBoxTopLineCompany2.setSize("161", "24");
+		absolutePanelCompany2.add(textBoxTopLineCompany2, 136, 36);
+		textBoxTopLineCompany2.setSize("161", "24");
 		// Marktanteil
 		absolutePanelCompany2.add(lbMarketShareCompany2, 432, 48);
-		absolutePanelCompany2.add(doubleBoxMarketShareCompany2, 577, 36);
-		doubleBoxMarketShareCompany2.setSize("161", "24");
+		absolutePanelCompany2.add(textBoxMarketShareCompany2, 577, 36);
+		textBoxMarketShareCompany2.setSize("161", "24");
 		// Produktpreis
 		absolutePanelCompany2.add(lbProductPriceCompany2, 41, 104);
-		absolutePanelCompany2.add(doubleBoxProductPriceCompany2, 136, 92);
-		doubleBoxProductPriceCompany2.setSize("161px", "24px");
+		absolutePanelCompany2.add(textBoxProductPriceCompany2, 136, 92);
+		textBoxProductPriceCompany2.setSize("161px", "24px");
 		// Absatzmenge
 		absolutePanelCompany2.add(lbSalesVolumeCompany2, 432, 104);
-		absolutePanelCompany2.add(integerBoxSalesVolumeCompany2, 577, 92);
-		integerBoxSalesVolumeCompany2.setSize("161px", "24px");
+		absolutePanelCompany2.add(textBoxSalesVolumeCompany2, 577, 92);
+		textBoxSalesVolumeCompany2.setSize("161px", "24px");
 	} // Ende method addTabPanelCompany2
 
 	private void addTabPanelCompanyThree() {
@@ -446,44 +571,69 @@ public class CompanySimulation implements EntryPoint {
 		btDeleteCompany3.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				// TODO Daten Unternehmen 3 aus DB löschen
-				integerBoxTopLineCompany3.setValue(null);
-				doubleBoxMarketShareCompany3.setValue(null);
-				doubleBoxProductPriceCompany3.setValue(null);
-				integerBoxSalesVolumeCompany3.setValue(null);
+				textBoxTopLineCompany3.setValue(null);
+				textBoxMarketShareCompany3.setValue(null);
+				textBoxProductPriceCompany3.setValue(null);
+				textBoxSalesVolumeCompany3.setValue(null);
 			}
 		}); // Ende btDeleteCompany3
 		// Unternehmen speichern
 		btSaveCompany3.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				// TODO Daten Unternehmen 3 in DB übernehmen
-				company[2] = new Company();
-				company[2].setTopLine(integerBoxTopLineCompany3.getValue());
-				company[2].setMarketShare(doubleBoxMarketShareCompany3
-						.getValue());
-				company[2].getProduct().setPrice(
-						doubleBoxProductPriceCompany3.getValue());
-				company[2].getProduct().setSalesVolume(
-						integerBoxSalesVolumeCompany3.getValue());
+				if(	
+						expInteger.test(textBoxTopLineCompany3.getText())
+						&& expDouble.test(textBoxMarketShareCompany3.getText())
+						&& expDouble.test(textBoxProductPriceCompany3.getText())
+						&& expInteger.test(textBoxSalesVolumeCompany3.getText())
+			
+						)
+				{
+					//company[0] = new Company();
+					
+					companies.get(2).setTopLine(new Integer(textBoxTopLineCompany3
+									.getText()));
+					companies.get(2).setMarketShare(new Double(
+									textBoxMarketShareCompany3.getText()));
+					companies.get(2).getProduct().setPrice(new Double(textBoxProductPriceCompany3
+							.getText()));
+					companies.get(2).getProduct().setSalesVolume(new Integer(textBoxSalesVolumeCompany3.getText()));
+					
+					
+					/* company[0].setTopLine(new Integer(textBoxTopLineCompany1
+					*		.getText()));
+					* company[0].setMarketShare(new Double(
+					*		textBoxMarketShareCompany1.getText()));
+					company[0].getProduct().setPrice(
+							new Double(textBoxProductPriceCompany1
+									.getText()));
+					company[0].getProduct().setSalesVolume(
+							new Integer(textBoxSalesVolumeCompany1.getText()));*/
+
+					service.addCompany(companies.get(2), new AddCompanyCallback());
+				} else {
+					Window.alert("Bitte Eingabe \u00FCberpr\u00FCfen");
+				} // Ende if-else
 			}
 		}); // Ende btSaveCompany3
 
 		// Elemente
 		// Umsatz
 		absolutePanelCompany3.add(lbTopLineCompany3, 41, 48);
-		absolutePanelCompany3.add(integerBoxTopLineCompany3, 136, 36);
-		integerBoxTopLineCompany3.setSize("161", "24");
+		absolutePanelCompany3.add(textBoxTopLineCompany3, 136, 36);
+		textBoxTopLineCompany3.setSize("161", "24");
 		// Marktanteil
 		absolutePanelCompany3.add(lbMarketShareCompany3, 432, 48);
-		absolutePanelCompany3.add(doubleBoxMarketShareCompany3, 577, 36);
-		doubleBoxMarketShareCompany3.setSize("161", "24");
+		absolutePanelCompany3.add(textBoxMarketShareCompany3, 577, 36);
+		textBoxMarketShareCompany3.setSize("161", "24");
 		// Produktpreis
 		absolutePanelCompany3.add(lbProductPriceCompany3, 41, 104);
-		absolutePanelCompany3.add(doubleBoxProductPriceCompany3, 136, 92);
-		doubleBoxProductPriceCompany3.setSize("161px", "24px");
+		absolutePanelCompany3.add(textBoxProductPriceCompany3, 136, 92);
+		textBoxProductPriceCompany3.setSize("161px", "24px");
 		// Absatzmenge
 		absolutePanelCompany3.add(lbSalesVolumeCompany3, 432, 104);
-		absolutePanelCompany3.add(integerBoxSalesVolumeCompany3, 577, 92);
-		integerBoxSalesVolumeCompany3.setSize("161px", "24px");
+		absolutePanelCompany3.add(textBoxSalesVolumeCompany3, 577, 92);
+		textBoxSalesVolumeCompany3.setSize("161px", "24px");
 	} // Ende method addTabPanelCompanyThree
 
 	private void startCall() {
@@ -505,17 +655,27 @@ public class CompanySimulation implements EntryPoint {
 
 		@Override
 		public void onSuccess(Void result) {
-			// jetzt wissen wir, das alles geklappt hat, auf dem Server.
-			// Wir fÃ¼gen den neuen Wert der Liste hinzu
-			// students.addItem(newName.getText());
-			//
-			// // und leeren das Eingabefeld.
-			// newName.setText("");
-
-			Window.alert("Das eigene Unternehmen wurde aktualisiert");
+				Window.alert("Das eigene Unternehmen wurde aktualisiert");
 		} // Ende method onSuccess
 	} // Ende class AddOwnCompanyCallback
+	/**
+	 * 
+	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher ein
+	 * angelegtes Unternehmen speichert
+	 * 
+	 */
+	public class AddCompanyCallback implements AsyncCallback<java.lang.Void> {
 
+		@Override
+		public void onFailure(Throwable caught) {
+		} // Ende onFailure
+
+		@Override
+		public void onSuccess(Void result) {
+			Window.alert("Das Unternehmen wurde aktualisiert");
+		} // Ende method onSuccess
+	} // Ende class AddCompanyCallback
+	
 	/**
 	 * 
 	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher ein
@@ -544,17 +704,17 @@ public class CompanySimulation implements EntryPoint {
 			machinesOwnCompany.add(result.getMachines());
 
 			textBoxTradeName.setText(result.getTradeName());
-			integerBoxTopLineOwnCompany
+			textBoxTopLineOwnCompany
 					.setText(new Integer(result.getTopLine()).toString());
-			doubleBoxMarketShareOwnCompany.setValue(result.getMarketShare());
-			doubleBoxFixedCosts.setValue(result.getFixedCosts());
-			doubleBoxProductPriceOwnCompany.setValue(result.getProduct()
-					.getPrice());
-			integerBoxSalesVolume.setText(new Integer(result.getProduct()
+			textBoxMarketShareOwnCompany.setText(new Double(result.getMarketShare()).toString());
+			textBoxFixedCosts.setText(new Double(result.getFixedCosts()).toString());
+			textBoxProductPriceOwnCompany.setText(new Double(result.getProduct()
+					.getPrice()).toString());
+			textBoxSalesVolume.setText(new Integer(result.getProduct()
 					.getSalesVolume()).toString());
-			integerBoxNumberOfStaff.setText(new Integer(result
+			textBoxNumberOfStaff.setText(new Integer(result
 					.getNumberOfStaff()).toString());
-			integerBoxSalaryOfStaff
+			textBoxSalaryOfStaff
 					.setText(new Integer(result.getSalaryStaff()).toString());
 
 		} // Ende method onSuccess
@@ -574,29 +734,30 @@ public class CompanySimulation implements EntryPoint {
 
 		@Override
 		public void onSuccess(List<Company> result) {
-			integerBoxTopLineCompany1.setValue(result.get(0).getTopLine());
-			doubleBoxMarketShareCompany1.setValue(result.get(0)
-					.getMarketShare());
-			doubleBoxProductPriceCompany1.setValue(result.get(0).getProduct()
-					.getPrice());
-			integerBoxSalesVolumeCompany1.setValue(result.get(0).getProduct()
-					.getSalesVolume());
+			companies = result;
+			textBoxTopLineCompany1.setText(new Integer(result.get(0).getTopLine()).toString());
+			textBoxMarketShareCompany1.setValue(new Double(result.get(0)
+					.getMarketShare()).toString());
+			textBoxProductPriceCompany1.setValue(new Double(result.get(0).getProduct()
+					.getPrice()).toString());
+			textBoxSalesVolumeCompany1.setValue(new Integer(result.get(0).getProduct()
+					.getSalesVolume()).toString());
 
-			integerBoxTopLineCompany2.setValue(result.get(1).getTopLine());
-			doubleBoxMarketShareCompany2.setValue(result.get(1)
-					.getMarketShare());
-			doubleBoxProductPriceCompany2.setValue(result.get(1).getProduct()
-					.getPrice());
-			integerBoxSalesVolumeCompany2.setValue(result.get(1).getProduct()
-					.getSalesVolume());
+			textBoxTopLineCompany2.setValue(new Integer(result.get(1).getTopLine()).toString());
+			textBoxMarketShareCompany2.setValue(new Double(result.get(1)
+					.getMarketShare()).toString());
+			textBoxProductPriceCompany2.setValue(new Double(result.get(1).getProduct()
+					.getPrice()).toString());
+			textBoxSalesVolumeCompany2.setValue(new Integer(result.get(1).getProduct()
+					.getSalesVolume()).toString());
 
-			integerBoxTopLineCompany3.setValue(result.get(2).getTopLine());
-			doubleBoxMarketShareCompany3.setValue(result.get(2)
-					.getMarketShare());
-			doubleBoxProductPriceCompany3.setValue(result.get(2).getProduct()
-					.getPrice());
-			integerBoxSalesVolumeCompany3.setValue(result.get(2).getProduct()
-					.getSalesVolume());
+			textBoxTopLineCompany3.setValue(new Integer(result.get(2).getTopLine()).toString());
+			textBoxMarketShareCompany3.setValue(new Double(result.get(2)
+					.getMarketShare()).toString());
+			textBoxProductPriceCompany3.setValue(new Double(result.get(2).getProduct()
+					.getPrice()).toString());
+			textBoxSalesVolumeCompany3.setValue(new Integer(result.get(2).getProduct()
+					.getSalesVolume()).toString());
 
 		} // Ende method onSuccess
 	} // Ende class GetOwnCompanyCallback

@@ -6,6 +6,7 @@ public class Company implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private String userID = new String();
+	private String companyID = new String();
 	private int topLine;
 	private int amount;
 	private double marketShare;
@@ -34,6 +35,13 @@ public class Company implements Serializable {
 
 	}
 
+	public String getCompanyID(){
+		return companyID;
+	}
+	
+	public void setCompanyID(String companyID){
+		this.companyID = companyID;
+	}
 	public int getTopLine() {
 		return topLine;
 	}
