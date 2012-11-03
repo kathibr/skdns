@@ -4,7 +4,8 @@ package de.dhbw.wwi11sca.skdns.client.company;
  * 
  * @author SKDNS Marktsimulationen
  * 
- * CompanyServiceAsync ist ein Interface für die Kommunikation der CompanySimulation mit der CompanyServiceImpl im Server.
+ * CompanyServiceAsync ist ein Interface für die Kommunikation
+ * der CompanySimulation mit der CompanyServiceImpl im Server.
  *
  */
 import java.util.List;
