@@ -1,5 +1,6 @@
 package de.dhbw.wwi11sca.skdns.client.simulation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -12,21 +13,24 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.IntegerBox;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.visualization.client.AbstractDataTable.ColumnType;
+import com.google.gwt.visualization.client.DataTable;
+import com.google.gwt.visualization.client.VisualizationUtils;
+import com.google.gwt.visualization.client.visualizations.corechart.PieChart.PieOptions;
+import com.google.gwt.visualization.client.visualizations.corechart.PieChart;
 
 import de.dhbw.wwi11sca.skdns.client.home.HomeSimulation;
 import de.dhbw.wwi11sca.skdns.client.login.LoginSimulation;
 import de.dhbw.wwi11sca.skdns.shared.Company;
-import de.dhbw.wwi11sca.skdns.shared.OwnCompany;
 import de.dhbw.wwi11sca.skdns.shared.SimulationVersion;
-
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class Simulation implements EntryPoint {
 
@@ -64,17 +68,18 @@ public class Simulation implements EntryPoint {
 	TabLayoutPanel tabPanelYears = new TabLayoutPanel(1.5, Unit.EM);
 	CellTable<Company> tableCompanies = new CellTable<Company>();
 	List<Company> companyList;
+	List<Company> companyListSimulation;
 	AbsolutePanel[] absolutePanelYear = new AbsolutePanel[1000];
 
-	AbsolutePanel absolutePanel = new AbsolutePanel();
-	VerticalPanel verticalPanelInput = new VerticalPanel();
-	Label lbResults = new Label("Ihre Eingaben:");
-	Label lbInvestMarketing = new Label();
-	Label lbInvestPersonal = new Label();
-	Label lbInvestPrice = new Label();
-	Label lbInvestMachineValue = new Label();
-	Label lbInvestMachinesCapacity = new Label();
-	Label lbInvestMachinePersonal = new Label();
+	AbsolutePanel absolutePanelPieChart;
+	VerticalPanel verticalPanelInput;
+	Label lbResults;
+	Label lbInvestMarketing;
+	Label lbInvestPersonal;
+	Label lbInvestPrice;
+	Label lbInvestMachineValue;
+	Label lbInvestMachinesCapacity;
+	Label lbInvestMachinePersonal;
 
 	int stackYear = 0;
 	int simulationYear = 1;
@@ -244,22 +249,6 @@ public class Simulation implements EntryPoint {
 
 	} // Ende onModuleLoad()
 
-	private void createResults(int stackYear) {
-		tabPanelYears.add(absolutePanelYear[stackYear - 1], "Jahr "
-				+ simulationYear + " (" + simulationVersion + ")", true);
-
-		absolutePanelYear[stackYear - 1].add(lbResults, 10, 10);
-		absolutePanelYear[stackYear - 1].add(verticalPanelInput, 10, 34);
-		verticalPanelInput.setSize("210px", "236px");
-		verticalPanelInput.add(lbInvestMarketing);
-		verticalPanelInput.add(lbInvestPersonal);
-		verticalPanelInput.add(lbInvestPrice);
-		verticalPanelInput.add(lbInvestMachineValue);
-		verticalPanelInput.add(lbInvestMachinesCapacity);
-		verticalPanelInput.add(lbInvestMachinePersonal);
-
-	}
-
 	private void deleteValueInvestments() {
 		integerBoxMarketing.setValue(null);
 		integerBoxMachineValue.setValue(null);
@@ -321,6 +310,8 @@ public class Simulation implements EntryPoint {
 		tableCompanies.addColumn(produktPreisColumn, "Produktpreis");
 		tableCompanies.addColumn(produktMengeColumn, "Absatzmenge");
 
+		// TODO: Wenn eine Simulation aufgerufen wurde, soll die Liste aktualisiert werden
+		// dabei sollen die Daten aus der Liste companyListSimulation genommen werden
 		service.getCompany(new GetCompanyCallback());
 
 	} // Ende method summaryCompanies
@@ -375,6 +366,97 @@ public class Simulation implements EntryPoint {
 
 	} // Ende method loadInvestment
 
+	public void showInput(SimulationVersion result) {
+		// Eingegebene Investitionen werden angezeigt
+		verticalPanelInput = new VerticalPanel();
+		lbResults = new Label("Ihre Eingabe: ");
+
+		absolutePanelYear[stackYear - 1].add(lbResults, 10, 10);
+		absolutePanelYear[stackYear - 1].add(verticalPanelInput, 10, 34);
+
+		lbInvestMarketing = new Label("Marketing: " + result.getMarketing());
+		lbInvestPersonal = new Label("Personal: " + result.getPersonal());
+		lbInvestPrice = new Label("Produktpreis: " + result.getPrice());
+		lbInvestMachineValue = new Label("Maschinenwert: "
+				+ result.getMachineValue());
+		lbInvestMachinesCapacity = new Label("Maschinenkapazität: "
+				+ result.getMachineCapacity());
+		lbInvestMachinePersonal = new Label("Maschinenpersonal: "
+				+ result.getMachineStaff());
+
+		verticalPanelInput.setSize("210px", "236px");
+		verticalPanelInput.add(lbInvestMarketing);
+		verticalPanelInput.add(lbInvestPersonal);
+		verticalPanelInput.add(lbInvestPrice);
+		verticalPanelInput.add(lbInvestMachineValue);
+		verticalPanelInput.add(lbInvestMachinesCapacity);
+		verticalPanelInput.add(lbInvestMachinePersonal);
+
+	}
+
+	public void showPieChart(final List<Company> companyListSimulation) {
+		// Marktanteilstorte wird erstellt und angezeigt
+		// TODO Fangen, wenn Company ist 0 oder nachsehen, ob
+		// Marktsimulation
+		// company schon 0 gesetzt hat
+
+		absolutePanelPieChart = new AbsolutePanel();
+		absolutePanelYear[stackYear - 1].add(absolutePanelPieChart, 250, 10);
+		absolutePanelPieChart.setSize("260px", "260px");
+
+		Runnable onLoadCallback = new Runnable() {
+			public void run() {
+
+				// Create a pie chart visualization.
+				PieChart pie = new PieChart(createTable(companyListSimulation),
+						createOptions());
+
+				absolutePanelPieChart.add(pie);
+			}
+		};
+
+		// Load the visualization api, passing the onLoadCallback to be
+		// called
+		// when loading is done.
+		VisualizationUtils.loadVisualizationApi(onLoadCallback,
+				PieChart.PACKAGE);
+
+	}
+
+	private PieOptions createOptions() {
+		PieOptions options = PieOptions.create();
+		options.setWidth(260);
+		options.setHeight(260);
+		options.set3D(true);
+		options.setTitle("Markanteile der Unternehmen");
+		return options;
+	}
+
+	private DataTable createTable(List<Company> companies) {
+
+		// Datentabelle erzeugen
+		DataTable data = DataTable.create();
+		data.addColumn(ColumnType.STRING, "Unternehmen");
+		data.addColumn(ColumnType.NUMBER, "Marktanteil");
+		data.addRows(companies.size());
+
+		// Datentabelle mit Daten befüllen
+		for (Company company : companies) {
+			int rowIndex = 0;
+			data.setValue(rowIndex, 0, company.getTradeName());
+			data.setValue(rowIndex, 1, company.getMarketShare() * 100);
+			rowIndex++;
+		}
+		return data;
+	}
+
+	private void showMarketIncrease(int marketIncrease){
+		// TODO: Marktwachstumspfeil
+	}
+	
+	private void showColumnChart(){
+		//TOD: ColumnChart
+	}
 	/**
 	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher angelegte
 	 * Unternehmen zurückgibt
@@ -393,6 +475,7 @@ public class Simulation implements EntryPoint {
 
 			// Add the data to the data provider, which automatically pushes it
 			// to the widget.
+
 			companyList = dataProvider.getList();
 
 			for (Company company : result) {
@@ -418,23 +501,31 @@ public class Simulation implements EntryPoint {
 
 		@Override
 		public void onSuccess(SimulationVersion result) {
-			// TODO AbsolutePanel im TabPanel mit Marktanteilstorte etc.
-			// befüllen
 
-			// Eingegebene Investitionen werden angezeigt
-			lbInvestMarketing.setText("Marketing: " + result.getMarketing());
-			lbInvestPersonal.setText("Personal: " + result.getPersonal());
-			lbInvestPrice.setText("Produktpreis: " + result.getPrice());
-			lbInvestMachineValue.setText("Maschinenwert: "
-					+ result.getMachineValue());
-			lbInvestMachinesCapacity.setText("Maschinenkapazität: "
-					+ result.getMachineCapacity());
-			lbInvestMachinePersonal.setText("Maschinenpersonal: "
-					+ result.getMachineStaff());
+			tabPanelYears.add(absolutePanelYear[stackYear - 1], "Jahr "
+					+ simulationYear + " (" + (simulationVersion-1) + ")", true);
 
-			// Alle Elemente auf der Oberfläche anbringen
-			createResults(stackYear);
+			showInput(result);
+			// Angezeigte Daten ind er Tabelle neu laden
+			summaryCompanies();
+
+			companyListSimulation = new ArrayList<Company>();
+			companyListSimulation.add(result.getOwnCompany());
+			companyListSimulation.add(result.getCompany1());
+			companyListSimulation.add(result.getCompany2());
+			companyListSimulation.add(result.getCompany3());
+
+			// TODO: PieChart
+			showPieChart(companyListSimulation);
+			
+			// TODO: Marktwachstum
+			showMarketIncrease(result.getMarketIncrease());
+			
+			// TODO: ColumnChart
+			showColumnChart();
+
 		} // Ende method onSuccess
 
 	} // Ende class CreateSimulationCallback
+
 } // Ende class Simulation
