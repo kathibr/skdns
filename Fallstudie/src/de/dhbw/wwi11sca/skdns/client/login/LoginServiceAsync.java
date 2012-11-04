@@ -18,4 +18,6 @@ public interface LoginServiceAsync {
 	void forgotPassword(User user, AsyncCallback<Void> callback);
 
 	void checkAdmin(User userOnline, AsyncCallback<Void> callback);
+	
+	
 }

@@ -22,4 +22,5 @@ public interface LoginService extends RemoteService {
 	void forgotPassword(User user) throws DelistedException;
 
 	void checkAdmin(User userOnline) throws DelistedException;
+	
 }

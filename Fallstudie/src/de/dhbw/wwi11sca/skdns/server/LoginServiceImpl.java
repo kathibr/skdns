@@ -18,6 +18,10 @@ import com.google.code.morphia.Morphia;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.UpdateOperations;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 
@@ -49,7 +53,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 			AdminServiceImpl.getAdmin().setLoginCount(1);
 			// success
 		} else {
-			throw new DelistedException("ERR");
+			throw new DelistedException("Username oder Passwort falsch/ unbekannt.");
 		} // Ende if-else
 	} // Ende method checkLogin
 
@@ -90,13 +94,62 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public void checkAdmin(User admin) throws DelistedException {
+		
+		//Überprüfe ob bereits ein Admin angelegt wurde
+		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
+		try{
+			List<User> dbAdmin = ds.createQuery(User.class).filter("username = ", "admin").asList();
+			User singleAdmin = dbAdmin.get(0);
+			
+			if (admin.getPassword().equals(singleAdmin.getPassword())){
+				//success
+			} else {
+				throw new DelistedException("Adminpasswort falsch.");
+			}
+			
+		}catch(IndexOutOfBoundsException e){
+			User newAdmin = new User("admin", "12345", "admin@skdns.de");
+			ds.save(newAdmin);
+			
+			List<User> dbAdmin = ds.createQuery(User.class).filter("username = ", "admin").asList();
+			User singleAdmin = dbAdmin.get(0);
+			
+			if (admin.getPassword().equals(singleAdmin.getPassword())){
+				//success
+			} else {
+				throw new DelistedException("Adminpasswort falsch.");
+			}
+			
+		}
+		
+		
+		/*
+		
+		User newAdmin = new User("admin", "12345", "admin@skdns.de");
+		ds.save(newAdmin);
+		
+		List<User> dbAdmin = ds.createQuery(User.class).filter("username = ", "admin").asList();
+		
+		//Wenn kein Admin angelegt wurde
+		if(dbAdmin.get(0) == null)
+		{
+			User newAdmin = new User("admin", "12345", "admin@skdns.de");
+			ds.save(newAdmin);
+			
+		} else {
+			User singleAdmin = dbAdmin.get(0);
+			if (admin.getPassword().equals(singleAdmin.getPassword())){
+				//success
+			} else {
+				throw new DelistedException("Adminpasswort falsch.");
+			}
+		}
+			/*
 		username = (String) admin.getUsername().trim();
 		password = (String) admin.getPassword().trim();
-
-		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
-
-		List<User> dbUser = ds.createQuery(User.class)
-				.filter("username =", username).asList();
+		
+		
+		List<User> dbUser = ds.createQuery(User.class).filter("username =", username).asList();
 		User first = dbUser.get(0);
 
 		String dbPassword = (String) first.getPassword();
@@ -106,7 +159,8 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 		} else {
 			throw new DelistedException("ERR");
 		} // Ende if-else
-
+		}
+		*/
 	} // Ende method checkAdmin
 
 	public static String getUserID() {
@@ -116,4 +170,6 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 	public void setUserID(String userID) {
 		LoginServiceImpl.userID = userID;
 	} // Ende method setUserID
+
+
 } // Ende class LoginServiceImpl

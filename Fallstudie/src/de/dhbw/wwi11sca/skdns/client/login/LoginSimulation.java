@@ -21,6 +21,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.Image;
 import de.dhbw.wwi11sca.skdns.shared.User;
+import de.dhbw.wwi11sca.skdns.client.DelistedException;
 import de.dhbw.wwi11sca.skdns.client.admin.AdminSimulation;
 import de.dhbw.wwi11sca.skdns.client.home.HomeSimulation;
 import com.google.gwt.event.dom.client.DragEnterHandler;
@@ -149,6 +150,9 @@ public class LoginSimulation implements EntryPoint {
 				textBoxUsername.setText("");
 			}
 		}); // Ende textBoxUsername
+		
+		
+		
 	} // Ende onModuleLoad
 
 	/**
@@ -208,7 +212,7 @@ public class LoginSimulation implements EntryPoint {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			lbInfo.setText("Adminpasswort falsch.");
+			lbInfo.setText("Adminpasswort falsch");
 
 		} // Ende method onFailure
 
@@ -221,4 +225,6 @@ public class LoginSimulation implements EntryPoint {
 
 		} // Ende method onSuccess
 	} // Ende class CheckAdminCallback
+	
+	
 } // Ende classLoginSimulation
