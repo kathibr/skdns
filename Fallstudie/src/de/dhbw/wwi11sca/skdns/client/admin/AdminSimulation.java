@@ -389,7 +389,7 @@ public class AdminSimulation implements EntryPoint {
 			// gestartet
 			// wurde newUser in der DB gespeichert, soll dem Admin ein Label
 			// angezeigt werden, dass das speichern erfolgreich war
-
+			Window.alert("User wurde hinzugefügt.");
 		} // Ende method onSuccess
 	} // Ende class SaveUserCallback
 
