@@ -1,4 +1,4 @@
-package de.dhbw.wwi11sca.skdns.server.services;
+package de.dhbw.wwi11sca.skdns.server;
 
 import java.net.UnknownHostException;
 import java.util.List;

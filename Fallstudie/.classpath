@@ -4,8 +4,9 @@
 	<classpathentry kind="src" output="test-classes" path="test"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/D056867/Desktop/DHBW/Semester III/Systemanalyse Fallstudie/mongo-2.8.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/D056867/Desktop/DHBW/Semester III/Systemanalyse Fallstudie/morphia-0.99.jar"/>
-	<classpathentry kind="lib" path="C:/Users/D056867/Desktop/DHBW/Semester III/Systemanalyse Fallstudie/morphia-gwt-0.99-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Steven/Downloads/mongo-2.8.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Steven/Downloads/morphia-0.99.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Steven/Downloads/morphia-gwt-0.99-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Steven/Downloads/gwt-visualization-1.1.2/gwt-visualization-1.1.2/gwt-visualization.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

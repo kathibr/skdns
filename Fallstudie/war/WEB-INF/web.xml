@@ -9,7 +9,7 @@
   
   <servlet>
     <servlet-name>login</servlet-name>
-    <servlet-class>de.dhbw.wwi11sca.skdns.server.serivces.LoginServiceImpl</servlet-class>
+    <servlet-class>de.dhbw.wwi11sca.skdns.server.LoginServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
@@ -19,7 +19,7 @@
   
     <servlet>
     <servlet-name>home</servlet-name>
-    <servlet-class>de.dhbw.wwi11sca.skdns.server.services.HomeServiceImpl</servlet-class>
+    <servlet-class>de.dhbw.wwi11sca.skdns.server.HomeServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
@@ -29,7 +29,7 @@
   
     <servlet>
     <servlet-name>company</servlet-name>
-    <servlet-class>de.dhbw.wwi11sca.skdns.server.services.CompanyServiceImpl</servlet-class>
+    <servlet-class>de.dhbw.wwi11sca.skdns.server.CompanyServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
@@ -39,7 +39,7 @@
   
   <servlet>
     <servlet-name>admin</servlet-name>
-    <servlet-class>de.dhbw.wwi11sca.skdns.server.services.AdminServiceImpl</servlet-class>
+    <servlet-class>de.dhbw.wwi11sca.skdns.server.AdminServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
@@ -49,7 +49,7 @@
   
       <servlet>
     <servlet-name>simulation</servlet-name>
-    <servlet-class>de.dhbw.wwi11sca.skdns.server.services.SimulationServiceImpl</servlet-class>
+    <servlet-class>de.dhbw.wwi11sca.skdns.server.SimulationServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
