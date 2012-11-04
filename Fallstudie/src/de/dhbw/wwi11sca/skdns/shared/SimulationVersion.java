@@ -14,7 +14,7 @@ public class SimulationVersion implements Serializable {
 	private int machineCapacity;
 	private int machineStaff;
 	private int marketing;
-	private int price;
+	private Double price;
 	
 	private int marketIncrease;
 
@@ -95,12 +95,12 @@ public class SimulationVersion implements Serializable {
 		this.version = version;
 	}
 
-	public int getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
-		this.price = price;
+	public void setPrice(Double double1) {
+		this.price = double1;
 	}
 
 	public int getMarketIncrease() {

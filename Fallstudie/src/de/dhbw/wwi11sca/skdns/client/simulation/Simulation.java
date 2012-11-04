@@ -31,6 +31,7 @@ import de.dhbw.wwi11sca.skdns.client.home.HomeSimulation;
 import de.dhbw.wwi11sca.skdns.client.login.LoginSimulation;
 import de.dhbw.wwi11sca.skdns.shared.Company;
 import de.dhbw.wwi11sca.skdns.shared.SimulationVersion;
+import com.google.gwt.user.client.ui.DoubleBox;
 
 public class Simulation implements EntryPoint {
 
@@ -62,7 +63,7 @@ public class Simulation implements EntryPoint {
 	IntegerBox integerBoxCapacity = new IntegerBox();
 	IntegerBox integerBoxMachineStaff = new IntegerBox();
 	IntegerBox integerBoxPersonal = new IntegerBox();
-	IntegerBox integerBoxPrice = new IntegerBox();
+	DoubleBox doubleBoxPrice = new DoubleBox();
 
 	ScrollPanel scrollPanelYears = new ScrollPanel();
 	TabLayoutPanel tabPanelYears = new TabLayoutPanel(1.5, Unit.EM);
@@ -158,8 +159,8 @@ public class Simulation implements EntryPoint {
 					version.setMachineStaff(integerBoxMachineStaff.getValue());
 				if (integerBoxPersonal.getValue() != null)
 					version.setPersonal(integerBoxPersonal.getValue());
-				if (integerBoxPrice.getValue() != null)
-					version.setPrice(integerBoxPrice.getValue());
+				if (doubleBoxPrice.getValue() != null)
+					version.setPrice(doubleBoxPrice.getValue());
 
 				deleteValueInvestments();
 
@@ -203,8 +204,8 @@ public class Simulation implements EntryPoint {
 					version.setMachineStaff(integerBoxMachineStaff.getValue());
 				if (integerBoxPersonal.getValue() != null)
 					version.setPersonal(integerBoxPersonal.getValue());
-				if (integerBoxPrice.getValue() != null)
-					version.setPrice(integerBoxPrice.getValue());
+				if (doubleBoxPrice.getValue() != null)
+					version.setPrice(doubleBoxPrice.getValue());
 
 				// gefüllte Investitionsfelder werden geleert:
 				deleteValueInvestments();
@@ -255,7 +256,7 @@ public class Simulation implements EntryPoint {
 		integerBoxCapacity.setValue(null);
 		integerBoxMachineStaff.setValue(null);
 		integerBoxPersonal.setValue(null);
-		integerBoxPrice.setValue(null);
+		doubleBoxPrice.setValue(null);
 
 	} // Ende method deleteValueInvestments
 
@@ -344,7 +345,7 @@ public class Simulation implements EntryPoint {
 		lbPrice.setSize("101px", "18px");
 		lbPrice.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 
-		// IntegerBoxen
+		// Eingabefelder
 		// Marketing
 		absolutePanelInvestments.add(integerBoxMarketing, 86, 34);
 		integerBoxMarketing.setSize("94px", "25px");
@@ -352,8 +353,8 @@ public class Simulation implements EntryPoint {
 		absolutePanelInvestments.add(integerBoxPersonal, 300, 34);
 		integerBoxPersonal.setSize("94px", "25px");
 		// Produktpreis
-		absolutePanelInvestments.add(integerBoxPrice, 520, 34);
-		integerBoxPrice.setSize("94px", "25px");
+		absolutePanelInvestments.add(doubleBoxPrice, 522, 34);
+		doubleBoxPrice.setSize("92px", "23px");
 		// Maschinenwert
 		absolutePanelInvestments.add(integerBoxMachineValue, 86, 90);
 		integerBoxMachineValue.setSize("94px", "25px");
@@ -363,6 +364,7 @@ public class Simulation implements EntryPoint {
 		// Maschinen Anzahl der notwendigen Mitarbeiter
 		absolutePanelInvestments.add(integerBoxMachineStaff, 520, 90);
 		integerBoxMachineStaff.setSize("94px", "25px");
+		
 
 	} // Ende method loadInvestment
 
@@ -527,5 +529,4 @@ public class Simulation implements EntryPoint {
 		} // Ende method onSuccess
 
 	} // Ende class CreateSimulationCallback
-
 } // Ende class Simulation
