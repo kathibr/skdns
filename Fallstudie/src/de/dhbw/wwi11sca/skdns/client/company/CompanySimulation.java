@@ -106,6 +106,7 @@ public class CompanySimulation implements EntryPoint {
 	private RegExp expTradeName = RegExp
 			.compile("^([\u00C4\u00DC\u00D6A-Z])[0-9a-z\u00E4\u00FC\u00F6\u00C4\u00DC\u00DF\u00D6A-Z\\s]*");
 	private RegExp expInteger = RegExp.compile("^(\\d*)$");
+	private RegExp expPeriod = RegExp.compile(".");
 	private RegExp expDouble = RegExp.compile("^([1-9]\\d*|0)(\\.\\d)?$");
 
 	private CompanyServiceAsync service = GWT.create(CompanyService.class);
@@ -349,7 +350,7 @@ public class CompanySimulation implements EntryPoint {
 						&& expInteger.test(textBoxSalaryOfStaff.getText())
 						&& expDouble.test(textBoxProductPriceOwnCompany
 								.getText())
-						&& expInteger.test(textBoxVariableCosts.getText())
+						&& expDouble.test(textBoxVariableCosts.getText())
 
 				) {
 					ownCom.setTradeName(textBoxTradeName.getText());
@@ -366,8 +367,10 @@ public class CompanySimulation implements EntryPoint {
 							.setPrice(
 									new Double(textBoxProductPriceOwnCompany
 											.getText()));
-					ownCom.getProduct().setSalesVolume(
-							new Integer(textBoxVariableCosts.getText()));
+					ownCom.setVariableCosts(new Double(textBoxVariableCosts.getText()));
+					
+					//ownCom.getProduct().setSalesVolume(
+					//		new Integer(textBoxVariableCosts.getText()));
 
 					service.addOwnCompany(ownCom, new AddOwnCompanyCallback());
 
