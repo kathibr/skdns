@@ -119,6 +119,7 @@ public class HomeSimulation implements EntryPoint {
 		// CellTable für Konkurrenzunternehmen
 		panelHome.add(tableCompanies, 110, 268);
 		tableCompanies.setSize("805px", "200px");
+		tableCompanies.setStyleName("cellTableHeader");
 
 		// Unternehmensdaten der Konkurrenzunternehmen befüllen: Umsatz
 		TextColumn<Company> tradeNameColumn = new TextColumn<Company>() {

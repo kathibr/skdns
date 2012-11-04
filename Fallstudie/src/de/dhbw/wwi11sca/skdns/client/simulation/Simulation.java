@@ -108,7 +108,7 @@ public class Simulation implements EntryPoint {
 		// Absolute Panel: absolutePanelSimulation
 		root.add(absolutePanelSimulation, 0, 0);
 		absolutePanelSimulation.setSize("1024px", "768px");
-
+		lbSimulation.setStyleName("gwt-Label-Info");
 		// Informationsfelder
 
 		// Label zurück zur Home: lbHome
@@ -154,7 +154,7 @@ public class Simulation implements EntryPoint {
 				// eine neue Simulationsversion des laufenden Jahres wird
 				// angebracht
 				absolutePanelYear[stackYear] = new AbsolutePanel();
-				absolutePanelYear[stackYear].setSize("100%", "250px");
+				absolutePanelYear[stackYear].setSize("892px", "280px");
 
 				SimulationVersion version = new SimulationVersion(
 						simulationYear, simulationVersion);
@@ -275,6 +275,7 @@ public class Simulation implements EntryPoint {
 		tableCompanies = new CellTable<Company>();
 		absolutePanelSimulation.add(tableCompanies, 60, 79);
 		tableCompanies.setSize("894px", "156px");
+		tableCompanies.setStyleName("cellTableHeader");
 
 		TextColumn<Company> tradeNameColumn = new TextColumn<Company>() {
 			@Override
@@ -333,7 +334,7 @@ public class Simulation implements EntryPoint {
 		// Panel, um die Investitionen zu tätigen : absolutePanelSimulation
 		absolutePanelSimulation.add(absolutePanelInvestments, 84, 248);
 		absolutePanelInvestments.setSize("650px", "133px");
-
+		absolutePanelInvestments.setStyleName("gwt-Panel-Invest");
 		// Labels
 
 		lbInvestments.setStyleName("gwt-UnternehmenLabel");
@@ -384,7 +385,7 @@ public class Simulation implements EntryPoint {
 
 		verticalPanelInput = new VerticalPanel();
 		lbResults = new Label("Ihre Eingabe: ");
-
+		lbResults.setStyleName("gwt-Panel-Invest-Inputlabel");
 		absolutePanelYear[stackYear - 1].add(lbResults, 10, 10);
 		absolutePanelYear[stackYear - 1].add(verticalPanelInput, 10, 34);
 		verticalPanelInput.setSize("154px", "18px");
@@ -421,6 +422,7 @@ public class Simulation implements EntryPoint {
 				PieOptions options = PieOptions.create();
 				options.setWidth(325);
 				options.setHeight(260);
+				options.setColors("#FF9900", "#A3A3A3", "#969696", "#BDBDBD");
 				options.set3D(true);
 				options.setTitle("Markanteile der Unternehmen");
 
@@ -468,7 +470,7 @@ public class Simulation implements EntryPoint {
 		absolutePanelMarketIncrease.add(lbMarketIncrease, 0, 0);
 
 		// Marktwachstumspfeil
-		if (marketIncrease  == -1) {
+		if (marketIncrease == -1) {
 			arrowImage = new Image("fallstudie/gwt/clean/images/redArrow.png");
 		} else if (marketIncrease == 1) {
 			arrowImage = new Image("fallstudie/gwt/clean/images/greenArrow.png");
@@ -494,6 +496,7 @@ public class Simulation implements EntryPoint {
 				Options options = CoreChart.createOptions();
 				options.setHeight(240);
 				options.setWidth(400);
+				options.setColors("#FF9900");
 
 				AxisOptions axisOptions = AxisOptions.create();
 				axisOptions.setMinValue(0);
@@ -585,7 +588,7 @@ public class Simulation implements EntryPoint {
 			tabPanelYears.add(absolutePanelYear[stackYear - 1], "Jahr "
 					+ simulationYear + " (" + (simulationVersion - 1) + ")",
 					true);
-
+			absolutePanelYear[stackYear - 1].setStyleName("gwt-Panel-results");
 			showInput(result);
 			// Angezeigte Daten ind er Tabelle neu laden
 			summaryCompanies();
@@ -612,6 +615,7 @@ public class Simulation implements EntryPoint {
 								+ " Mitarbeiter.");
 				absolutePanelYear[stackYear - 1].add(necessaryPersonalInfo,
 						130, 0);
+				necessaryPersonalInfo.setStyleName("gwt-Infolabel");
 
 			}
 			if (result.isUnusedMachineCapacity() == true) {
@@ -619,6 +623,7 @@ public class Simulation implements EntryPoint {
 						"Möchten Sie noch eine Maschine kaufen? Sie könnten dadurch Ihr Betriebergebnis steigern!");
 				absolutePanelYear[stackYear - 1].add(unusedMachineCapacityInfo,
 						130, 22);
+				unusedMachineCapacityInfo.setStyleName("gwt-Infolabel");
 			}
 
 		} // Ende method onSuccess

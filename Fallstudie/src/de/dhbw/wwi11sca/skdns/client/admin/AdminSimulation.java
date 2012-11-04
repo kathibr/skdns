@@ -48,11 +48,13 @@ public class AdminSimulation implements EntryPoint {
 	Label lbLogout = new Label("Sie wurden erfolgreich ausgeloggt.");
 	Button btRelogin = new Button("erneuter Login?");
 
+	AbsolutePanel absolutePanelUserStats = new AbsolutePanel();
 	Label lbExistingUsers = new Label("aktuell angelegte User:");
 	Label lbLoginCounter = new Label("0");
 	Label lbLogins = new Label("bisherige Anmeldungen (gesamt):");
 	Label lbExistingUserCounter = new Label("0");
 
+	AbsolutePanel absolutePanelCreateUser = new AbsolutePanel();
 	Label lbCreateNewUser = new Label("neuen User anlegen:");
 	TextBox textBoxUsername = new TextBox();
 	TextBox textBoxMail = new TextBox();
@@ -60,6 +62,7 @@ public class AdminSimulation implements EntryPoint {
 	Button btCreateUser = new Button("neuen User anlegen");
 	User newUser;
 
+	AbsolutePanel absolutePanelDeleteUser = new AbsolutePanel();
 	TextBox textBoxUsernameDelete = new TextBox();
 	Label lbDeleteUser = new Label("User l\u00F6schen:");
 	Button btDelete = new Button("L\u00F6schen");
@@ -87,29 +90,34 @@ public class AdminSimulation implements EntryPoint {
 		// Buttons
 		panelAdmin.add(btLogout, 933, 10);
 		panelAdmin.add(btSave, 309, 594);
-		panelAdmin.add(btDelete, 788, 512);
-		panelAdmin.add(btCreateUser, 788, 372);
+		absolutePanelDeleteUser.add(btDelete, 245, 46);
+		absolutePanelCreateUser.add(btCreateUser, 243, 135);
 
 		btDelete.setSize("173px", "30px");
 		btLogout.setSize("81px", "30px");
 		btCreateUser.setSize("173px", "30px");
 
 		// Statistiken
-		panelAdmin.add(lbExistingUsers, 525, 64);
-		panelAdmin.add(lbExistingUserCounter, 788, 64);
+		absolutePanelUserStats.setStyleName("gwt-Panel-Invest");
+		panelAdmin.add(absolutePanelUserStats, 514, 47);
+		absolutePanelUserStats.setSize("339px", "63px");
+		absolutePanelUserStats.add(lbExistingUsers, 20, 14);
+		absolutePanelUserStats.add(lbExistingUserCounter, 285, 10);
 		lbExistingUserCounter.setSize("44px", "18px");
 
-		panelAdmin.add(lbLogins, 525, 88);
-		panelAdmin.add(lbLoginCounter, 788, 88);
+		absolutePanelUserStats.add(lbLogins, 10, 38);
+		absolutePanelUserStats.add(lbLoginCounter, 285, 34);
 		lbLoginCounter.setSize("47px", "18px");
 
 		// neuen User anlegen
-		panelAdmin.add(lbCreateNewUser, 559, 246);
-
-		;
-		panelAdmin.add(textBoxUsername, 559, 292);
-		panelAdmin.add(textBoxPassword, 559, 328);
-		panelAdmin.add(textBoxMail, 559, 368);
+		absolutePanelCreateUser.setStyleName("gwt-Panel-Invest");
+		panelAdmin.add(absolutePanelCreateUser, 547, 239);
+		absolutePanelCreateUser.setSize("426px", "181px");
+		lbCreateNewUser.setStyleName("gwt-Home-Label");
+		absolutePanelCreateUser.add(lbCreateNewUser, 10, 10);
+		absolutePanelCreateUser.add(textBoxUsername, 10, 42);
+		absolutePanelCreateUser.add(textBoxPassword, 10, 88);
+		absolutePanelCreateUser.add(textBoxMail, 10, 135);
 
 		textBoxUsername.setSize("159px", "18px");
 
@@ -118,9 +126,12 @@ public class AdminSimulation implements EntryPoint {
 		textBoxMail.setText("E-Mail");
 
 		// User löschen
-		panelAdmin.add(lbDeleteUser, 559, 464);
-		panelAdmin.add(textBoxUsernameDelete, 559, 508);
-
+		absolutePanelDeleteUser.setStyleName("gwt-Panel-Invest");
+		panelAdmin.add(absolutePanelDeleteUser, 545, 453);
+		absolutePanelDeleteUser.setSize("428px", "98px");
+		absolutePanelDeleteUser.add(lbDeleteUser, 10, 10);
+		absolutePanelDeleteUser.add(textBoxUsernameDelete, 10, 42);
+		lbDeleteUser.setStyleName("gwt-Home-Label");
 		textBoxUsernameDelete.setText("Username");
 
 		// Usertabelle
@@ -144,12 +155,12 @@ public class AdminSimulation implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				// User löschen, dessen Name angezeigt wurde
 				deleteUser = textBoxUsernameDelete.getText().trim();
-				if((deleteUser.toLowerCase()).equals("admin")){
+				if ((deleteUser.toLowerCase()).equals("admin")) {
 					Window.alert("Sie können den Admin nicht löschen!");
-				}else{
+				} else {
 					service.deleteUser(deleteUser, new DeleteUserCallback());
 				}
-				
+
 			}
 		}); // Ende btDelete
 
@@ -221,6 +232,7 @@ public class AdminSimulation implements EntryPoint {
 		cellTableUser.setPageSize(30);
 		cellTableUser.setSize("489px", "407px");
 		panelAdmin.add(cellTableUser, 30, 181);
+		cellTableUser.setStyleName("cellTableHeader");
 
 		// Usertabelle mit DB-Usern befüllen: Username
 		TextColumn<User> UsernameColumn = new TextColumn<User>() {

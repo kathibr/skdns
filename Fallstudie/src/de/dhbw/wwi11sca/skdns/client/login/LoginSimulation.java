@@ -21,7 +21,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.Image;
 import de.dhbw.wwi11sca.skdns.shared.User;
-import de.dhbw.wwi11sca.skdns.client.DelistedException;
 import de.dhbw.wwi11sca.skdns.client.admin.AdminSimulation;
 import de.dhbw.wwi11sca.skdns.client.home.HomeSimulation;
 import com.google.gwt.event.dom.client.DragEnterHandler;
@@ -34,7 +33,7 @@ public class LoginSimulation implements EntryPoint {
 
 	// Panel
 	private AbsolutePanel panelLogin = new AbsolutePanel();
-
+	Image background = new Image("fallstudie/gwt/clean/images/Consulting.png");
 	// Widgets
 	Image logo = new Image("fallstudie/gwt/clean/images/Logo.JPG");
 	private TextBox textBoxUsername = new TextBox();
@@ -53,22 +52,26 @@ public class LoginSimulation implements EntryPoint {
 		panelLogin.setSize("1024px", "768px");
 		lbInfo.setSize("310px", "12px");
 
+		// Background: background
+		panelLogin.add(background, 0, 0);
+		background.setSize("1024px", "768px");
+
 		// Firmenlogo: logo
-		panelLogin.add(logo, 205, 70);
+		panelLogin.add(logo, 545, 34);
 		logo.setSize("360px", "110px");
 
 		// TextBox für den Usernamen: textBoxUsername
-		panelLogin.add(textBoxUsername, 236, 228);
+		panelLogin.add(textBoxUsername, 208, 229);
 		textBoxUsername.setSize("300px", "24px");
 		textBoxUsername.setText("Username");
 
 		// TextBox für das Kennwort: textBoxPassword
-		panelLogin.add(textBoxPassword, 236, 283);
+		panelLogin.add(textBoxPassword, 208, 283);
 		textBoxPassword.setText("Kennwort");
 		textBoxPassword.setSize("300px", "24px");
 
 		// Button einloggen: btLogin
-		panelLogin.add(btLogin, 236, 353);
+		panelLogin.add(btLogin, 208, 353);
 		btLogin.setSize("100px", "30px");
 
 		// Eventhandler
@@ -110,7 +113,7 @@ public class LoginSimulation implements EntryPoint {
 		// Buttons
 
 		// Button vergessenes Passwort: btForgotPassword
-		panelLogin.add(btForgotPassword, 397, 353);
+		panelLogin.add(btForgotPassword, 369, 353);
 		btForgotPassword.setSize("149px", "30px");
 
 		// Eventhandler vergessenes Passwort
@@ -132,7 +135,8 @@ public class LoginSimulation implements EntryPoint {
 		}); // Ende btForgottPassword Enter-Handler
 
 		// Informationsfeld: lfInfo
-		panelLogin.add(lbInfo, 236, 404);
+		panelLogin.add(lbInfo, 208, 325);
+		lbInfo.setStyleName("gwt-Infolabel");
 
 		// Eventhandler Password TextBox: löscht den Textboxinhalt, damit der
 		// User Daten eingeben kann
@@ -150,9 +154,7 @@ public class LoginSimulation implements EntryPoint {
 				textBoxUsername.setText("");
 			}
 		}); // Ende textBoxUsername
-		
-		
-		
+
 	} // Ende onModuleLoad
 
 	/**
@@ -225,6 +227,5 @@ public class LoginSimulation implements EntryPoint {
 
 		} // Ende method onSuccess
 	} // Ende class CheckAdminCallback
-	
-	
+
 } // Ende classLoginSimulation
