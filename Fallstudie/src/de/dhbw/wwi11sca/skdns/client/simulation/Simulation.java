@@ -468,9 +468,9 @@ public class Simulation implements EntryPoint {
 		absolutePanelMarketIncrease.add(lbMarketIncrease, 0, 0);
 
 		// Marktwachstumspfeil
-		if (marketIncrease < 0) {
+		if (marketIncrease  == -1) {
 			arrowImage = new Image("fallstudie/gwt/clean/images/redArrow.png");
-		} else if (marketIncrease > 0) {
+		} else if (marketIncrease == 1) {
 			arrowImage = new Image("fallstudie/gwt/clean/images/greenArrow.png");
 		} else {
 			arrowImage = new Image(

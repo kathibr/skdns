@@ -111,10 +111,10 @@ public class MarketSimulation {
 				.getSalesVolume());
 
 		// Überprüfung, ob der Markt wächst oder sinkt
-		if (random > 1) {
+		if (increaseRandom[random] > 1) {
 			// der Markt wächst == 1
 			version.setMarketIncrease(1);
-		} else if (random < 1) {
+		} else if (increaseRandom[random] < 1) {
 			// der Markt sinkt == -1
 			version.setMarketIncrease(-1);
 		} else {
@@ -177,7 +177,7 @@ public class MarketSimulation {
 	}
 
 	public void specialCaseOne(SimulationVersion version) {
-		freePersonal = ownCompany.getNumberOfStaff()
+		freePersonal = (ownCompany.getNumberOfStaff()+ version.getMachineStaff())
 				* 0.7
 				- (ownCompany.getMachines().getStaff() + version
 						.getMachineStaff());
@@ -189,7 +189,11 @@ public class MarketSimulation {
 
 			version.setNecessaryPersonal(necessaryPersonal);
 
-		} // Ende if-Statement
+		} else{
+			version.setNecessaryPersonal(0);
+		}
+		
+		ownCompany.setNumberOfStaff(ownCompany.getNumberOfStaff() + version.getMachineStaff());
 
 	} // Ende method specialCaseOne
 
