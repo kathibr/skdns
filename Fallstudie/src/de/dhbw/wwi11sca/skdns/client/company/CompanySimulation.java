@@ -10,6 +10,8 @@ package de.dhbw.wwi11sca.skdns.client.company;
  */
 import java.util.List;
 import com.google.gwt.regexp.shared.RegExp;
+import com.google.gwt.cell.client.EditTextCell;
+import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
@@ -29,6 +31,7 @@ import de.dhbw.wwi11sca.skdns.shared.Company;
 import de.dhbw.wwi11sca.skdns.shared.Machines;
 import de.dhbw.wwi11sca.skdns.shared.OwnCompany;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.view.client.ListDataProvider;
 
@@ -183,35 +186,107 @@ public class CompanySimulation implements EntryPoint {
 		absolutePanelOwnCompany.add(cellTableMachines, 88, 277);
 		cellTableMachines.setSize("656px", "100px");
 
-		TextColumn<Machines> serviceLifeColumn = new TextColumn<Machines>() {
+		final EditTextCell serviceLifeCell = new EditTextCell();
+		Column<Machines, String> serviceLifeColumn = new Column<Machines, String>(
+				serviceLifeCell){
+
+					@Override
+					public String getValue(Machines object) {
+						return new Integer(object.getServiceLife()).toString();
+					}
+			
+		};
+		serviceLifeColumn.setFieldUpdater(new FieldUpdater<Machines, String>() {
 			@Override
-			public String getValue(Machines machine) {
-				return new Integer(machine.getServiceLife()).toString();
+			public void update(int index, Machines object, String value) {
+			
+				if( expInteger.test(value)){
+					ownCom.getMachines().setServiceLife(new Integer(value));
+					cellTableMachines.redraw();
+				}else{
+					Window.alert("Die Eingabe ist ung\u00FCltig und wird nicht gespeichert!");					
+				}
+				
 			}
-		}; // Ende serviceLifeColumn
-		TextColumn<Machines> capacityColumn = new TextColumn<Machines>() {
+		});//Ende serviceLifeColumn
+		
+		final EditTextCell capacityCell = new EditTextCell();
+		Column<Machines, String> capacityColumn = new Column<Machines, String>(
+				capacityCell){
+
+					@Override
+					public String getValue(Machines object) {
+						return new Integer(object.getCapacity()).toString();
+					}
+			
+		};
+		capacityColumn.setFieldUpdater(new FieldUpdater<Machines, String>() {
 			@Override
-			public String getValue(Machines machine) {
-				return new Integer(machine.getCapacity()).toString();
+			public void update(int index, Machines object, String value) {
+			
+				if( expInteger.test(value)){
+					ownCom.getMachines().setCapacity(new Integer(value));
+					cellTableMachines.redraw();
+				}else{
+					Window.alert("Die Eingabe ist ung\u00FCltig und wird nicht gespeichert!");					
+				}
+				
 			}
-		}; // Ende capacityColumn
-		TextColumn<Machines> accountingValueColumn = new TextColumn<Machines>() {
+		});	//Ende capacityColumn
+		
+		final EditTextCell accountingValueCell = new EditTextCell();
+		Column<Machines, String> accountingValueColumn = new Column<Machines, String>(
+				accountingValueCell){
+
+					@Override
+					public String getValue(Machines object) {
+						return new Double(object.getAccountingValue()).toString();
+					}
+			
+		};
+		accountingValueColumn.setFieldUpdater(new FieldUpdater<Machines, String>() {
 			@Override
-			public String getValue(Machines machine) {
-				return new Double(machine.getAccountingValue()).toString();
+			public void update(int index, Machines object, String value) {
+			
+				if( expDouble.test(value)){
+					ownCom.getMachines().setAccountingValue(new Double(value));
+					cellTableMachines.redraw();
+				}else{
+					Window.alert("Die Eingabe ist ung\u00FCltig und wird nicht gespeichert!");					
+				}
+				
 			}
-		}; // Ende accountingValueColumn
-		TextColumn<Machines> StaffColumn = new TextColumn<Machines>() {
+		});	//Ende accountingValueColumn
+		
+		final EditTextCell staffCell = new EditTextCell();
+		Column<Machines, String> staffColumn = new Column<Machines, String>(
+				staffCell){
+
+					@Override
+					public String getValue(Machines object) {
+						return new Integer(object.getStaff()).toString();
+					}
+			
+		};
+		staffColumn.setFieldUpdater(new FieldUpdater<Machines, String>() {
 			@Override
-			public String getValue(Machines machine) {
-				return new Integer(machine.getStaff()).toString();
+			public void update(int index, Machines object, String value) {
+			
+				if( expInteger.test(value)){
+					ownCom.getMachines().setStaff(new Integer(value));
+					cellTableMachines.redraw();
+				}else{
+					Window.alert("Die Eingabe ist ung\u00FCltig und wird nicht gespeichert!");					
+				}
+				
 			}
-		}; // Ende StaffColumn
+		});	//Ende staffColumn
+		
 		cellTableMachines.addColumn(serviceLifeColumn,
 				"bisherige Nutzungsdauer");
 		cellTableMachines.addColumn(capacityColumn, "Kapazit\u00e4t");
 		cellTableMachines.addColumn(accountingValueColumn, "Preis");
-		cellTableMachines.addColumn(StaffColumn, "Notwendige Mitarbeiter");
+		cellTableMachines.addColumn(staffColumn, "Notwendige Mitarbeiter");
 
 		// AbsolutePanels für die Unternehmen anbringen
 		// Tab für das eigene Unternehmen

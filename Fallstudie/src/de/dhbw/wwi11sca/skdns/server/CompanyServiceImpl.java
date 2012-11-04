@@ -66,7 +66,9 @@ public class CompanyServiceImpl extends RemoteServiceServlet implements
 				.set("fixedCosts", ownCompany.getFixedCosts())
 				.set("numberOfStaff", ownCompany.getNumberOfStaff())
 				.set("salaryStaff", ownCompany.getSalaryStaff())
-				.set("product", ownCompany.getProduct());
+				.set("product", ownCompany.getProduct())
+				.set("machines", ownCompany.getMachines());
+
 
 		ds.update(updateQuery, ops);
 
