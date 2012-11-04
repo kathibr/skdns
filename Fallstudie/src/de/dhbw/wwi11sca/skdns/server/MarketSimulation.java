@@ -340,6 +340,7 @@ public class MarketSimulation {
 			double marketShare) {
 		double topLineCompanyCalc = topLineCompany;
 		double topLineCalc = topLine;
+		// TODO warum sind topLineCompanyCalc und topLineCalc 0?
 		marketShare = (marketShare + (topLineCompanyCalc / topLineCalc) * 100) * 0.5;
 		return marketShare;
 	} // Ende method calculateMarketShare
