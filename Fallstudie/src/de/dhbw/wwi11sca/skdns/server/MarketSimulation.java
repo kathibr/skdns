@@ -22,7 +22,6 @@ public class MarketSimulation {
 	// Sonderfall 1
 	double freePersonal = 0;
 	int necessaryPersonal = 0;
-	String necessaryPersonalInfo;
 
 	// Schritt 2
 	int random = 0;
@@ -38,7 +37,6 @@ public class MarketSimulation {
 	// Schritt 5
 	int amount = 0;
 	int amortization = 0;
-	String unusedMachineCapacityInfo;
 
 	public SimulationVersion simulate(SimulationVersion version) {
 
@@ -189,10 +187,8 @@ public class MarketSimulation {
 					.ceil((version.getMachineStaff() + ownCompany.getMachines()
 							.getStaff()) / 0.7 - ownCompany.getNumberOfStaff());
 
-			necessaryPersonalInfo = new String(
-					"Für die neue Maschine ist nicht genügend Personal vorhanden und kann somit nicht in Betrieb genommen werden. Es fehlen mindestens "
-							+ necessaryPersonal + " Mitarbeiter.");
-			System.out.println("necessaryPersonal:" + necessaryPersonal);
+			version.setNecessaryPersonal(necessaryPersonal);
+
 		} // Ende if-Statement
 
 	} // Ende method specialCaseOne
@@ -210,10 +206,9 @@ public class MarketSimulation {
 			// Der Umsatz sinkt
 			ownCompany.setTopLine((int) Math.ceil(salesVolume
 					* ownCompany.getProduct().getPrice()));
-			System.out.println("Kapazität: "
-					+ ownCompany.getMachines().getCapacity());
-			unusedMachineCapacityInfo = new String(
-					"Möchten Sie noch eine Maschine kaufen? Sie könnten dadurch Ihr Betriebergebnis steigern!");
+
+			version.setUnusedMachineCapacity(true);
+
 			// Marktanteil der Konkurrenzunternehmen
 			double marketSharesCompanies = company1.getMarketShare()
 					+ company2.getMarketShare() + company3.getMarketShare();

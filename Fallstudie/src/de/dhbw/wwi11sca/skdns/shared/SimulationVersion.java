@@ -25,6 +25,9 @@ public class SimulationVersion implements Serializable {
 	private Company company1;
 	private Company company2;
 	private Company company3;
+	
+	private boolean unusedMachineCapacity = false;
+	private int necessaryPersonal;
 
 	// Konstruktor
 	public SimulationVersion() {
@@ -149,6 +152,22 @@ public class SimulationVersion implements Serializable {
 
 	public void setUserID(String userID) {
 		this.userID = userID;
+	}
+
+	public boolean isUnusedMachineCapacity() {
+		return unusedMachineCapacity;
+	}
+
+	public void setUnusedMachineCapacity(boolean unusedMachineCapacity) {
+		this.unusedMachineCapacity = unusedMachineCapacity;
+	}
+
+	public int getNecessaryPersonal() {
+		return necessaryPersonal;
+	}
+
+	public void setNecessaryPersonal(int necessaryPersonal) {
+		this.necessaryPersonal = necessaryPersonal;
 	}
 
 }

@@ -24,11 +24,8 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.visualization.client.AbstractDataTable.ColumnType;
 import com.google.gwt.visualization.client.DataTable;
 import com.google.gwt.visualization.client.VisualizationUtils;
-import com.google.gwt.visualization.client.events.OnMouseOutHandler;
 import com.google.gwt.visualization.client.visualizations.corechart.PieChart.PieOptions;
 import com.google.gwt.visualization.client.visualizations.corechart.PieChart;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.visualization.client.DataTable;
 import com.google.gwt.visualization.client.visualizations.corechart.AxisOptions;
 import com.google.gwt.visualization.client.visualizations.corechart.ColumnChart;
 import com.google.gwt.visualization.client.visualizations.corechart.CoreChart;
@@ -92,6 +89,8 @@ public class Simulation implements EntryPoint {
 	Label lbInvestMachineValue;
 	Label lbInvestMachinesCapacity;
 	Label lbInvestMachinePersonal;
+	Label necessaryPersonalInfo;
+	Label unusedMachineCapacityInfo;
 
 	int stackYear = 0;
 	int simulationYear = 1;
@@ -447,20 +446,19 @@ public class Simulation implements EntryPoint {
 		DataTable data = DataTable.create();
 		data.addColumn(ColumnType.STRING, "Unternehmen");
 		data.addColumn(ColumnType.NUMBER, "Marktanteil");
-		 data.addRows(companies.size());
-		 int rowIndex = 0;
+		data.addRows(companies.size());
+		int rowIndex = 0;
 		// Datentabelle mit Daten befüllen
-		 for (Company company : companies) {
-		 data.setValue(rowIndex, 0, company.getTradeName());
-		 data.setValue(rowIndex, 1,
-		 (int) Math.round(company.getMarketShare() * 100));
-		 rowIndex++;
-		 }
+		for (Company company : companies) {
+			data.setValue(rowIndex, 0, company.getTradeName());
+			data.setValue(rowIndex, 1,
+					(int) Math.round(company.getMarketShare() * 100));
+			rowIndex++;
+		}
 		return data;
 	}
 
 	private void showMarketIncrease(int marketIncrease) {
-
 		absolutePanelMarketIncrease = new AbsolutePanel();
 		absolutePanelYear[stackYear - 1].add(absolutePanelMarketIncrease, 339,
 				241);
@@ -470,14 +468,13 @@ public class Simulation implements EntryPoint {
 		absolutePanelMarketIncrease.add(lbMarketIncrease, 0, 0);
 
 		// Marktwachstumspfeil
-		if (marketIncrease < 0){
+		if (marketIncrease < 0) {
 			arrowImage = new Image("fallstudie/gwt/clean/images/redArrow.png");
-		}
-		else if (marketIncrease > 0){
+		} else if (marketIncrease > 0) {
 			arrowImage = new Image("fallstudie/gwt/clean/images/greenArrow.png");
-		}
-		else{
-			arrowImage = new Image("fallstudie/gwt/clean/images/orangeArrow.png");
+		} else {
+			arrowImage = new Image(
+					"fallstudie/gwt/clean/images/orangeArrow.png");
 		}
 
 		absolutePanelMarketIncrease.add(arrowImage, 102, 0);
@@ -487,7 +484,6 @@ public class Simulation implements EntryPoint {
 
 	private void showColumnChart(final List<Company> companyListSimulation) {
 		// ColumnChart
-
 		verticalPanelColumns = new VerticalPanel();
 		absolutePanelYear[stackYear - 1].add(verticalPanelColumns, 500, 10);
 		verticalPanelColumns.setSize("382px", "260px");
@@ -608,6 +604,22 @@ public class Simulation implements EntryPoint {
 
 			// ColumnChart
 			showColumnChart(companyListSimulation);
+
+			if (result.getNecessaryPersonal() > 0) {
+				necessaryPersonalInfo = new Label(
+						"Für die neue Maschine ist nicht genügend Personal vorhanden. Es fehlen mindestens "
+								+ result.getNecessaryPersonal()
+								+ " Mitarbeiter.");
+				absolutePanelYear[stackYear - 1].add(necessaryPersonalInfo,
+						130, 0);
+
+			}
+			if (result.isUnusedMachineCapacity() == true) {
+				unusedMachineCapacityInfo = new Label(
+						"Möchten Sie noch eine Maschine kaufen? Sie könnten dadurch Ihr Betriebergebnis steigern!");
+				absolutePanelYear[stackYear - 1].add(unusedMachineCapacityInfo,
+						130, 22);
+			}
 
 		} // Ende method onSuccess
 
