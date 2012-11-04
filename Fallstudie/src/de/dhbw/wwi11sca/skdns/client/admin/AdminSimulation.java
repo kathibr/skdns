@@ -144,8 +144,12 @@ public class AdminSimulation implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				// User löschen, dessen Name angezeigt wurde
 				deleteUser = textBoxUsernameDelete.getText().trim();
-				service.deleteUser(deleteUser, new DeleteUserCallback());
-
+				if((deleteUser.toLowerCase()).equals("admin")){
+					Window.alert("Sie können den Admin nicht löschen!");
+				}else{
+					service.deleteUser(deleteUser, new DeleteUserCallback());
+				}
+				
 			}
 		}); // Ende btDelete
 

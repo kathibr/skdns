@@ -13,6 +13,8 @@ import com.mongodb.MongoException;
 
 import de.dhbw.wwi11sca.skdns.client.admin.AdminService;
 import de.dhbw.wwi11sca.skdns.shared.Admin;
+import de.dhbw.wwi11sca.skdns.shared.Company;
+import de.dhbw.wwi11sca.skdns.shared.OwnCompany;
 import de.dhbw.wwi11sca.skdns.shared.User;
 
 public class AdminServiceImpl extends RemoteServiceServlet implements
@@ -45,32 +47,53 @@ public class AdminServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public void saveUser(User newUser) {
-		// TODO User in DB speichern
-		// User newUser aus AdminSimulation holen und in der db speichern
-		// anschließend true zurückgeben, damit dem Admin angezeigt werden kann,
-		// dass das Erzeugen erfolgreich war
+		newUser.setUserID(newUser.getUsername());		
+	
+		OwnCompany ownCompany = new OwnCompany();
+		ownCompany.setTradeName("Eigenes Unternehmen");
+		ownCompany.setUserID(newUser.getUsername());
+		
+		Company company1 = new Company();
+		company1.setTradeName("Competitior");
+		company1.setUserID(newUser.getUsername());
+		company1.setCompanyID("1");
+		
+		Company company2 = new Company();
+		company2.setTradeName("Competitior");
+		company2.setUserID(newUser.getUsername());
+		company2.setCompanyID("2");
+		
+		Company company3 = new Company();
+		company3.setTradeName("Competitior");
+		company3.setUserID(newUser.getUsername());
+		company3.setCompanyID("3");
+		
+		
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
 		ds.save(newUser);
+		ds.save(ownCompany);
+		ds.save(company1);
+		ds.save(company2);
+		ds.save(company3);
+		
 		
 	} // Ende method saveUser
 
 	@Override
-	public void deleteUser(String deleteUser) {
-		// TODO Auto-generated method stub
-		
+	public void deleteUser(String deleteUser) {		
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
-//		Query<User> deleteQuery = ds.createQuery(User.class).filter("userID =", deleteUser);
-		ds.delete(ds.createQuery(User.class).filter("username = ", deleteUser));
-
+		ds.delete(ds.createQuery(User.class).filter("userID = ", deleteUser));
+		ds.delete(ds.createQuery(OwnCompany.class).filter("userID = ", deleteUser));
+		ds.delete(ds.createQuery(Company.class).filter("userID = ", deleteUser));
+		
 	} // Ende method deleteUser
 
 	@Override
 	public Admin getStats() {
-		// TODO DB-User Inhalte zählen
-		// alle in der Datenbank vorhandenen User (außer Admin) sollen gezählt
-		// werden und in
-		// admin.setExistingUserCount(existingUserCount) gespeichert werden
-		// damit die Statistiken ausgegeben werden können
+		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
+		List<User> allUser = ds.createQuery(User.class).filter("username <>", "admin").asList();
+		admin.setExistingUserCount(allUser.size());
+		
 		return getAdmin();
 	} // Ende method getStats
 
