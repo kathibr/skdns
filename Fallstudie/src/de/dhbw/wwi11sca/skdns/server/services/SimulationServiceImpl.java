@@ -1,8 +1,9 @@
-package de.dhbw.wwi11sca.skdns.server;
+package de.dhbw.wwi11sca.skdns.server.services;
 
 import java.net.UnknownHostException;
 import java.util.List;
 import de.dhbw.wwi11sca.skdns.client.simulation.SimulationService;
+import de.dhbw.wwi11sca.skdns.server.MarketSimulation;
 import de.dhbw.wwi11sca.skdns.shared.*;
 
 import com.google.code.morphia.Datastore;

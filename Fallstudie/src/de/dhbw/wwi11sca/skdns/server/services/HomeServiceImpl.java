@@ -1,4 +1,4 @@
-package de.dhbw.wwi11sca.skdns.server;
+package de.dhbw.wwi11sca.skdns.server.services;
 
 /**
  * 
