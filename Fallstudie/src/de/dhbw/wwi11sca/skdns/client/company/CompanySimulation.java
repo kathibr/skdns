@@ -32,7 +32,6 @@ import de.dhbw.wwi11sca.skdns.shared.Machines;
 import de.dhbw.wwi11sca.skdns.shared.OwnCompany;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.view.client.ListDataProvider;
 
 public class CompanySimulation implements EntryPoint {
@@ -160,27 +159,7 @@ public class CompanySimulation implements EntryPoint {
 		// Eventhandler ausloggen
 		btLogout.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				RootPanel.get().clear();
-				RootPanel.get().add(btRelogin);
-				RootPanel.get().add(lbLogout);
-				btRelogin.addClickHandler(new ClickHandler() {
-					public void onClick(ClickEvent event) {
-
-						if ((ownCom.getMarketShare()
-								+ companies.get(0).getMarketShare()
-								+ companies.get(1).getMarketShare() + companies
-								.get(2).getMarketShare()) == 100) {
-
-							RootPanel.get().clear();
-							LoginSimulation login = new LoginSimulation();
-							login.onModuleLoad();
-
-						} else {
-							Window.alert("Der Marktanteil aller Unternehmen muss zusammen 100 betragen!");
-						}
-
-					}
-				}); // btLogout
+				service.deleteVersions(new DeleteSimulationCallback());
 			}
 		});
 		// Maschinen
@@ -735,4 +714,34 @@ public class CompanySimulation implements EntryPoint {
 					.getProduct().getPrice()).toString());
 		} // Ende method onSuccess
 	} // Ende class GetOwnCompanyCallback
+
+	/**
+	 * 
+	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher alle
+	 * ,abgesehen der letzten drei SimulationVersion, löscht
+	 * 
+	 */
+	public class DeleteSimulationCallback implements
+			AsyncCallback<java.lang.Void> {
+
+		@Override
+		public void onFailure(Throwable caught) {
+		} // Ende method onFailure
+
+		@Override
+		public void onSuccess(Void result) {
+			RootPanel.get().clear();
+			RootPanel.get().add(btRelogin);
+			RootPanel.get().add(lbLogout);
+			btRelogin.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					RootPanel.get().clear();
+					LoginSimulation login = new LoginSimulation();
+					login.onModuleLoad();
+				}
+			}); // btLogout
+
+		} // Ende method onSuccess
+
+	} // Ende class CreateSimulationCallback
 } // Ende class CompanySimulation

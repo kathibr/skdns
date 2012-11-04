@@ -26,4 +26,6 @@ public interface CompanyService extends RemoteService {
 	void addOwnCompany(OwnCompany ownCompany);
 
 	void addCompany(Company company);
+
+	void deleteVersions();
 }

@@ -22,5 +22,7 @@ public interface CompanyServiceAsync {
 
 	void addOwnCompany(OwnCompany ownCompany, AsyncCallback<Void> callback);
 	void addCompany(Company company, AsyncCallback<Void> callback);
+
+	void deleteVersions(AsyncCallback<Void> callback);
 	
 }

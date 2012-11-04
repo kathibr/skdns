@@ -245,16 +245,7 @@ public class Simulation implements EntryPoint {
 		// Logout
 		btLogout.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				RootPanel.get().clear();
-				RootPanel.get().add(btRelogin);
-				RootPanel.get().add(lbLogout);
-				btRelogin.addClickHandler(new ClickHandler() {
-					public void onClick(ClickEvent event) {
-						RootPanel.get().clear();
-						LoginSimulation login = new LoginSimulation();
-						login.onModuleLoad();
-					}
-				}); // btLogout
+				service.deleteVersions(new DeleteSimulationCallback());
 			}
 		}); // btLogout
 
@@ -625,6 +616,36 @@ public class Simulation implements EntryPoint {
 						130, 22);
 				unusedMachineCapacityInfo.setStyleName("gwt-Infolabel");
 			}
+
+		} // Ende method onSuccess
+
+	} // Ende class CreateSimulationCallback
+	/**
+	 * 
+	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher alle ,abgesehen der letzten drei 
+	 * SimulationVersion, löscht
+	 * 
+	 */
+	public class DeleteSimulationCallback implements
+	AsyncCallback<java.lang.Void> {
+
+		@Override
+		public void onFailure(Throwable caught) {
+		} // Ende method onFailure
+
+		@Override
+		public void onSuccess(Void result) {
+			RootPanel.get().clear();
+			RootPanel.get().add(btRelogin);
+			RootPanel.get().add(lbLogout);
+			btRelogin.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					RootPanel.get().clear();
+					LoginSimulation login = new LoginSimulation();
+					login.onModuleLoad();
+				}
+			}); // btLogout
+			
 
 		} // Ende method onSuccess
 

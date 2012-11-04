@@ -23,4 +23,6 @@ public interface HomeService extends RemoteService {
 
 	List<Company> getCompany();
 
+	void deleteVersions();
+
 }

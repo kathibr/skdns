@@ -19,4 +19,6 @@ public interface HomeServiceAsync {
 
 	void loginServer(String name, AsyncCallback<String> callback);
 
+	void deleteVersions(AsyncCallback<Void> callback);
+
 }

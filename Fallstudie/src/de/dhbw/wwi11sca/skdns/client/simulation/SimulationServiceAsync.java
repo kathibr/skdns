@@ -20,4 +20,6 @@ public interface SimulationServiceAsync {
 	void createSimulationCallback(SimulationVersion version,
 			AsyncCallback<SimulationVersion> callback);
 
+	void deleteVersions(AsyncCallback<Void> callback);
+
 }

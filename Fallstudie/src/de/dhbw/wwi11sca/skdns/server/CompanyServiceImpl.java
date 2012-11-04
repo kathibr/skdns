@@ -14,6 +14,8 @@ import com.mongodb.MongoException;
 import de.dhbw.wwi11sca.skdns.client.company.CompanyService;
 import de.dhbw.wwi11sca.skdns.shared.Company;
 import de.dhbw.wwi11sca.skdns.shared.OwnCompany;
+import de.dhbw.wwi11sca.skdns.shared.SimulationVersion;
+import de.dhbw.wwi11sca.skdns.shared.User;
 
 @SuppressWarnings("serial")
 public class CompanyServiceImpl extends RemoteServiceServlet implements
@@ -69,7 +71,6 @@ public class CompanyServiceImpl extends RemoteServiceServlet implements
 				.set("product", ownCompany.getProduct())
 				.set("machines", ownCompany.getMachines());
 
-
 		ds.update(updateQuery, ops);
 
 	} // Ende method addOwnCompany
@@ -79,7 +80,8 @@ public class CompanyServiceImpl extends RemoteServiceServlet implements
 		// TODO Auto-generated method stub
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
 		Query<Company> updateQuery = ds.createQuery(Company.class)
-				.filter("userID = ", LoginServiceImpl.getUserID()).filter("companyID = ", company.getCompanyID());
+				.filter("userID = ", LoginServiceImpl.getUserID())
+				.filter("companyID = ", company.getCompanyID());
 		// ds.createQuery(EigenesUnternehmen.class);
 		UpdateOperations<Company> ops;
 		ops = ds.createUpdateOperations(Company.class)
@@ -88,7 +90,27 @@ public class CompanyServiceImpl extends RemoteServiceServlet implements
 				.set("product", company.getProduct());
 		ds.update(updateQuery, ops);
 
+	}
+
+	@Override
+	public void deleteVersions() {
+		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
+		List<SimulationVersion> versions = ds
+				.createQuery(SimulationVersion.class)
+				.filter("userID =", LoginServiceImpl.getUserID()).asList();
 		
+		
+		if(versions.size() > 3)
+			{
+			ds.delete(ds.createQuery(SimulationVersion.class).filter("userID = ",
+					LoginServiceImpl.getUserID()));
+			versions.get(versions.size());
+			for (int i = versions.size(); i > versions.size() - 3; i--) {
+				ds.save(versions.get(i));
+			}
+			}
+		
+
 	}
 
 } // Ende class CompanyServiceImpl

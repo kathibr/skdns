@@ -22,46 +22,48 @@ public class SimulationServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public List<Company> getCompany() {
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
-			
-		
-		List<Company> dbCompany = ds.createQuery(Company.class).filter("userID =", LoginServiceImpl.getUserID()).asList();
-		
-		List<OwnCompany> dbOwnCompany = ds.createQuery(OwnCompany.class).filter("userID = ", LoginServiceImpl.getUserID())
-				.asList();
 
-		// Eigenes Unternehmen aus der Datenbank laden und am Anfang der Liste in die Liste aufnehmen
+		List<Company> dbCompany = ds.createQuery(Company.class)
+				.filter("userID =", LoginServiceImpl.getUserID()).asList();
+
+		List<OwnCompany> dbOwnCompany = ds.createQuery(OwnCompany.class)
+				.filter("userID = ", LoginServiceImpl.getUserID()).asList();
+
+		// Eigenes Unternehmen aus der Datenbank laden und am Anfang der Liste
+		// in die Liste aufnehmen
 		OwnCompany single = dbOwnCompany.get(0);
-		
+
 		dbCompany.add(0, single);
-		
+
 		return dbCompany;
 	} // Ende method getCompany
 
 	@Override
 	public SimulationVersion createSimulationCallback(SimulationVersion version) {
-		
+
 		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
-		
-		List<Company> dbCompany = ds.createQuery(Company.class).filter("userID =", LoginServiceImpl.getUserID()).asList();
-		List<OwnCompany> dbOwnCompany = ds.createQuery(OwnCompany.class).filter("userID = ", LoginServiceImpl.getUserID())
-				.asList();
-		
+
+		List<Company> dbCompany = ds.createQuery(Company.class)
+				.filter("userID =", LoginServiceImpl.getUserID()).asList();
+		List<OwnCompany> dbOwnCompany = ds.createQuery(OwnCompany.class)
+				.filter("userID = ", LoginServiceImpl.getUserID()).asList();
+
 		OwnCompany ownCompany = dbOwnCompany.get(0);
 		Company company1 = dbCompany.get(0);
 		Company company2 = dbCompany.get(1);
 		Company company3 = dbCompany.get(2);
-		
+
+		version.setUserID(LoginServiceImpl.getUserID());
 		version.setOwnCompany(ownCompany);
 		version.setCompany1(company1);
 		version.setCompany2(company2);
 		version.setCompany3(company3);
-		
+
 		MarketSimulation marktsim = new MarketSimulation();
 		SimulationVersion simversion = new SimulationVersion();
-		
+
 		simversion = marktsim.simulate(version);
 		ds.save(simversion);
-		
 
 		return simversion;
 	} // Ende method createSimulationCallback
@@ -77,5 +79,25 @@ public class SimulationServiceImpl extends RemoteServiceServlet implements
 		}
 		return m;
 	} // Ende method getMongo
+	@Override
+	public void deleteVersions() {
+		Datastore ds = new Morphia().createDatastore(getMongo(), "skdns");
+		List<SimulationVersion> versions = ds
+				.createQuery(SimulationVersion.class)
+				.filter("userID =", LoginServiceImpl.getUserID()).asList();
+		
+		
+		if(versions.size() > 3)
+			{
+			ds.delete(ds.createQuery(SimulationVersion.class).filter("userID = ",
+					LoginServiceImpl.getUserID()));
+			versions.get(versions.size());
+			for (int i = versions.size(); i > versions.size() - 3; i--) {
+				ds.save(versions.get(i));
+			}
+			}
+		
+
+	}
 
 } // Ende class SimulationServiceImpl
