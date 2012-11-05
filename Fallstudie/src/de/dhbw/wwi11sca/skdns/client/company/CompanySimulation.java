@@ -27,6 +27,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.TextBox;
 import de.dhbw.wwi11sca.skdns.client.home.HomeSimulation;
 import de.dhbw.wwi11sca.skdns.client.login.LoginSimulation;
+import de.dhbw.wwi11sca.skdns.client.logout.LogoutSimulation;
 import de.dhbw.wwi11sca.skdns.shared.Company;
 import de.dhbw.wwi11sca.skdns.shared.Machines;
 import de.dhbw.wwi11sca.skdns.shared.OwnCompany;
@@ -44,9 +45,7 @@ public class CompanySimulation implements EntryPoint {
 	// Widgets
 	private Label lbHome = new Label("Home");
 	private Label lbCreate = new Label("> Unternehmen anlegen");
-	private Label lbLogout = new Label("Sie wurden erfolgreich ausgeloggt.");
 	private Button btLogout = new Button("Logout");
-	private Button btRelogin = new Button("erneuter Login?");
 
 	private AbsolutePanel absolutePanelOwnCompany = new AbsolutePanel();
 	private Label lbTradeName = new Label("Firma:");
@@ -159,7 +158,9 @@ public class CompanySimulation implements EntryPoint {
 		// Eventhandler ausloggen
 		btLogout.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				service.deleteVersions(new DeleteSimulationCallback());
+				RootPanel.get().clear();
+				LogoutSimulation logout = new LogoutSimulation();
+				logout.onModuleLoad();
 			}
 		});
 		// Maschinen
@@ -713,33 +714,4 @@ public class CompanySimulation implements EntryPoint {
 		} // Ende method onSuccess
 	} // Ende class GetOwnCompanyCallback
 
-	/**
-	 * 
-	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher alle
-	 * ,abgesehen der letzten drei SimulationVersion, löscht
-	 * 
-	 */
-	public class DeleteSimulationCallback implements
-			AsyncCallback<java.lang.Void> {
-
-		@Override
-		public void onFailure(Throwable caught) {
-		} // Ende method onFailure
-
-		@Override
-		public void onSuccess(Void result) {
-			RootPanel.get().clear();
-			RootPanel.get().add(btRelogin);
-			RootPanel.get().add(lbLogout);
-			btRelogin.addClickHandler(new ClickHandler() {
-				public void onClick(ClickEvent event) {
-					RootPanel.get().clear();
-					LoginSimulation login = new LoginSimulation();
-					login.onModuleLoad();
-				}
-			}); // btLogout
-
-		} // Ende method onSuccess
-
-	} // Ende class CreateSimulationCallback
 } // Ende class CompanySimulation

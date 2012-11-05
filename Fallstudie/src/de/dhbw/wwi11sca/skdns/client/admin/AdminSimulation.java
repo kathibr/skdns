@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 
 import de.dhbw.wwi11sca.skdns.client.login.LoginSimulation;
+import de.dhbw.wwi11sca.skdns.client.logout.LogoutSimulation;
 import de.dhbw.wwi11sca.skdns.shared.Admin;
 import de.dhbw.wwi11sca.skdns.shared.User;
 import com.google.gwt.view.client.ListDataProvider;
@@ -45,9 +46,7 @@ public class AdminSimulation implements EntryPoint {
 	Button btSave = new Button("Refresh");
 
 	Button btLogout = new Button("Logout");
-	Label lbLogout = new Label("Sie wurden erfolgreich ausgeloggt.");
-	Button btRelogin = new Button("erneuter Login?");
-
+	
 	AbsolutePanel absolutePanelUserStats = new AbsolutePanel();
 	Label lbExistingUsers = new Label("aktuell angelegte User:");
 	Label lbLoginCounter = new Label("0");
@@ -180,15 +179,8 @@ public class AdminSimulation implements EntryPoint {
 		btLogout.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get().clear();
-				RootPanel.get().add(btRelogin);
-				RootPanel.get().add(lbLogout);
-				btRelogin.addClickHandler(new ClickHandler() {
-					public void onClick(ClickEvent event) {
-						RootPanel.get().clear();
-						LoginSimulation login = new LoginSimulation();
-						login.onModuleLoad();
-					}
-				}); // btLogout
+				LogoutSimulation logout = new LogoutSimulation();
+				logout.onModuleLoad();
 			}
 		});
 

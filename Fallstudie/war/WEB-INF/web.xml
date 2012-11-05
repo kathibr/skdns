@@ -56,6 +56,16 @@
     <servlet-name>simulation</servlet-name>
     <url-pattern>/fallstudie/simulation</url-pattern>
   </servlet-mapping>
+  
+     <servlet>
+    <servlet-name>logout</servlet-name>
+    <servlet-class>de.dhbw.wwi11sca.skdns.server.LogoutServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>logout</servlet-name>
+    <url-pattern>/fallstudie/logout</url-pattern>
+  </servlet-mapping>
       
   <!-- Default page to serve -->
   <welcome-file-list>

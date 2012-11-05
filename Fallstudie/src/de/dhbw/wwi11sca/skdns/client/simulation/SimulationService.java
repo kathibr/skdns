@@ -21,7 +21,6 @@ public interface SimulationService extends RemoteService {
 	SimulationVersion createSimulationCallback(SimulationVersion version);
 
 	List<Company> getCompany();
-	
-	void deleteVersions();
+
 
 }

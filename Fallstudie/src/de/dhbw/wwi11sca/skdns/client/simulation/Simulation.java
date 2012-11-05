@@ -33,6 +33,7 @@ import com.google.gwt.visualization.client.visualizations.corechart.Options;
 
 import de.dhbw.wwi11sca.skdns.client.home.HomeSimulation;
 import de.dhbw.wwi11sca.skdns.client.login.LoginSimulation;
+import de.dhbw.wwi11sca.skdns.client.logout.LogoutSimulation;
 import de.dhbw.wwi11sca.skdns.shared.Company;
 import de.dhbw.wwi11sca.skdns.shared.SimulationVersion;
 import com.google.gwt.user.client.ui.DoubleBox;
@@ -47,8 +48,6 @@ public class Simulation implements EntryPoint {
 	// Widgets
 	Label lbHome = new Label("Home");
 	Label lbSimulation = new Label(">  Simulation");
-	Label lbLogout = new Label("Sie wurden erfolgreich ausgeloggt.");
-	Button btRelogin = new Button("erneuter Login?");
 
 	Button btSimulation = new Button("Simulation starten");
 	Button btNextYear = new Button("Folgejahr");
@@ -245,7 +244,9 @@ public class Simulation implements EntryPoint {
 		// Logout
 		btLogout.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				service.deleteVersions(new DeleteSimulationCallback());
+				RootPanel.get().clear();
+				LogoutSimulation logout = new LogoutSimulation();
+				logout.onModuleLoad();
 			}
 		}); // btLogout
 
@@ -616,36 +617,6 @@ public class Simulation implements EntryPoint {
 						130, 22);
 				unusedMachineCapacityInfo.setStyleName("gwt-Infolabel");
 			}
-
-		} // Ende method onSuccess
-
-	} // Ende class CreateSimulationCallback
-	/**
-	 * 
-	 * Klasse, die für den Asynchronen Callback zuständig ist, welcher alle ,abgesehen der letzten drei 
-	 * SimulationVersion, löscht
-	 * 
-	 */
-	public class DeleteSimulationCallback implements
-	AsyncCallback<java.lang.Void> {
-
-		@Override
-		public void onFailure(Throwable caught) {
-		} // Ende method onFailure
-
-		@Override
-		public void onSuccess(Void result) {
-			RootPanel.get().clear();
-			RootPanel.get().add(btRelogin);
-			RootPanel.get().add(lbLogout);
-			btRelogin.addClickHandler(new ClickHandler() {
-				public void onClick(ClickEvent event) {
-					RootPanel.get().clear();
-					LoginSimulation login = new LoginSimulation();
-					login.onModuleLoad();
-				}
-			}); // btLogout
-			
 
 		} // Ende method onSuccess
 

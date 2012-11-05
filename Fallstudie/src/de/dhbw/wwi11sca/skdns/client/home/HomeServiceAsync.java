@@ -11,7 +11,6 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import de.dhbw.wwi11sca.skdns.shared.Company;
-import de.dhbw.wwi11sca.skdns.shared.OwnCompany;
 
 public interface HomeServiceAsync {
 
@@ -19,6 +18,6 @@ public interface HomeServiceAsync {
 
 	void loginServer(String name, AsyncCallback<String> callback);
 
-	void deleteVersions(AsyncCallback<Void> callback);
+	
 
 }
