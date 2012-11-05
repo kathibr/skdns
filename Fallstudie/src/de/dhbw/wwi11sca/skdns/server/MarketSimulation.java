@@ -40,10 +40,10 @@ public class MarketSimulation {
 
 	public SimulationVersion simulate(SimulationVersion version) {
 
-		ownCompany = (OwnCompany) checkCompany(version.getOwnCompany());
-		company1 = checkCompany(version.getCompany1());
-		company2 = checkCompany(version.getCompany2());
-		company3 = checkCompany(version.getCompany3());
+		ownCompany = version.getOwnCompany();
+		company1 = version.getCompany1();
+		company2 = version.getCompany2();
+		company3 = version.getCompany3();
 
 		// Sonderfall 1
 		// Überprüft, ob genügend Personal für den Einsatz aller Maschinen
@@ -159,22 +159,6 @@ public class MarketSimulation {
 		return version;
 	} // Ende method simulate
 
-	private Company checkCompany(Company company) {
-
-		// Überprüft, ob das Unternehmen vorhanden ist
-		// Wenn nicht füllt es das Unternehmen mit dem Wert 0,
-		// damit die Berechnung keine NullPointerException wirft
-		if (company != null) {
-			company.setAmount(0);
-			company.setMarketShare(0.0);
-			company.setTopLine(0);
-			company.setTradeName("");
-			company.getProduct().setPrice(0.0);
-			company.getProduct().setSalesVolume(0);
-		}
-
-		return company;
-	}
 
 	public void specialCaseOne(SimulationVersion version) {
 		freePersonal = (ownCompany.getNumberOfStaff()+ version.getMachineStaff())
