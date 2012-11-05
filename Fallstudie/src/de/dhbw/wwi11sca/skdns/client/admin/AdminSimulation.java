@@ -43,7 +43,7 @@ public class AdminSimulation implements EntryPoint {
 	// Widgets
 	CellTable<User> cellTableUser = new CellTable<User>();
 	List<User> userList;
-	Button btSave = new Button("Refresh");
+	Button btRefresh = new Button("Refresh Usertabelle");
 
 	Button btLogout = new Button("Logout");
 	
@@ -66,6 +66,7 @@ public class AdminSimulation implements EntryPoint {
 	Label lbDeleteUser = new Label("User l\u00F6schen:");
 	Button btDelete = new Button("L\u00F6schen");
 	String deleteUser;
+	Boolean alreadyExistingUser = false;
 
 	Image logo = new Image("fallstudie/gwt/clean/images/Logo.JPG");
 
@@ -88,7 +89,8 @@ public class AdminSimulation implements EntryPoint {
 
 		// Buttons
 		panelAdmin.add(btLogout, 933, 10);
-		panelAdmin.add(btSave, 309, 594);
+		panelAdmin.add(btRefresh, 547, 559);
+		btRefresh.setSize("167px", "30px");
 		absolutePanelDeleteUser.add(btDelete, 245, 46);
 		absolutePanelCreateUser.add(btCreateUser, 243, 135);
 
@@ -142,7 +144,7 @@ public class AdminSimulation implements EntryPoint {
 
 		// Eventhandler
 
-		btSave.addClickHandler(new ClickHandler() {
+		btRefresh.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 
 				service.getUser(new GetUserCallback());
@@ -167,11 +169,25 @@ public class AdminSimulation implements EntryPoint {
 			public void onClick(ClickEvent event) {
 
 				// Daten aus Textboxen übernehmen und neuen User erzeugen
-				newUser = new User();
-				newUser.setUsername(textBoxUsername.getText());
-				newUser.setPassword(textBoxPassword.getText());
-				newUser.setMail(textBoxMail.getText());
-				service.saveUser(newUser, new SaveUserCallback());
+				
+				// Überprüfung, ob User schon existiert
+				for (User user: userList){
+					if (textBoxUsername.getText().equals(user.getUsername())){
+						alreadyExistingUser = true;
+					}
+				}
+				if (alreadyExistingUser == true){
+					Window.alert("Dieser User existiert bereits.");
+					alreadyExistingUser = false;
+				}
+				else{
+					newUser = new User();
+					newUser.setUsername(textBoxUsername.getText());
+					newUser.setPassword(textBoxPassword.getText());
+					newUser.setMail(textBoxMail.getText());
+					service.saveUser(newUser, new SaveUserCallback());
+				}
+				
 			}
 		}); // Ende btCreateUser
 
