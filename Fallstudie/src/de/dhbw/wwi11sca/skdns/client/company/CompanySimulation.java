@@ -291,18 +291,16 @@ public class CompanySimulation implements EntryPoint {
 	} // Ende onModuleLoad
 
 	private void addTabPanelOwnCompany() {
-
-		// Tab für das eigene Unternehmen anbringen
-		absolutePanelOwnCompany.setSize("100%", "596px");
+		absolutePanelOwnCompany.setSize("100%", "586px");
 		tabPanelCreateCompanies.add(absolutePanelOwnCompany,
 				"Eigenes Unternehmen", false);
 		absolutePanelOwnCompany.setStyleName("gwt-Panel");
 		// Buttons
 		// Unternehmensdaten löschen
-		absolutePanelOwnCompany.add(btDeleteOwnCompany, 720, 551);
+		absolutePanelOwnCompany.add(btDeleteOwnCompany, 718, 541);
 		btDeleteOwnCompany.setSize("100px", "35px");
 		// Unternehmensdaten speichern
-		absolutePanelOwnCompany.add(btSaveOwnCompany, 614, 551);
+		absolutePanelOwnCompany.add(btSaveOwnCompany, 612, 541);
 		btSaveOwnCompany.setSize("100px", "35px");
 
 		// Eventhandler

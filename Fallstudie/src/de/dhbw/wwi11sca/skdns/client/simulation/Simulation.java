@@ -58,8 +58,8 @@ public class Simulation implements EntryPoint {
 	Label lbMarketing = new Label("Marketing:");
 	Label lbMachine = new Label("Maschinen:");
 	Label lbMachineValue = new Label("Wert:");
-	Label lbUsedPersonal = new Label("nötiges Personal:");
-	Label lbMachineCapacity = new Label("Kapazität:");
+	Label lbUsedPersonal = new Label("n\u00f6tiges Personal:");
+	Label lbMachineCapacity = new Label("Kapazit\u00E4t:");
 	Label lbPersonal = new Label("Personal:");
 	Label lbPrice = new Label("Produktpreis:");
 
@@ -386,7 +386,7 @@ public class Simulation implements EntryPoint {
 		lbInvestPrice = new Label("Produktpreis: " + result.getPrice());
 		lbInvestMachineValue = new Label("Maschinenwert: "
 				+ result.getMachineValue());
-		lbInvestMachinesCapacity = new Label("Maschinenkapazität: "
+		lbInvestMachinesCapacity = new Label("Maschinenkapazit\u00E4t: "
 				+ result.getMachineCapacity());
 		lbInvestMachinePersonal = new Label("Maschinenpersonal: "
 				+ result.getMachineStaff());
@@ -601,7 +601,7 @@ public class Simulation implements EntryPoint {
 
 			if (result.getNecessaryPersonal() > 0) {
 				necessaryPersonalInfo = new Label(
-						"Für die neue Maschine ist nicht genügend Personal vorhanden. Es fehlen mindestens "
+						"F\u00fcr die neue Maschine ist nicht gen\u00fcgend Personal vorhanden. Es fehlen mindestens "
 								+ result.getNecessaryPersonal()
 								+ " Mitarbeiter.");
 				absolutePanelYear[stackYear - 1].add(necessaryPersonalInfo,
@@ -611,7 +611,7 @@ public class Simulation implements EntryPoint {
 			}
 			if (result.isUnusedMachineCapacity() == true) {
 				unusedMachineCapacityInfo = new Label(
-						"Möchten Sie noch eine Maschine kaufen? Sie könnten dadurch Ihr Betriebergebnis steigern!");
+						"M\u00f6chten Sie noch eine Maschine kaufen? Sie k\u00f6nnten dadurch Ihr Betriebergebnis steigern!");
 				absolutePanelYear[stackYear - 1].add(unusedMachineCapacityInfo,
 						130, 22);
 				unusedMachineCapacityInfo.setStyleName("gwt-Infolabel");

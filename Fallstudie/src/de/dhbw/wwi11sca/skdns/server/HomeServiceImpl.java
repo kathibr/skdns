@@ -75,7 +75,7 @@ public class HomeServiceImpl extends RemoteServiceServlet implements
 			{
 			ds.delete(ds.createQuery(SimulationVersion.class).filter("userID = ",
 					LoginServiceImpl.getUserID()));
-			versions.get(versions.size());
+			versions.get(versions.size()-1);
 			for (int i = versions.size(); i > versions.size() - 3; i--) {
 				ds.save(versions.get(i));
 			}

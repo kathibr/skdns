@@ -192,7 +192,7 @@ public class LoginSimulation implements EntryPoint {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			lbInfo.setText("Derzeit liegt leider ein Systemfehler vor. Versuchen Sie es später erneut.");
+			lbInfo.setText("Derzeit liegt leider ein Systemfehler vor. Versuchen Sie es sp\u00E4ter erneut.");
 
 		} // Ende method onFailure
 

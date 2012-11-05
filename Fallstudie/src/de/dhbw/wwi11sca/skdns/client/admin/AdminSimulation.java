@@ -156,7 +156,7 @@ public class AdminSimulation implements EntryPoint {
 				// User löschen, dessen Name angezeigt wurde
 				deleteUser = textBoxUsernameDelete.getText().trim();
 				if ((deleteUser.toLowerCase()).equals("admin")) {
-					Window.alert("Sie können den Admin nicht löschen!");
+					Window.alert("Sie k\u00f6nnen den Admin nicht l\u00f6schen!");
 				} else {
 					service.deleteUser(deleteUser, new DeleteUserCallback());
 				}
@@ -389,7 +389,8 @@ public class AdminSimulation implements EntryPoint {
 			// gestartet
 			// wurde newUser in der DB gespeichert, soll dem Admin ein Label
 			// angezeigt werden, dass das speichern erfolgreich war
-			Window.alert("User wurde hinzugefügt.");
+			Window.alert("User wurde hinzugef\u00fcgt.");
+//			service.getStats(new GetStatsCallback() );
 		} // Ende method onSuccess
 	} // Ende class SaveUserCallback
 

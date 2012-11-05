@@ -39,7 +39,7 @@ h1 {
 }
 
 .gwt-UnternehmenLabel {
-	color: #FF9900;
+	color: #CC5200;
 	font-size: 14px;
 	font-family: Calibri;
 	font-weight: bolder;
@@ -118,6 +118,7 @@ h1 {
 
 .gwt-Panel {
 	background: #EDEDED;
+	background-color: mintcream;
 }
 
 .gwt-Label-Info {

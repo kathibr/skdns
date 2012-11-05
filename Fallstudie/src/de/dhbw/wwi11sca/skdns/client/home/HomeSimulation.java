@@ -48,6 +48,7 @@ public class HomeSimulation implements EntryPoint {
 	private Button btRelogin = new Button("erneuter Login?");
 
 	private List<Company> companyList;
+	int emptyCompanyCounter = 0;
 
 	private HomeServiceAsync service = GWT.create(HomeService.class);
 
@@ -195,14 +196,19 @@ public class HomeSimulation implements EntryPoint {
 			// to the widget.
 			companyList = dataProvider.getList();
 
+			
+			
 			for (Company company : result) {
 				companyList.add(company);
+				if (company.getTopLine() == 0){
+					emptyCompanyCounter++;
+				}
 			} // Ende for-Schleife
 
 			// Wenn weniger als zwei Unternehmen aus der DB zurückgeliefert
 			// werden, kann die Simulation nicht stattfinden.
 			// Daher wird der Button btSimulation deaktiviert
-			if (result.size() < 2) {
+			if (emptyCompanyCounter > 2) {
 				btSimulation.setEnabled(false);
 			} // Ende if-Statement
 
