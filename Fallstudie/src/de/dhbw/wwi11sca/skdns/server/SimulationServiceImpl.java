@@ -48,6 +48,7 @@ public class SimulationServiceImpl extends RemoteServiceServlet implements
 		List<OwnCompany> dbOwnCompany = ds.createQuery(OwnCompany.class)
 				.filter("userID = ", LoginServiceImpl.getUserID()).asList();
 
+		// TODO die nächsten vier zeilen funktionieren noch nicht
 		OwnCompany ownCompany = dbOwnCompany.get(0);
 		Company company1 = dbCompany.get(0);
 		Company company2 = dbCompany.get(1);
