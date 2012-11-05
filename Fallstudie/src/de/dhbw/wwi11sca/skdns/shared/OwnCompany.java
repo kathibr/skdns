@@ -5,7 +5,6 @@ import java.io.Serializable;
 public class OwnCompany extends Company implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String userID = new String();
 	private double fixedCosts;
 	private double variableCosts;
 	private Machines machines;
@@ -55,12 +54,5 @@ public class OwnCompany extends Company implements Serializable {
 		this.numberOfStaff = numberOfStaff;
 	}
 
-	public String getUserID() {
-		return userID;
-	}
-
-	public void setUserID(String userID) {
-		this.userID = userID;
-	}
 
 }

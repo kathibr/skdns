@@ -15,6 +15,7 @@ import com.google.gwt.cell.client.SelectionCell;
 import com.google.gwt.cell.client.TextInputCell;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -69,7 +70,10 @@ public class AdminSimulation implements EntryPoint {
 	Boolean alreadyExistingUser = false;
 
 	Image logo = new Image("fallstudie/gwt/clean/images/Logo.JPG");
-
+	private RegExp expName = RegExp
+			.compile("[a-zA-Z0-9\u00E4\u00FC\u00F6\u00C4\u00DC\u00DF\u00D6]+");
+	private RegExp expMail = RegExp.compile("^([a-zA-Z0-9]+)(\u0040)([a-zA-Z0-9]+)(\\.)([a-z]+)$");
+	
 	String changeInfo;
 	private AdminServiceAsync service = GWT.create(AdminService.class);
 
@@ -169,24 +173,32 @@ public class AdminSimulation implements EntryPoint {
 			public void onClick(ClickEvent event) {
 
 				// Daten aus Textboxen übernehmen und neuen User erzeugen
-				
-				// Überprüfung, ob User schon existiert
-				for (User user: userList){
-					if (textBoxUsername.getText().equals(user.getUsername())){
-						alreadyExistingUser = true;
+				if( expName.test(textBoxUsername.getText())
+						&& expName.test(textBoxPassword.getText())
+						&& expMail.test(textBoxMail.getText())
+							){
+					// Überprüfung, ob User schon existiert
+					for (User user: userList){
+						if (textBoxUsername.getText().equals(user.getUsername())){
+							alreadyExistingUser = true;
+						}
 					}
+					if (alreadyExistingUser == true){
+						Window.alert("Dieser User existiert bereits.");
+						alreadyExistingUser = false;
+					}
+					else{
+						newUser = new User();
+						newUser.setUsername(textBoxUsername.getText());
+						newUser.setPassword(textBoxPassword.getText());
+						newUser.setMail(textBoxMail.getText());
+						service.saveUser(newUser, new SaveUserCallback());
+					}
+						
+				} else {
+					Window.alert("Bitte geben sie alle Daten an!");					
 				}
-				if (alreadyExistingUser == true){
-					Window.alert("Dieser User existiert bereits.");
-					alreadyExistingUser = false;
-				}
-				else{
-					newUser = new User();
-					newUser.setUsername(textBoxUsername.getText());
-					newUser.setPassword(textBoxPassword.getText());
-					newUser.setMail(textBoxMail.getText());
-					service.saveUser(newUser, new SaveUserCallback());
-				}
+
 				
 			}
 		}); // Ende btCreateUser
@@ -294,8 +306,8 @@ public class AdminSimulation implements EntryPoint {
 		PasswordColumn.setFieldUpdater(new FieldUpdater<User, String>() {
 			@Override
 			public void update(int index, User object, String value) {
-				Window.alert("\u00C4nderung erfolgreich.");
 				((User) object).setPassword((String) value);
+				object.setForgottenPassword(false);
 				service.updateTable((User) object, new UpdateTableCallback());
 				cellTableUser.redraw();
 			}
@@ -304,12 +316,11 @@ public class AdminSimulation implements EntryPoint {
 				.setFieldUpdater(new FieldUpdater<User, String>() {
 					@Override
 					public void update(int index, User object, String value) {
-						Window.alert("\u00C4nderung erfolgreich.");
 						((User) object)
-								.setForgottenPassword(new Boolean(value));
-						service.updateTable((User) object,
-								new UpdateTableCallback());
-						cellTableUser.redraw();
+						.setForgottenPassword(new Boolean(value));
+				service.updateTable((User) object,
+						new UpdateTableCallback());
+				cellTableUser.redraw();
 					}
 				});
 
@@ -330,14 +341,8 @@ public class AdminSimulation implements EntryPoint {
 
 		@Override
 		public void onSuccess(Void result) {
-			// TODO: User ist gespeichert worden uns soll nun in der
-			// cellTableUser auch für den Anwender angezeigt werden
-			// Daten wurden durch Textboxen im Eventhandler btCreaseUser.onClick
-			// in newUser gespeichert
-			// und mit service.saveUser(newUser, new SaveUserCallback())
-			// gestartet
-			// wurde newUser in der DB gespeichert, soll dem Admin ein Label
-			// angezeigt werden, dass das speichern erfolgreich war
+			Window.alert("Änderung erfolgreich. Informieren Sie den Kunden.");
+
 
 		} // Ende method onSuccess
 	} // Ende class SaveUserCallback
@@ -389,16 +394,11 @@ public class AdminSimulation implements EntryPoint {
 
 		@Override
 		public void onSuccess(Void result) {
-			// TODO: User ist gespeichert worden uns soll nun in der
-			// cellTableUser auch für den Anwender angezeigt werden
-			// Daten wurden durch Textboxen im Eventhandler btCreaseUser.onClick
-			// in newUser gespeichert
-			// und mit service.saveUser(newUser, new SaveUserCallback())
-			// gestartet
-			// wurde newUser in der DB gespeichert, soll dem Admin ein Label
-			// angezeigt werden, dass das speichern erfolgreich war
-			Window.alert("User wurde hinzugef\u00fcgt.");
-//			service.getStats(new GetStatsCallback() );
+			Window.alert("User wurde hinzugefügt.");
+			service.getUser(new GetUserCallback());
+		
+			service.getStats(new GetStatsCallback() );
+
 		} // Ende method onSuccess
 	} // Ende class SaveUserCallback
 
@@ -417,15 +417,10 @@ public class AdminSimulation implements EntryPoint {
 
 		@Override
 		public void onSuccess(Void result) {
-			// TODO User soll aus der db gelöscht werden
-			// der Username wurde durch die textBoxUsernameDelete im String
-			// deleteUser gespeichert
-			// dann service.deleteUser(deleteUser, new DeleteUserCallback())
-			// ist der zu löschende User aus der DB entfernt worden soll dem
-			// User ein Label ausgegeben werden
-			// auf dem angegeben wurde, dass der User nun nicht mehr vorhanden
-			// ist
+
 			Window.alert("User wurde entfernt.");
+
+			service.getUser(new GetUserCallback());
 		} // Ende method onSuccess
 	} // Ende class DeleteUserCallback
 

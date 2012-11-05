@@ -46,11 +46,13 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 				.filter("username =", username).asList();
 		User first = dbUser.get(0);
 
-		setUserID(first.getUserID());
+		
 		String dbUsername = (String) first.getUsername();
 		String dbPassword = (String) first.getPassword();
 		if ((username.equals(dbUsername)) && (password.equals(dbPassword))) {
 			AdminServiceImpl.getAdmin().setLoginCount(1);
+			setUserID(first.getUserID());
+			
 			// success
 		} else {
 			throw new DelistedException("Username oder Passwort falsch/ unbekannt.");
@@ -122,45 +124,6 @@ public class LoginServiceImpl extends RemoteServiceServlet implements
 			
 		}
 		
-		
-		/*
-		
-		User newAdmin = new User("admin", "12345", "admin@skdns.de");
-		ds.save(newAdmin);
-		
-		List<User> dbAdmin = ds.createQuery(User.class).filter("username = ", "admin").asList();
-		
-		//Wenn kein Admin angelegt wurde
-		if(dbAdmin.get(0) == null)
-		{
-			User newAdmin = new User("admin", "12345", "admin@skdns.de");
-			ds.save(newAdmin);
-			
-		} else {
-			User singleAdmin = dbAdmin.get(0);
-			if (admin.getPassword().equals(singleAdmin.getPassword())){
-				//success
-			} else {
-				throw new DelistedException("Adminpasswort falsch.");
-			}
-		}
-			/*
-		username = (String) admin.getUsername().trim();
-		password = (String) admin.getPassword().trim();
-		
-		
-		List<User> dbUser = ds.createQuery(User.class).filter("username =", username).asList();
-		User first = dbUser.get(0);
-
-		String dbPassword = (String) first.getPassword();
-
-		if (password.equals(dbPassword)) {
-			// success
-		} else {
-			throw new DelistedException("ERR");
-		} // Ende if-else
-		}
-		*/
 	} // Ende method checkAdmin
 
 	public static String getUserID() {
